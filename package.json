@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "precommit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "npx commitizen init cz-conventional-changelog --save-dev --save-exact"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
@@ -19,6 +20,8 @@
     "react-router-dom": "^7.4.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
