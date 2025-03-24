@@ -1,0 +1,25 @@
+:root {
+    --color-primary: #16423C;
+    --color-secondary: #6A9C89;
+    --color-green: #C4DAD2;
+    --color-white: #FFFFFF;
+    --color-background: #E9EFEC;
+    --color-background-section: #F9F9F9;
+    --color-text: #626766;
+    --color-text-primary: #323635;
+    --sign-out: #8a0000;
+}
+
+.header {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.logo {
+    width: 70px;
+}
+
+.title {
+    border-left: 3px solid var(--color-white);
+    margin-bottom: 0;
+}
