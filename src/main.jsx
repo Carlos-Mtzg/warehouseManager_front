@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import PublicRoute from './components/PublicRoute.jsx';
 import ResetPassword from './pages/auth/ResetPassword.jsx';
 import ProductEntry from './pages/user/ProductEntry.jsx';
+import ActiveAccount from './pages/auth/ActiveAccount.jsx';
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,21 @@ const router = createBrowserRouter([
     element: <PublicRoute />,
     children: [
       { path: 'login', element: <Login />, errorElement: <Error500 /> },
-      { path: 'forgot-password', element: <ForgotPassword />, errorElement: <Error500 /> },
-      { path: 'reset-password/:token', element: <ResetPassword />, errorElement: <Error500 /> },
+      {
+        path: 'forgot-password',
+        element: <ForgotPassword />,
+        errorElement: <Error500 />,
+      },
+      {
+        path: 'reset-password/:token',
+        element: <ResetPassword />,
+        errorElement: <Error500 />,
+      },
+      {
+        path: 'active-account/:token',
+        element: <ActiveAccount />,
+        errorElement: <Error500 />,
+      },
     ],
   },
   {
@@ -36,7 +50,11 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
           { index: true, element: <Home />, errorElement: <Error500 /> },
-          { path: 'productEntries', element: <ProductEntry />, errorElement: <Error500 /> },
+          {
+            path: 'productEntries',
+            element: <ProductEntry />,
+            errorElement: <Error500 />,
+          },
         ],
       },
     ],
