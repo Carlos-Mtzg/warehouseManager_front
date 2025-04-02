@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AxiosClient from "../../config/axios-client";
 import AddSupplierModal from "../../components/AddSupplierModal";
 import AddCategoryModal from "../../components/AddCategoryModal";
+import Swal from "sweetalert2";
 
 
 const ProductEntryForm = () => {
@@ -50,10 +51,19 @@ const ProductEntryForm = () => {
         },
       });
       console.log("Product entry saved successfully:", response);
-      alert("Registro guardado exitosamente.");
+      await Swal.fire({
+        icon: 'success',
+        title: 'Registro guardado exitosamente.',
+        showConfirmButton: false,
+        timer: 1500
+      });
     } catch (error) {
       console.error("Error saving product entry:", error);
-      alert("Error al guardar el registro.");
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar el registro.',
+        text: error.message,
+      });
     }
   };
 
