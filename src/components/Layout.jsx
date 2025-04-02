@@ -19,7 +19,7 @@ const Layout = () => {
               </Link>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="/requests" className={`${styles['sidebar-link']}`}>
+              <Link to="/admin/productEntries" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-add me-3"></i>
                 <span>Entradas</span>
               </Link>

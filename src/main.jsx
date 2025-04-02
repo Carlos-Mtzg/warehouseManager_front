@@ -15,6 +15,7 @@ import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import PublicRoute from './components/PublicRoute.jsx';
 import ResetPassword from './pages/auth/ResetPassword.jsx';
+import ProductEntry from './pages/user/ProductEntry.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
           { index: true, element: <Home />, errorElement: <Error500 /> },
+          { path: 'productEntries', element: <ProductEntry />, errorElement: <Error500 /> },
         ],
       },
     ],
