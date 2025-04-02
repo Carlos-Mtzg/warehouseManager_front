@@ -1,24 +1,21 @@
-import { useState, createContext, useMemo } from 'react';
+import { useState, createContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const isTokenValid = (token) => {
-    return !!token;
-  };
+  const isTokenValid = (token) => !!token;
 
   const [auth, setAuth] = useState(() => {
     const token = localStorage.getItem('token');
     return isTokenValid(token);
   });
 
-  const handleIsLoggedIn = () => {
-    if (!auth && localStorage.getItem('accessToken') == null) {
-      window.location = 'login';
-    }
-  };
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    setAuth(isTokenValid(accessToken));
+  }, []);
 
   const handleLogin = (accessToken, role, uuid) => {
     localStorage.setItem('accessToken', accessToken);
@@ -43,13 +40,12 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('role');
         localStorage.removeItem('uuid');
         setAuth(false);
-        window.location = '/';
       }
     });
   };
 
   const contextValue = useMemo(
-    () => ({ auth, handleLogin, handleIsLoggedIn, handleLogout }),
+    () => ({ auth, handleLogin, handleLogout }),
     [auth]
   );
 

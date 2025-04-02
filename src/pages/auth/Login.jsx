@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import toast, { Toaster } from 'react-hot-toast';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { authLogin } from '../../services/ApiAuth';
 import AuthContext from '../../context/AuthProvider';
 
@@ -10,6 +10,7 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 
 const Login = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { handleLogin } = useContext(AuthContext);
 
@@ -38,7 +39,6 @@ const Login = () => {
     values,
     errors,
     touched,
-    isSubmitting,
   } = useFormik({
     initialValues: {
       email: '',
@@ -47,6 +47,7 @@ const Login = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
+        setIsSubmitting(true);
         const response = await authLogin(values);
         if (response?.accessToken) {
           const { accessToken, role, uuid } = response;
@@ -60,6 +61,7 @@ const Login = () => {
             'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.'
           );
         }
+        setIsSubmitting(false);
       } catch (error) {
         toast.error('Ocurrió un error inesperado');
       } finally {
@@ -96,7 +98,7 @@ const Login = () => {
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
+              className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
               placeholder="Escribe aquí tu correo electrónico"
             />
             {touched.email && errors.email ? (
@@ -119,7 +121,7 @@ const Login = () => {
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
+              className={`form-control py-3 ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
               placeholder="Escribe aquí tu contraseña"
             />
             {touched.password && errors.password ? (
@@ -128,36 +130,38 @@ const Login = () => {
               </div>
             ) : null}
           </div>
-          {isSubmitting ? (
-            <button
-              className={`rounded ${styles['submit-btn']}`}
-              type="submit"
-              disabled
-            >
-              <div className={`${styles['submit-content']}`}>
-                Cargando
-                <output
-                  className="spinner-border ms-1"
-                  style={{ width: '1.25rem', height: '1.25rem' }}
-                >
-                  <span className="visually-hidden"></span>
-                </output>
-              </div>
-              <span></span>
-            </button>
-          ) : (
-            <button
-              className={`rounded ${styles['submit-btn']}`}
-              type="submit"
-              disabled={isSubmitting}
-            >
-              <div className={`${styles['submit-content']}`}>
-                Iniciar Sesión<i className="bi bi-box-arrow-in-right ms-2"></i>
-              </div>
-              <span></span>
-            </button>
-          )}
-          <Link className={`text-center ${styles['forget-password']}`} to="#">
+          <div className="row mt-3">
+            {isSubmitting ? (
+              <button
+                className={`rounded ${styles['submit-btn']}`}
+                type="submit"
+                disabled
+              >
+                <div className={`${styles['submit-content']}`}>
+                  Cargando
+                  <output
+                    className="spinner-border ms-1"
+                    style={{ width: '1.25rem', height: '1.25rem' }}
+                  >
+                    <span className="visually-hidden"></span>
+                  </output>
+                </div>
+                <span></span>
+              </button>
+            ) : (
+              <button
+                className={`rounded ${styles['submit-btn']}`}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                <div className={`${styles['submit-content']}`}>
+                  Iniciar Sesión<i className="bi bi-box-arrow-in-right ms-2"></i>
+                </div>
+                <span></span>
+              </button>
+            )}
+          </div>
+          <Link className={`text-center ${styles['forget-password']}`} to="/forgot-password">
             He olvidado mi contraseña
           </Link>
         </form>

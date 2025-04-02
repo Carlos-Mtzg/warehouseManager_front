@@ -11,49 +11,43 @@ import Login from './pages/auth/Login.jsx';
 import Error404 from './pages/errors/Error404.jsx';
 import Error500 from './pages/errors/Error500.jsx';
 import Home from './pages/admin/Home.jsx';
+import ForgotPassword from './pages/auth/ForgotPassword.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
+import PublicRoute from './components/PublicRoute.jsx';
+import ResetPassword from './pages/auth/ResetPassword.jsx';
 import ProductEntry from './pages/user/ProductEntry.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <PublicRoute />,
+    children: [
+      { path: 'login', element: <Login />, errorElement: <Error500 /> },
+      { path: 'forgot-password', element: <ForgotPassword />, errorElement: <Error500 /> },
+      { path: 'reset-password/:token', element: <ResetPassword />, errorElement: <Error500 /> },
+    ],
+  },
+  {
+    path: '/admin',
+    element: <PrivateRoute />,
     children: [
       {
-        index: true,
-        element: <Login />,
-        errorElement: <Error500 />,
-      },
-      {
-        path: '*',
-        element: <Error404 />,
+        path: '',
+        element: <Layout />,
+        children: [
+          { index: true, element: <Home />, errorElement: <Error500 /> },
+          { path: 'productEntries', element: <ProductEntry />, errorElement: <Error500 /> },
+        ],
       },
     ],
   },
-    {
-      path: '/admin',
-      element: <Layout />,
-      children: [
-        {
-          index: true,
-          element: <Home />,
-          errorElement: <Error500 />,
-        },
-        {
-          path: 'productEntries', // Changed to relative path
-          element: <ProductEntry />,
-          errorElement: <Error500 />,
-        },
-        {
-          path: '*',
-          element: <Error404 />,
-        },
-      ],
-    },
+  { path: '*', element: <Error404 /> },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>
 );
