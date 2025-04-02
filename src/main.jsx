@@ -14,6 +14,7 @@ import Home from './pages/admin/Home.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import PublicRoute from './components/PublicRoute.jsx';
+import ResetPassword from './pages/auth/ResetPassword.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,11 +22,8 @@ const router = createBrowserRouter([
     element: <PublicRoute />,
     children: [
       { path: 'login', element: <Login />, errorElement: <Error500 /> },
-      {
-        path: 'forgot-password',
-        element: <ForgotPassword />,
-        errorElement: <Error500 />,
-      },
+      { path: 'forgot-password', element: <ForgotPassword />, errorElement: <Error500 /> },
+      { path: 'reset-password/:token', element: <ResetPassword />, errorElement: <Error500 /> },
     ],
   },
   {
