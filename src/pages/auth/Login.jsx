@@ -96,7 +96,7 @@ const Login = () => {
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
+              className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
               placeholder="Escribe aquí tu correo electrónico"
             />
             {touched.email && errors.email ? (
@@ -119,7 +119,7 @@ const Login = () => {
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
+              className={`form-control py-3 ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
               placeholder="Escribe aquí tu contraseña"
             />
             {touched.password && errors.password ? (
@@ -157,7 +157,7 @@ const Login = () => {
               <span></span>
             </button>
           )}
-          <Link className={`text-center ${styles['forget-password']}`} to="#">
+          <Link className={`text-center ${styles['forget-password']}`} to="/forgot-password">
             He olvidado mi contraseña
           </Link>
         </form>
