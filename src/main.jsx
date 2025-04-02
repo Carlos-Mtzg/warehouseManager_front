@@ -11,6 +11,7 @@ import Login from './pages/auth/Login.jsx';
 import Error404 from './pages/errors/Error404.jsx';
 import Error500 from './pages/errors/Error500.jsx';
 import Home from './pages/admin/Home.jsx';
+import ProductEntry from './pages/user/ProductEntry.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,21 +28,26 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: '/admin',
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Home />,
-        errorElement: <Error500 />,
-      },
-      {
-        path: '*',
-        element: <Error404 />,
-      },
-    ],
-  },
+    {
+      path: '/admin',
+      element: <Layout />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+          errorElement: <Error500 />,
+        },
+        {
+          path: 'productEntries', // Changed to relative path
+          element: <ProductEntry />,
+          errorElement: <Error500 />,
+        },
+        {
+          path: '*',
+          element: <Error404 />,
+        },
+      ],
+    },
 ]);
 
 createRoot(document.getElementById('root')).render(
