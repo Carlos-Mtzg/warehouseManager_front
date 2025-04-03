@@ -7,7 +7,6 @@ import {
   Pagination,
   Button,
 } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import AxiosClient from '../../config/axios-client';
 
 const Entries = () => {
