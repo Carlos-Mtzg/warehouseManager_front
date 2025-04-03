@@ -86,7 +86,7 @@ const ProductEntryForm = () => {
     const fetchSuppliers = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await AxiosClient.get(`suplier/`, {
+        const response = await AxiosClient.get(`supplier/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
