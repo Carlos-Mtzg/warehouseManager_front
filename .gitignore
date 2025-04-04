@@ -1,3 +1,6 @@
+# Sonnarqube
+.scannerwork/
+
 # Logs
 logs
 *.log
@@ -11,6 +14,11 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Yarn lock files
+yarn-error.log
+yarn-debug.log
+yarn.lock
 
 # Editor directories and files
 .vscode/*
