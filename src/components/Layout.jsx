@@ -32,7 +32,7 @@ const Layout = () => {
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link
-                to="/requestsSelected"
+                to="/admin/users"
                 className={`${styles['sidebar-link']}`}
               >
                 <i className="bi bi-person-plus me-3"></i>
@@ -41,7 +41,7 @@ const Layout = () => {
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link
-                to="/requestsSelected"
+                to="#"
                 className={`${styles['sidebar-link']}`}
               >
                 <i className="bi bi-person-fill me-3"></i>
