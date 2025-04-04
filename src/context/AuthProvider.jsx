@@ -8,13 +8,16 @@ const AuthProvider = ({ children }) => {
   const isTokenValid = (token) => !!token;
 
   const [auth, setAuth] = useState(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     return isTokenValid(token);
   });
+
+  const [role, setRole] = useState(() => localStorage.getItem('role') || '');
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     setAuth(isTokenValid(accessToken));
+    setRole(localStorage.getItem('role') || '');
   }, []);
 
   const handleLogin = (accessToken, role, uuid) => {
@@ -22,6 +25,7 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem('role', role);
     localStorage.setItem('uuid', uuid);
     setAuth(true);
+    setRole(role);
   };
 
   const handleLogout = () => {
@@ -40,13 +44,14 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('role');
         localStorage.removeItem('uuid');
         setAuth(false);
+        setRole('');
       }
     });
   };
 
   const contextValue = useMemo(
-    () => ({ auth, handleLogin, handleLogout }),
-    [auth]
+    () => ({ auth, role, handleLogin, handleLogout }),
+    [auth, role]
   );
 
   return (
