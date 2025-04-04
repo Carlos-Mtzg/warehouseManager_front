@@ -57,11 +57,6 @@ const router = createBrowserRouter([
             errorElement: <Error500 />,
           },
           {
-            path: 'entries',
-            element: <Entries />,
-            errorElement: <Error500 />
-          },
-          {
             path: 'users',
             element: <Users />,
             errorElement: <Error500 />
