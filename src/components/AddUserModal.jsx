@@ -214,11 +214,11 @@ const AddUserModal = ({ show, handleClose, onResetForm }) => {
                                 type="submit"
                                 disabled
                             >
-                                <div className={`${styles['primary-content']}`}>
+                                <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
                                     Cargando
                                     <output
-                                        className="spinner-border ms-1"
-                                        style={{ width: '1.25rem', height: '1.25rem' }}
+                                        className="spinner-border"
+                                        style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
                                     >
                                         <span className="visually-hidden"></span>
                                     </output>
