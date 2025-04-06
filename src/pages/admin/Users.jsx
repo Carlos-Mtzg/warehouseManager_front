@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styles from '../../assets/css/users.module.css'
 import AddUserModal from '../../components/AddUserModal'
+import UserList from '../../components/UserList';
 
 const Users = () => {
     const [showAddUserModel, setShowAddUserModel] = useState("");
@@ -20,8 +21,8 @@ const Users = () => {
                 handleClose={handleAddUserModalClose}
                 onResetForm={handleResetForm}
             />
-            <div className="content d-flex flex-column">
-                <h1 className={`mb-4 ${styles['title']}`}>Gestión de Usuarios</h1>
+            <div className="content d-flex flex-column gap-4">
+                <h1 className={`${styles['title']}`}>Gestión de Usuarios</h1>
                 <div className="d-flex align-items-center gap-3">
                     <div className="input-group">
                         <input
@@ -41,6 +42,8 @@ const Users = () => {
                         <span></span>
                     </button>
                 </div>
+
+                <UserList />
             </div>
         </>
     )
