@@ -31,3 +31,25 @@ export async function registerUser(name, lastname, email, role) {
     };
   }
 }
+
+export async function getAllUsers() {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.get(`${API_URL}user/list`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return {
+      state: 'success',
+      users: response.data,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al obtener los usuarios',
+    };
+  }
+}
