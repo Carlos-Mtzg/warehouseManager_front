@@ -85,3 +85,27 @@
 .label {
     color: var(--color-primary);
 }
+
+.table-custom {
+    border: transparent;
+}
+
+.table-custom th {
+    color: var(--color-primary);
+    background-color: transparent;
+}
+
+.table-custom td {
+    background-color: transparent;
+    border: transparent;
+}
+
+.btn-custom {
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s ease-in-out !important;
+}
+
+.btn-custom:hover {
+    transform: scale(1.1);
+}
