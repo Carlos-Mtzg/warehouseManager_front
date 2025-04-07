@@ -1,22 +1,33 @@
 import { useState } from 'react'
 import styles from '../../assets/css/users.module.css'
 import AddUserModal from '../../components/AddUserModal'
+import EditUserModal from '../../components/EditUserModal';
 import UserList from '../../components/UserList';
 
 const Users = () => {
-    const [showAddUserModel, setShowAddUserModel] = useState("");
+    const [showAddUserModel, setShowAddUserModel] = useState(false);
+    const [showEditUserModal, setShowEditUserModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [refreshTable, setRefreshTable] = useState(false);
 
     const handleAddUserModalClose = () => {
         setShowAddUserModel(false);
     }
 
+    const handleEditUserModalClose = () => {
+        setShowEditUserModal(false);
+    }
+
     const handleResetForm = (resetForm) => {
         resetForm();
     };
 
-    const handleUserAdded = () => {
-        setRefreshTable((prev) => !prev);
+    const handleUserAdded = () => { setRefreshTable((prev) => !prev); };
+    const handleUserUpdated = () => { setRefreshTable((prev) => !prev) };
+
+    const handleEditUser = (user) => {
+        setSelectedUser(user);
+        setShowEditUserModal(true);
     };
 
     return (
@@ -27,6 +38,15 @@ const Users = () => {
                 onResetForm={handleResetForm}
                 onUserAdded={handleUserAdded}
             />
+            {selectedUser && (
+                <EditUserModal
+                    show={showEditUserModal}
+                    handleClose={handleEditUserModalClose}
+                    user={selectedUser}
+                    onUserUpdated={handleUserUpdated}
+                    onResetForm={handleResetForm}
+                />
+            )}
             <div className="content d-flex flex-column gap-3">
                 <h1 className={`${styles['title']}`}>Gestión de Usuarios</h1>
                 <div className="d-flex justify-content-end gap-4">
@@ -62,7 +82,7 @@ const Users = () => {
                         <span></span>
                     </button>
                 </div>
-                <UserList refresh={refreshTable} />
+                <UserList refresh={refreshTable} onEditUser={handleEditUser} />
             </div>
         </>
     )
