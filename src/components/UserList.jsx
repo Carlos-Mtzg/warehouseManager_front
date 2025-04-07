@@ -1,24 +1,100 @@
+import Swal from 'sweetalert2';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { getAllUsers } from '../services/ApiUser';
+import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../services/ApiUser';
 import styles from '../assets/css/users.module.css'
+import UserStatus from './UserStatus';
 
 
-const UserList = () => {
+const UserList = ({ refresh }) => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            const result = await getAllUsers();
-
-            if (result.state === 'success') {
-                setUsers(result.users);
-            } else {
-                setError(result.message);
-            }
-        };
         fetchUsers();
-    }, []);
+    }, [refresh]);
+
+    const fetchUsers = async () => {
+        const result = await getAllUsers();
+
+        if (result.state === 'success') {
+            setUsers(result.users);
+        } else {
+            setError(result.message);
+        }
+    };
+
+    const handleDeleteUser = async (uuid) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro de eliminar el usuario?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#16423C',
+            reverseButtons: true,
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            const response = await deleteUser(uuid);
+            if (response.state === 'success') {
+                Swal.fire('Usuario eliminado', 'Usuario eliminado correctamente', 'success');
+                fetchUsers();
+            } else {
+                Swal.fire('Error', response.message, 'error');
+            }
+        }
+    };
+
+    const handleDeactivateUser = async (uuid) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro de desactivar el usuario?',
+            text: 'El usuario no podrá acceder al sistema.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#16423C',
+            reverseButtons: true,
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            const response = await deactivateUser(uuid);
+            if (response.state === 'success') {
+                Swal.fire('Usuario desactivado', 'Usuario desactivado correctamente', 'success');
+                fetchUsers();
+            } else {
+                Swal.fire('Error', response.message, 'error');
+            }
+        }
+    };
+
+    const handleActivateUser = async (uuid) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro de activar el usuario?',
+            text: 'El usuario podrá acceder al sistema de nuevo.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#16423C',
+            reverseButtons: true,
+            allowOutsideClick: false,
+        });
+
+        if (result.isConfirmed) {
+            const response = await activateUser(uuid);
+            if (response.state === 'success') {
+                Swal.fire('Usuario activado', 'Usuario activado correctamente', 'success');
+                fetchUsers();
+            } else {
+                Swal.fire('Error', response.message, 'error');
+            }
+        }
+    };
 
     return (
         <div>
@@ -39,21 +115,36 @@ const UserList = () => {
                             users.map((user, index) => (
                                 <tr key={user.id}>
                                     <td className='text-center'>{index + 1}</td>
-                                    <td className='text-center'>{user.name}</td>
+                                    <td className='text-center'>
+                                        <UserStatus status={user.status} name={user.name} />
+                                    </td>
                                     <td className='text-center'>{user.email}</td>
                                     <td className='text-center'>
-                                        {user.role?.name === "ROLE_ADMIN" ? (
+                                        {user.role.name === "ROLE_ADMIN" && (
                                             "Administrador"
-                                        ) : user.role?.name === "ROLE_USER" ? (
+                                        )}
+                                        {user.role.name === "ROLE_USER" && (
                                             "Usuario"
-                                        ) : (
-                                            "Sin rol"
                                         )}
                                     </td>
                                     <td className='d-flex gap-3 justify-content-center'>
-                                        <button className={`${styles['btn-custom']}`}><i className="bi bi-pencil-square"></i></button>
-                                        <button className={`text-danger ${styles['btn-custom']}`}><i className="bi bi-trash"></i></button>
-                                        <button className={`${styles['btn-custom']}`}><i className="bi bi-person-fill-slash"></i></button>
+                                        {user.status === "Active" && (
+                                            <button className={`${styles['btn-custom']}`} onClick={() => handleDeactivateUser(user.uuid)}>
+                                                <i className="bi bi-person-fill-slash"></i>
+                                            </button>
+                                        )}
+                                        {user.status === "Inactive" && (
+                                            <button className={`${styles['btn-custom']}`} onClick={() => handleActivateUser(user.uuid)}>
+                                                <i className="bi bi-person-fill-check text-success"></i>
+                                            </button>
+                                        )}
+                                        <button className={`${styles['btn-custom']}`}>
+                                            <i className="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button className={`text-danger ${styles['btn-custom']}`} onClick={() => handleDeleteUser(user.uuid)}>
+                                            <i className="bi bi-trash"></i>
+                                        </button>
+
                                     </td>
                                 </tr>
                             ))
@@ -67,6 +158,10 @@ const UserList = () => {
             </div>
         </div>
     );
+};
+
+UserList.propTypes = {
+    refresh: PropTypes.bool.isRequired,
 };
 
 export default UserList;
