@@ -75,7 +75,7 @@ const ForgotPassword = () => {
     })
 
     return (
-        <div className={`d-flex justify-content-center align-items-center ${styles['content']}`}>
+        <div className={`d-flex justify-content-center align-items-center ${styles['content']} slide-up`}>
             <div
                 className={`col-8 col-md-5 d-flex flex-column ${styles['form-content']}`}
             >
