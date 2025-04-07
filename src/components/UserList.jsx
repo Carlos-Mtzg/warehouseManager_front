@@ -6,7 +6,7 @@ import styles from '../assets/css/users.module.css'
 import UserStatus from './UserStatus';
 
 
-const UserList = ({ refresh }) => {
+const UserList = ({ refresh, onEditUser }) => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
 
@@ -16,7 +16,6 @@ const UserList = ({ refresh }) => {
 
     const fetchUsers = async () => {
         const result = await getAllUsers();
-
         if (result.state === 'success') {
             setUsers(result.users);
         } else {
@@ -138,7 +137,7 @@ const UserList = ({ refresh }) => {
                                                 <i className="bi bi-person-fill-check text-success"></i>
                                             </button>
                                         )}
-                                        <button className={`${styles['btn-custom']}`}>
+                                        <button className={`${styles['btn-custom']}`} onClick={() => onEditUser(user)}>
                                             <i className="bi bi-pencil-square"></i>
                                         </button>
                                         <button className={`text-danger ${styles['btn-custom']}`} onClick={() => handleDeleteUser(user.uuid)}>
