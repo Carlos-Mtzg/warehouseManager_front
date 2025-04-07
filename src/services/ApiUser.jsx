@@ -32,6 +32,32 @@ export async function registerUser(name, lastname, email, role) {
   }
 }
 
+export async function updateUser(uuid, name, lastname, role) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.put(
+      `${API_URL}user/update/${uuid}`,
+      { name, lastname, role },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return {
+      state: 'success',
+      users: response.data,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al editar el usuario',
+    };
+  }
+}
+
 export async function getAllUsers() {
   try {
     const token = localStorage.getItem('accessToken');
