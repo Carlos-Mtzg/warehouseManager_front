@@ -6,7 +6,7 @@ import { resetPassword } from '../../services/ApiAuth';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
-import toast, { Toaster } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -51,16 +51,33 @@ const ResetPassword = () => {
           setIsSubmitting(true);
           const response = await resetPassword(token, values.password);
           if (response.state === 'error') {
-            toast.error(response.message || 'Ocurrió un error inesperado');
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error inesperado',
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2000
+            })
           } else {
-            toast.success('Contraseña restablecida con éxito');
-            setTimeout(() => {
+            Swal.fire({
+              title: 'Contraseña restablecida con éxito',
+              text: 'Ahora puedes iniciar sesión',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 2000
+            }).then(() => {
               navigate('/login');
-            }, 2000);
+            });
           }
           setIsSubmitting(false);
         } catch (error) {
-          toast.error('Ocurrió un error inesperado');
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error inesperado',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000
+          })
         } finally {
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
@@ -158,7 +175,6 @@ const ResetPassword = () => {
           </div>
         </form>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

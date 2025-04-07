@@ -39,8 +39,15 @@ const UserList = ({ refresh, onEditUser }) => {
         if (result.isConfirmed) {
             const response = await deleteUser(uuid);
             if (response.state === 'success') {
-                Swal.fire('Usuario eliminado', 'Usuario eliminado correctamente', 'success');
-                fetchUsers();
+                Swal.fire({
+                    title: 'Usuario eliminado',
+                    text: 'El usuario ya no tiene acceso al sistema',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    fetchUsers();
+                });
             } else {
                 Swal.fire('Error', response.message, 'error');
             }
@@ -63,8 +70,15 @@ const UserList = ({ refresh, onEditUser }) => {
         if (result.isConfirmed) {
             const response = await deactivateUser(uuid);
             if (response.state === 'success') {
-                Swal.fire('Usuario desactivado', 'Usuario desactivado correctamente', 'success');
-                fetchUsers();
+                Swal.fire({
+                    title: 'Usuario desactivado',
+                    text: 'El usuario ya no podra acceder al sistema',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    fetchUsers();
+                });
             } else {
                 Swal.fire('Error', response.message, 'error');
             }
@@ -87,8 +101,15 @@ const UserList = ({ refresh, onEditUser }) => {
         if (result.isConfirmed) {
             const response = await activateUser(uuid);
             if (response.state === 'success') {
-                Swal.fire('Usuario activado', 'Usuario activado correctamente', 'success');
-                fetchUsers();
+                Swal.fire({
+                    title: 'Usuario activado',
+                    text: 'El usuario puede acceder al sistema de nuevo',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    fetchUsers();
+                });
             } else {
                 Swal.fire('Error', response.message, 'error');
             }
@@ -161,6 +182,7 @@ const UserList = ({ refresh, onEditUser }) => {
 
 UserList.propTypes = {
     refresh: PropTypes.bool.isRequired,
+    onEditUser: PropTypes.func.isRequired,
 };
 
 export default UserList;

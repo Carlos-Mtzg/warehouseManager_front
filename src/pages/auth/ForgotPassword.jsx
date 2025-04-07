@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import toast, { Toaster } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 import { resetPasswordEmail } from '../../services/ApiAuth';
 
@@ -41,16 +41,33 @@ const ForgotPassword = () => {
                 setIsSubmitting(true);
                 const response = await resetPasswordEmail(values.email);
                 if (response.state === "error") {
-                    toast.error(response.message || 'Ocurrió un error inesperado');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
                 } else {
-                    toast.success('Correo de recuperación enviado con éxito');
-                    setTimeout(() => {
+                    Swal.fire({
+                        title: 'Correo de recuperación enviado con éxito',
+                        text: 'Revisa tu bandeja de entrada para continuar con el proceso',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
                         navigate('/login');
-                    }, 2000);
+                    });
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                toast.error('Ocurrió un error inesperado');
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }
@@ -121,7 +138,6 @@ const ForgotPassword = () => {
                     </div>
                 </form>
             </div>
-            <Toaster position="top-center" reverseOrder={false} />
         </div>
     );
 };

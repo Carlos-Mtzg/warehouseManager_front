@@ -48,15 +48,34 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
 
                 const response = await updateUser(user.uuid, requestBody.name, requestBody.lastname, requestBody.role);
                 if (response.state === 'success') {
-                    Swal.fire('Usuario actualizado', 'El usuario se actualizó correctamente', 'success');
-                    formik.resetForm();
-                    onUserUpdated();
                     handleClose();
+                    Swal.fire({
+                        title: 'Usuario actualizado',
+                        text: 'La información del usuario se actualizó correctamente',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        formik.resetForm();
+                        onUserUpdated();
+                    });
                 } else {
-                    Swal.fire('Error', response.message, 'error');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
                 }
             } catch (error) {
-                Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
             } finally {
                 setIsSubmitting(false);
             }
