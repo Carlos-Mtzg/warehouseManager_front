@@ -53,3 +53,67 @@ export async function getAllUsers() {
     };
   }
 }
+
+export async function deleteUser(uuid) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.delete(`${API_URL}user/${uuid}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {
+      state: 'success',
+      message: response.data.message,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al eliminar el usuario',
+    };
+  }
+}
+
+
+export async function deactivateUser(uuid) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.put(`${API_URL}user/deactivate/${uuid}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {
+      state: 'success',
+      message: response.data.message,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al desactivar el usuario',
+    };
+  }
+}
+
+export async function activateUser(uuid) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.put(`${API_URL}user/activate/${uuid}`, null, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {
+      state: 'success',
+      message: response.data.message,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al activar el usuario',
+    };
+  }
+}
