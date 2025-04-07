@@ -5,7 +5,7 @@ import Header from './Header';
 import AuthContext from '../context/AuthProvider';
 
 const Layout = () => {
-  const { handleLogout } = useContext(AuthContext);
+  const { handleLogout, role } = useContext(AuthContext);
   return (
     <div className={`${styles['content']}`}>
       <Header />
@@ -33,6 +33,17 @@ const Layout = () => {
                 <span>Salidas</span>
               </Link>
             </li>
+            {role === 'ROLE_ADMIN' && (
+              <li className={`${styles['sidebar-item']}`}>
+                <Link
+                  to="/admin/users"
+                  className={`${styles['sidebar-link']}`}
+                >
+                  <i className="bi bi-person-plus me-3"></i>
+                  <span>Usuarios</span>
+                </Link>
+              </li>
+            )}
             <li className={`${styles['sidebar-item']}`}>
               <Link to="/admin/entries" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-add me-3"></i>
@@ -41,16 +52,7 @@ const Layout = () => {
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link
-                to="/requestsSelected"
-                className={`${styles['sidebar-link']}`}
-              >
-                <i className="bi bi-person-plus me-3"></i>
-                <span>Usuarios</span>
-              </Link>
-            </li>
-            <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="/requestsSelected"
+                to="#"
                 className={`${styles['sidebar-link']}`}
               >
                 <i className="bi bi-person-fill me-3"></i>
