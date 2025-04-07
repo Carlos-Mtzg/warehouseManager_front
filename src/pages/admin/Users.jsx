@@ -5,6 +5,7 @@ import UserList from '../../components/UserList';
 
 const Users = () => {
     const [showAddUserModel, setShowAddUserModel] = useState("");
+    const [refreshTable, setRefreshTable] = useState(false);
 
     const handleAddUserModalClose = () => {
         setShowAddUserModel(false);
@@ -14,15 +15,34 @@ const Users = () => {
         resetForm();
     };
 
+    const handleUserAdded = () => {
+        setRefreshTable((prev) => !prev);
+    };
+
     return (
         <>
             <AddUserModal
                 show={showAddUserModel}
                 handleClose={handleAddUserModalClose}
                 onResetForm={handleResetForm}
+                onUserAdded={handleUserAdded}
             />
-            <div className="content d-flex flex-column gap-4">
+            <div className="content d-flex flex-column gap-3">
                 <h1 className={`${styles['title']}`}>Gestión de Usuarios</h1>
+                <div className="d-flex justify-content-end gap-4">
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                        <div className="bg-secondary rounded" style={{ width: "8px", height: "8px" }}></div>
+                        Inactivo
+                    </div>
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                        <div className="bg-success rounded" style={{ width: "8px", height: "8px" }}></div>
+                        Activo
+                    </div>
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                        <div className="bg-warning rounded" style={{ width: "8px", height: "8px" }}></div>
+                        Pendiente
+                    </div>
+                </div>
                 <div className="d-flex align-items-center gap-3">
                     <div className="input-group">
                         <input
@@ -42,8 +62,7 @@ const Users = () => {
                         <span></span>
                     </button>
                 </div>
-
-                <UserList />
+                <UserList refresh={refreshTable} />
             </div>
         </>
     )
