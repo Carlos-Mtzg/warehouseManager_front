@@ -10,10 +10,10 @@ const Layout = () => {
     <div className={`${styles['content']}`}>
       <Header />
       <div className={`${styles['wrapper']}`}>
-        <aside className={`${styles['sidebar']}`}>
+        <aside className={`${styles['sidebar']} slide-in-left`}>
           <ul className={`${styles['sidebar-nav']}`}>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="/" className={`${styles['sidebar-link']}`}>
+              <Link to="#" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-grid me-3"></i>
                 <span>Inicio</span>
               </Link>
@@ -28,7 +28,7 @@ const Layout = () => {
               </Link>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="/" className={`${styles['sidebar-link']}`}>
+              <Link to="#" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-dash me-3"></i>
                 <span>Salidas</span>
               </Link>

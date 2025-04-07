@@ -47,7 +47,7 @@ const Users = () => {
                     onResetForm={handleResetForm}
                 />
             )}
-            <div className="content d-flex flex-column gap-3">
+            <div className="content d-flex flex-column gap-3 slide-up">
                 <h1 className={`${styles['title']}`}>Gestión de Usuarios</h1>
                 <div className="d-flex justify-content-end gap-4">
                     <div className="d-flex align-items-center justify-content-center gap-2">

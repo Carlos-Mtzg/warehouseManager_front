@@ -5,6 +5,7 @@ import { StrictMode } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import '../src/assets/css/page-animations.css';
 import './index.css';
 
 import Layout from './components/Layout.jsx';
@@ -64,10 +65,10 @@ const router = createBrowserRouter([
             element: <RoleBasedRoute allowedRoles={['ROLE_ADMIN']} />,
             children: [{ index: true, element: <Users />, errorElement: <Error500 /> }],
           },
-          { 
-            path: 'entries', 
-            element: <Entries />, 
-            errorElement: <Error500 /> 
+          {
+            path: 'entries',
+            element: <Entries />,
+            errorElement: <Error500 />
           },
         ],
       },
