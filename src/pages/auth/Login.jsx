@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import toast, { Toaster } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 import { useContext, useState } from 'react';
 import { authLogin } from '../../services/ApiAuth';
 import AuthContext from '../../context/AuthProvider';
@@ -52,18 +52,33 @@ const Login = () => {
         if (response?.accessToken) {
           const { accessToken, role, uuid } = response;
           handleLogin(accessToken, role, uuid);
-          toast.success('Inicio de sesión correcto!');
-          setTimeout(() => {
+          Swal.fire({
+            title: 'Inicio de Sesión Correcto',
+            text: 'Bienvenido al sistema',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000
+          }).then(() => {
             navigate('/admin');
-          }, 2000);
+          });
         } else {
-          toast.error(
-            'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.'
-          );
+          Swal.fire({
+            title: 'Error',
+            text: 'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000
+          })
         }
         setIsSubmitting(false);
       } catch (error) {
-        toast.error('Ocurrió un error inesperado');
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error inesperado',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 2000
+        })
       } finally {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
@@ -166,7 +181,6 @@ const Login = () => {
           </Link>
         </form>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

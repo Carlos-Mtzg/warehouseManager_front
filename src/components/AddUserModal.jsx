@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { registerUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
 
-const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded}) => {
+const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const REQUIRED_FIELDS = 'Campo obligatorio';
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,16 +71,35 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded}) => {
 
                 const response = await registerUser(requestBody.name, requestBody.lastname, requestBody.email, requestBody.role);
                 if (response.state === 'success') {
-                    Swal.fire('Registro correcto', 'Usuario registrado correctamente', 'success');
-                    resetForm();
                     handleClose();
-                    if (onUserAdded) onUserAdded();
+                    Swal.fire({
+                        title: 'Registro correcto',
+                        text: 'Usuario registrado correctamente',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        resetForm();
+                        if (onUserAdded) onUserAdded();
+                    });
                 } else {
-                    Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }

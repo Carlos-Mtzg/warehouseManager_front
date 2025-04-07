@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
-import toast, { Toaster } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 import { activateAccount } from '../../services/ApiAuth';
 
 const ActiveAccount = () => {
@@ -50,16 +50,33 @@ const ActiveAccount = () => {
           setIsSubmitting(true);
           const response = await activateAccount(token, values.password);
           if (response.state === 'error') {
-            toast.error(response.message || 'Ocurrió un error inesperado');
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error inesperado',
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 2000
+            })
           } else {
-            toast.success('Tu cuenta ha sido activada correctamente');
-            setTimeout(() => {
+            Swal.fire({
+              title: 'Tu cuenta ha sido activada correctamente',
+              text: 'Ahora puedes iniciar sesión',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 2000
+            }).then(() => {
               navigate('/login');
-            }, 2000);
+            });
           }
           setIsSubmitting(false);
         } catch (error) {
-          toast.error('Ocurrió un error inesperado');
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error inesperado',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 2000
+          })
         } finally {
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
@@ -162,7 +179,6 @@ const ActiveAccount = () => {
           </div>
         </form>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };
