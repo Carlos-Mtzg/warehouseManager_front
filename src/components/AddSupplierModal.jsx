@@ -15,7 +15,7 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
   
     try {
       const token = localStorage.getItem("accessToken"); // Retrieve the token if needed
-      const response = await AxiosClient.post("suplier/", requestBody, {
+      const response = await AxiosClient.post("supplier/", requestBody, {
         headers: {
           Authorization: `Bearer ${token}`, // Add the token to the request headers
         },

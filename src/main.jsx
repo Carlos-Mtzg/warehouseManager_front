@@ -17,6 +17,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import PublicRoute from './components/PublicRoute.jsx';
 import ResetPassword from './pages/auth/ResetPassword.jsx';
 import ProductEntry from './pages/user/ProductEntry.jsx';
+import Entries from './pages/admin/Entries.jsx';
 import ActiveAccount from './pages/auth/ActiveAccount.jsx';
 import Users from './pages/admin/Users.jsx';
 import RoleBasedRoute from './components/RoleBasedRoute.jsx';
@@ -62,6 +63,11 @@ const router = createBrowserRouter([
             path: 'users',
             element: <RoleBasedRoute allowedRoles={['ROLE_ADMIN']} />,
             children: [{ index: true, element: <Users />, errorElement: <Error500 /> }],
+          },
+          { 
+            path: 'entries', 
+            element: <Entries />, 
+            errorElement: <Error500 /> 
           },
         ],
       },
