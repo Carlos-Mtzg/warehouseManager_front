@@ -68,7 +68,7 @@ const AddSupplierModal = ({ show, handleClose }) => {
                 <h3>Agregar Proveedor</h3>
             </Modal.Header>
             <form onSubmit={handleSubmit}>
-                <Modal.Body className="p-5 rounded">
+                <Modal.Body className="p-4 rounded">
                     <div className="d-flex flex-column gap-3">
                         <div className="form-group">
                             <label
