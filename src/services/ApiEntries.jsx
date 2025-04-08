@@ -116,14 +116,12 @@ export async function registerProductEntry(productEntryList) {
                 },
             }
         );
-        console.log("Response", response)
         return {
             state: 'success',
             message: response.data.message,
             data: response.data.data,
         };
     } catch (error) {
-        console.error("Error:", error.response)
         return {
             state: "error",
             message: error.response?.data?.message || "Error al registrar la entrada.",
