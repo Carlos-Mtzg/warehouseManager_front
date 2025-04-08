@@ -60,3 +60,43 @@ export async function createSupplier(name, email) {
         };
     }
 }
+
+export async function fetchCategories() {
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(`${API_URL}category/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return {
+            state: "success",
+            data: response.data,
+        };
+    } catch (error) {
+        return {
+            state: "error",
+            message: error.response?.data?.message || "Error al obtener las categorías.",
+        };
+    }
+}
+
+export async function fetchSuppliers() {
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(`${API_URL}supplier/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return {
+            state: "success",
+            data: response.data,
+        };
+    } catch (error) {
+        return {
+            state: "error",
+            message: error.response?.data?.message || "Error al obtener los proveedores.",
+        };
+    }
+}
