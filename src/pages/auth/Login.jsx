@@ -43,7 +43,7 @@ const Login = () => {
             showConfirmButton: false,
             timer: 1000
           }).then(() => {
-            navigate('/admin/product-entries');
+            navigate('/product-entries');
           });
         } else {
           Swal.fire({
