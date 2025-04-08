@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <PublicRoute />,
     children: [
-      { path: 'login', element: <Login />, errorElement: <Error500 /> },
+      { path: '/', element: <Login />, errorElement: <Error500 /> },
       {
         path: 'forgot-password',
         element: <ForgotPassword />,
