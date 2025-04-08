@@ -11,7 +11,14 @@ const RoleBasedRoute = ({ allowedRoles }) => {
     }
 
     if (!allowedRoles.includes(role)) {
-        return <Navigate to="/admin" replace />;
+        switch (role) {
+            case "ROLE_USER":
+                return <Navigate to="/user" replace />;
+            case "ROLE_ADMIN":
+                return <Navigate to="/admin" replace />;
+            default:
+                return <Navigate to="/" replace />;
+        }
     }
 
     return <Outlet />;
