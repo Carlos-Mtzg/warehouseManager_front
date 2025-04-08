@@ -1,11 +1,11 @@
-import styles from '../assets/css/sidebar.module.css';
-import { Outlet, Link } from 'react-router-dom';
-import { useContext } from 'react';
-import Header from './Header';
-import AuthContext from '../context/AuthProvider';
+import styles from '../assets/css/sidebar.module.css'
+import { Outlet, Link } from 'react-router-dom'
+import { useContext } from 'react'
+import Header from './Header'
+import AuthContext from '../context/AuthProvider'
 
 const Layout = () => {
-  const { handleLogout, role } = useContext(AuthContext);
+  const { handleLogout, role } = useContext(AuthContext)
   return (
     <div className={`${styles['content']}`}>
       <Header />
@@ -33,12 +33,19 @@ const Layout = () => {
                 <span>Salidas</span>
               </Link>
             </li>
+            <li className={`${styles['sidebar-item']}`}>
+              <Link
+                to="/admin/suppliers"
+                className={`${styles['sidebar-link']}`}
+              >
+                <i className="bi bi-person-badge me-3"></i>
+                <span>Proveedores</span>
+              </Link>
+            </li>
+
             {role === 'ROLE_ADMIN' && (
               <li className={`${styles['sidebar-item']}`}>
-                <Link
-                  to="/admin/users"
-                  className={`${styles['sidebar-link']}`}
-                >
+                <Link to="/admin/users" className={`${styles['sidebar-link']}`}>
                   <i className="bi bi-person-plus me-3"></i>
                   <span>Usuarios</span>
                 </Link>
@@ -51,10 +58,7 @@ const Layout = () => {
               </Link>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="#"
-                className={`${styles['sidebar-link']}`}
-              >
+              <Link to="#" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-person-fill me-3"></i>
                 <span>Mi Perfil</span>
               </Link>
@@ -76,7 +80,7 @@ const Layout = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout
