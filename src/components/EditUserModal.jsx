@@ -1,4 +1,3 @@
-import * as yup from 'yup';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -6,20 +5,12 @@ import { Modal } from 'react-bootstrap';
 import { updateUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
 import styles from '../assets/css/users.module.css';
+import { editUserSchema } from '../validations/userValidations';
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
-    const REQUIRED_FIELDS = 'Campo obligatorio';
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const validationSchema = yup.object().shape({
-        name: yup.string()
-            .required(REQUIRED_FIELDS)
-            .matches(/^[^<>]*$/, "Caracteres inválidos '<' o '>'"),
-        lastname: yup.string()
-            .required(REQUIRED_FIELDS)
-            .matches(/^[^<>]*$/, "Caracteres inválidos '<' o '>'"),
-        role: yup.string().required(REQUIRED_FIELDS),
-    });
+    const validationSchema = editUserSchema;
 
     const formik = useFormik({
         initialValues: {
@@ -160,7 +151,7 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                                     Selecciona una opción
                                 </option>
                                 <option value="admin">Administrador</option>
-                                <option value="user">Usuario</option>
+                                <option value="user">Almacenista</option>
                             </select>
                             {formik.touched.role && formik.errors.role ? (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>

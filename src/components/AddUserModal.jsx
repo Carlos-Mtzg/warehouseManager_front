@@ -1,4 +1,3 @@
-import * as yup from 'yup';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { Modal } from 'react-bootstrap';
@@ -6,34 +5,12 @@ import styles from "../assets/css/users.module.css"
 import { useState } from 'react';
 import { registerUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
+import { addUserSchema } from '../validations/userValidations';
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
-    const REQUIRED_FIELDS = 'Campo obligatorio';
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const validationSchema = yup.object().shape({
-        name: yup.string()
-            .required(REQUIRED_FIELDS)
-            .matches(
-                /^[^<>]*$/,
-                "Caracteres inválidos '<' o '>'"
-            ),
-        lastname: yup.string()
-            .required(REQUIRED_FIELDS)
-            .matches(
-                /^[^<>]*$/,
-                "Caracteres inválidos '<' o '>'"
-            ),
-        email: yup.string()
-            .required(REQUIRED_FIELDS)
-            .email('El correo electrónico no es válido')
-            .matches(
-                /^[^<>]*$/,
-                "El correo electrónico no puede contener los caracteres '<' o '>'"
-            ),
-        role: yup.string()
-            .required(REQUIRED_FIELDS),
-    });
+    const validationSchema = addUserSchema;
 
     const {
         handleSubmit,
@@ -135,7 +112,7 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 className={`form-control py-3 ${touched.name && errors.name ? 'is-invalid' : ''}`}
-                                placeholder="Escribe aquí tu nueva contraseña"
+                                placeholder="Escribe aquí el nombre del usuario"
                             />
                             {touched.name && errors.name ? (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
@@ -158,7 +135,7 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 className={`form-control py-3 ${touched.lastname && errors.lastname ? 'is-invalid' : ''}`}
-                                placeholder="Escribe aquí tu nueva contraseña"
+                                placeholder="Escribe aquí los apellidos del usuario"
                             />
                             {touched.lastname && errors.lastname ? (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
@@ -181,7 +158,7 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''}`}
-                                placeholder="Escribe aquí tu nueva contraseña"
+                                placeholder="Escribe aquí el correo electrónico del usuario"
                             />
                             {touched.email && errors.email ? (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
@@ -208,7 +185,7 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                                     Selecciona una opción
                                 </option>
                                 <option value="admin">Administrador</option>
-                                <option value="user">Usuario</option>
+                                <option value="user">Almacenista</option>
                             </select>
                             {touched.role && errors.role ? (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
