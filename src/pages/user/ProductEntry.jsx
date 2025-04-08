@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AxiosClient from "../../config/axios-client";
 import AddSupplierModal from "../../components/AddSupplierModal";
 import AddCategoryModal from "../../components/AddCategoryModal";
+import styles from '../../assets/css/entries.module.css'
 import Swal from "sweetalert2";
 
 const ProductEntryForm = () => {
@@ -188,9 +189,9 @@ const ProductEntryForm = () => {
             <Row className="h-100">
                 <Col lg={8} className="slide-up">
                     <div className="bg-white rounded shadow-sm p-4 h-100">
-                        <h4 className="text-center mb-4">
+                        <h1 className={`mb-5 ${styles['title']}`}>
                             Registro de entrada de productos
-                        </h4>
+                        </h1>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-4 d-flex align-items-center">
                                 <div className="d-flex flex-grow-1 mb-3">
@@ -205,16 +206,11 @@ const ProductEntryForm = () => {
                                             </option>
                                         ))}
                                     </Form.Select>
-                                    <Button
-                                        variant="outline-primary"
-                                        className="ms-2"
-                                        onClick={() => setShowAddSupplierModal(true)}
-                                    >
-                                        +
-                                    </Button>
+                                    <button type="button" className={`rounded ms-2 ${styles['btn-add-outline']}`} onClick={() => setShowAddSupplierModal(true)}>
+                                        <i className="bi bi-plus"></i>
+                                    </button>
                                 </div>
                             </Form.Group>
-                            <hr />
                             {products.map((product, index) => (
                                 <div key={index} className="mb-4">
                                     <Form.Group className="mb-3 d-flex align-items-center">
@@ -236,13 +232,9 @@ const ProductEntryForm = () => {
                                                     </option>
                                                 ))}
                                             </Form.Select>
-                                            <Button
-                                                variant="outline-primary"
-                                                className="ms-2"
-                                                onClick={() => setShowAddCategoryModal(true)}
-                                            >
-                                                +
-                                            </Button>
+                                            <button type="button" className={`rounded ms-2 ${styles['btn-add-outline']}`} onClick={() => setShowAddCategoryModal(true)}>
+                                                <i className="bi bi-plus"></i>
+                                            </button>
                                         </div>
                                     </Form.Group>
 
