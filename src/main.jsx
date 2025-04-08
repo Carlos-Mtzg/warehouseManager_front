@@ -22,6 +22,7 @@ import Entries from './pages/admin/Entries.jsx';
 import ActiveAccount from './pages/auth/ActiveAccount.jsx';
 import Users from './pages/admin/Users.jsx';
 import RoleBasedRoute from './components/RoleBasedRoute.jsx';
+import UserProfile from './pages/user/UserProfile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -47,23 +48,17 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/admin',
+    path: '/',
     element: <PrivateRoute />,
     children: [
       {
         path: '',
         element: <Layout />,
         children: [
-          { index: true, element: <Home />, errorElement: <Error500 /> },
           {
-            path: 'productEntries',
+            path: 'product-entries',
             element: <ProductEntry />,
             children: [{ index: true, element: <ProductEntry />, errorElement: <Error500 /> }],
-          },
-          {
-            path: 'users',
-            element: <RoleBasedRoute allowedRoles={['ROLE_ADMIN']} />,
-            children: [{ index: true, element: <Users />, errorElement: <Error500 /> }],
           },
           {
             path: 'entries',
@@ -73,6 +68,42 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '/admin',
+    element: <PrivateRoute />,
+    children: [
+      {
+        path: '',
+        element: <Layout />,
+        children: [
+          { index: true, element: <Home />, errorElement: <Error500 /> },
+          {
+            path: 'user-management',
+            element: <RoleBasedRoute allowedRoles={['ROLE_ADMIN']} />,
+            children: [{ index: true, element: <Users />, errorElement: <Error500 /> }],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/user',
+    element: <PrivateRoute />,
+    children: [
+      {
+        path: '',
+        element: <Layout />,
+        children: [
+          { index: true, element: <Home />, errorElement: <Error500 /> },
+          {
+            path: "my-profile",
+            element: <RoleBasedRoute allowedRoles={['ROLE_USER']} />,
+            children: [{ index: true, element: <UserProfile />, errorElement: <Error500 /> }],
+          }
+        ]
+      },
+    ]
   },
   { path: '*', element: <Error404 /> },
 ]);
