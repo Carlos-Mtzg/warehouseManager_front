@@ -1,220 +1,161 @@
-import React, {useState, useEffect} from "react";
-import {
-    Container,
-    Row,
-    Col,
-    Form,
-    Button,
-    InputGroup,
-} from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import AxiosClient from "../../config/axios-client";
 import AddSupplierModal from "../../components/AddSupplierModal";
 import AddCategoryModal from "../../components/AddCategoryModal";
-import Swal from "sweetalert2";
+import styles from '../../assets/css/entries.module.css'
+import { fetchCategories, fetchSuppliers, registerProductEntry } from "../../services/ApiEntries";
+import { productEntriesSchema } from "../../validations/entriesValidation";
+import { useFormik } from "formik";
+import Swal from 'sweetalert2';
 
 const ProductEntryForm = () => {
-    const [categories, setCategories] = useState([]);
-    const [suppliers, setSuppliers] = useState([]);
-    const [selectedSupplier, setSelectedSupplier] = useState("");
-    const [products, setProducts] = useState([
-        {
-            productName: "",
-            selectedCategory: "",
-            quantity: "",
-            unitPrice: "",
-            measurementUnit: "",
-        },
-    ]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
     const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
-    const [validFields, setValidFields] = useState(true)
+    const [categories, setCategories] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
 
-    const handleQuantityChange = (index, field, value) => {
-        const newProducts = products.map((product, i) => {
-            if (i === index) {
-                const updatedProduct = { ...product, [field]: value };
-                if (field === "quantity") {
-                    if (!value || value <= 0) {
-                        updatedProduct.quantityError = "La cantidad debe ser mayor a cero";
-                        setValidFields(false)
-
-                    } else {
-                        updatedProduct.quantityError = "";
-                    }
-                }
-                return updatedProduct;
-            }
-            return product;
-        });
-        setProducts(newProducts);
-    };
-
-
-
-
-
-
-
-    const handleSubmit = async (e) => {
-    e.preventDefault();
-    if(validFields) {
-        // if the fields are valid we send the request if they are not we show an alert
-        const requestBody = {
-            supplierId: selectedSupplier,
-            productEntryList: products.map((product) => ({
-                productName: product.productName,
-                supplierId: selectedSupplier,
-                categoryId: product.selectedCategory,
-                quantity: product.quantity,
-                unitPrice: product.unitPrice,
-                totalAmount: product.quantity * product.unitPrice,
-                measurementUnit: product.measurementUnit,
-                relatedUserId: 0,
-            })),
-        };
-
-        try {
-            const token = localStorage.getItem("accessToken");
-            const response = await AxiosClient.post("productEntry/", requestBody, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log("Product entry saved successfully:", response);
-            await Swal.fire({
-                icon: "success",
-                title: "Registro guardado exitosamente.",
-                showConfirmButton: false,
-                timer: 1500,
-            });
-            // Reset the form fields
-            setSelectedSupplier("");
-            setProducts([
-                {
-                    productName: "",
-                    selectedCategory: "",
-                    quantity: "",
-                    unitPrice: "",
-                    measurementUnit: "",
-                },
-            ]);
-        } catch (error) {
-            console.error("Error saving product entry:", error);
-            await Swal.fire({
-                icon: "error",
-                title: "Error al guardar el registro.",
-                text: error.message,
-            });
-        }
-
-
-    } else {
-        await Swal.fire({
-            icon: "error",
-            title: "Error al guardar el registro.",
-            text: "Verifica los campos",
-        })
-
-    }
-
-
-};
-    const fetchCategories = async () => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            const response = await AxiosClient.get("category/", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setCategories(response.data);
-        } catch (error) {
-            console.error("Error fetching categories:", error);
+    const loadCategories = async () => {
+        const response = await fetchCategories();
+        if (response.state === "success" && Array.isArray(response.data.data)) {
+            setCategories(response.data.data);
+        } else {
+            setCategories([]);
         }
     };
 
-    const fetchSuppliers = async () => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            const response = await AxiosClient.get("supplier/", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setSuppliers(response.data);
-        } catch (error) {
-            console.error("Error fetching suppliers:", error);
+    const loadSuppliers = async () => {
+        const response = await fetchSuppliers();
+        if (response.state === "success" && Array.isArray(response.data.data)) {
+            setSuppliers(response.data.data);
+        } else {
+            setSuppliers([]);
         }
     };
 
     useEffect(() => {
-        fetchCategories();
-        fetchSuppliers();
+        loadCategories();
+        loadSuppliers();
     }, []);
 
-    const handleAddProduct = () => {
-        setProducts([
-            ...products,
-            {
-                productName: "",
-                selectedCategory: "",
-                quantity: "",
-                unitPrice: "",
-                measurementUnit: "",
-            },
-        ]);
-    };
+    const validationSchema = productEntriesSchema;
 
-    const handleRemoveProduct = (index) => {
-        const newProducts = products.filter((_, i) => i !== index);
-        setProducts(newProducts);
-    };
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        touched,
+        resetForm,
+        setFieldValue,
+    } = useFormik({
+        initialValues: {
+            selectedSupplier: '',
+            selectedCategory: '',
+            products: [
+                {
+                    productName: '',
+                    measurementUnit: '',
+                    quantity: '',
+                    unitPrice: '',
+                },
+            ],
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                setIsSubmitting(true);
 
-    const handleProductChange = (index, field, value) => {
-        const newProducts = products.map((product, i) =>
-            i === index ? {...product, [field]: value} : product
-        );
-        setProducts(newProducts);
-    };
+                const productEntryList = values.products.map((product) => ({
+                    supplierId: values.selectedSupplier,
+                    categoryId: values.selectedCategory,
+                    productName: product.productName,
+                    measurementUnit: product.measurementUnit,
+                    quantity: parseInt(product.quantity, 10),
+                    unitPrice: parseFloat(product.unitPrice),
+                }));
+
+                const response = await registerProductEntry(productEntryList);
+                if (response.state === "success") {
+                    Swal.fire({
+                        title: "Registro exitoso",
+                        text: "Se registró la entrada correctamente",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    resetForm();
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: response.message,
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                }
+                setIsSubmitting(false);
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                setIsSubmitting(false);
+            } finally {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+        }
+    })
 
     const handleAddCategoryModalClose = () => {
         setShowAddCategoryModal(false);
-        fetchCategories();
+        loadCategories();
     };
 
     const handleAddSupplierModalClose = () => {
         setShowAddSupplierModal(false);
-        fetchSuppliers();
+        loadSuppliers();
     };
 
     return (
-        <Container fluid className="bg-light min-vh-100 p-0">
-            <>
-                <AddCategoryModal
-                    show={showAddCategoryModal}
-                    handleClose={handleAddCategoryModalClose}
-                />
-            </>
-
+        <>
+            <AddCategoryModal
+                show={showAddCategoryModal}
+                handleClose={handleAddCategoryModalClose}
+            />
             <AddSupplierModal
                 show={showAddSupplierModal}
                 handleClose={handleAddSupplierModalClose}
             />
-
-            <Container className="py-4">
-                <Row>
-                    <Col lg={8}>
-                        <div className="bg-white rounded shadow-sm p-4">
-                            <h4 className="text-center mb-4">
-                                Registro de entrada de productos
-                            </h4>
-                            <Form onSubmit={handleSubmit}>
-                                <Form.Group className="mb-4 d-flex align-items-center">
-                                    <div className="d-flex flex-grow-1 mb-3">
-                                        <Form.Select
-                                            value={selectedSupplier}
-                                            onChange={(e) => setSelectedSupplier(e.target.value)}
+            <Row className="h-100">
+                <Col lg={8} className="slide-up">
+                    <div className="bg-white rounded shadow-sm p-4 h-100">
+                        <h1 className={`mb-5 ${styles['title']}`}>
+                            Registro de entrada de productos
+                        </h1>
+                        <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+                            <div className="input-content">
+                                <div className="d-flex gap-3">
+                                    <div className="form-group flex-grow-1">
+                                        <label
+                                            htmlFor="selectedSupplier"
+                                            className={`form-label fw-semibold ${styles['label']}`}
+                                        >
+                                            Proveedor:
+                                        </label>
+                                        <select
+                                            id="selectedSupplier"
+                                            name="selectedSupplier"
+                                            className={`form-control ${touched.selectedSupplier && errors.selectedSupplier ? 'is-invalid' : ''}`}
+                                            value={values.selectedSupplier}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
                                         >
                                             <option value="">Selecciona un proveedor</option>
                                             {suppliers.map((supplier) => (
@@ -222,174 +163,263 @@ const ProductEntryForm = () => {
                                                     {supplier.name}
                                                 </option>
                                             ))}
-                                        </Form.Select>
-                                        <Button
-                                            variant="outline-primary"
-                                            className="ms-2"
-                                            onClick={() => setShowAddSupplierModal(true)}
-                                        >
-                                            +
-                                        </Button>
+                                        </select>
                                     </div>
-                                </Form.Group>
-                                <hr/>
-                                {products.map((product, index) => (
-                                    <div key={index} className="mb-4">
-                                        <Form.Group className="mb-3 d-flex align-items-center">
-                                            <div className="d-flex flex-grow-1">
-                                                <Form.Select
-                                                    value={product.selectedCategory}
-                                                    onChange={(e) =>
-                                                        handleProductChange(
-                                                            index,
-                                                            "selectedCategory",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="">Selecciona una categoría</option>
-                                                    {categories.map((category) => (
-                                                        <option key={category.id} value={category.id}>
-                                                            {category.name}
-                                                        </option>
-                                                    ))}
-                                                </Form.Select>
-                                                <Button
-                                                    variant="outline-primary"
-                                                    className="ms-2"
-                                                    onClick={() => setShowAddCategoryModal(true)}
-                                                >
-                                                    +
-                                                </Button>
-                                            </div>
-                                        </Form.Group>
+                                    <button className={`rounded mt-auto ${styles['btn-add-outline']}`} type="button" onClick={() => setShowAddSupplierModal(true)}><i className="bi bi-plus-lg"></i></button>
+                                </div>
+                                {touched.selectedSupplier && errors.selectedSupplier ? (
+                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                        {errors.selectedSupplier}
+                                    </div>
+                                ) : null}
+                            </div>
 
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Producto:</Form.Label>
-                                            <Form.Control
+                            <div className="input-content">
+                                <div className="d-flex gap-3">
+                                    <div className="form-group flex-grow-1">
+                                        <label
+                                            htmlFor="selectedCategory"
+                                            className={`form-label fw-semibold ${styles['label']}`}
+                                        >
+                                            Categoria:
+                                        </label>
+                                        <select
+                                            id="selectedCategory"
+                                            name="selectedCategory"
+                                            className={`form-control ${touched.selectedCategory && errors.selectedCategory ? 'is-invalid' : ''}`}
+                                            value={values.selectedCategory}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        >
+                                            <option value="">Selecciona una categoría</option>
+                                            {categories.map((category) => (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button className={`rounded mt-auto ${styles['btn-add-outline']}`} type="button" onClick={() => setShowAddCategoryModal(true)}><i className="bi bi-plus-lg"></i></button>
+                                </div>
+                                {touched.selectedCategory && errors.selectedCategory ? (
+                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                        {errors.selectedCategory}
+                                    </div>
+                                ) : null}
+                            </div>
+
+                            <div className="d-flex flex-column gap-3">
+                                {values.products.map((product, index) => (
+                                    <div key={index} className="d-flex flex-column gap-3">
+                                        <div className="form-group">
+                                            <label
+                                                htmlFor={`products[${index}].productName`}
+                                                className={`form-label fw-semibold ${styles['label']}`}
+                                            >
+                                                Producto:
+                                            </label>
+                                            <input
                                                 type="text"
-                                                placeholder="Escribe o selecciona el nombre del producto"
+                                                id={`products[${index}].productName`}
+                                                name={`products[${index}].productName`}
+                                                className={`form-control ${touched.products?.[index]?.productName && errors.products?.[index]?.productName
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                    }`}
                                                 value={product.productName}
-                                                onChange={(e) =>
-                                                    handleProductChange(
-                                                        index,
-                                                        "productName",
-                                                        e.target.value
-                                                    )
-                                                }
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                placeholder="Escribe o selecciona el nombre del producto"
                                             />
-                                        </Form.Group>
-
+                                            {touched.products?.[index]?.productName && errors.products?.[index]?.productName && (
+                                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                    {errors.products[index].productName}
+                                                </div>
+                                            )}
+                                        </div>
                                         <Row>
-                                            <Col md={4} className="mb-3">
-                                                <Form.Label>Unidad de entrada:</Form.Label>
-                                                <Form.Control
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].measurementUnit`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Unidad de entrada:
+                                                </label>
+                                                <input
                                                     type="text"
-                                                    placeholder="&quot;cajas&quot;"
+                                                    id={`products[${index}].measurementUnit`}
+                                                    name={`products[${index}].measurementUnit`}
+                                                    className={`form-control ${touched.products?.[index]?.measurementUnit &&
+                                                        errors.products?.[index]?.measurementUnit
+                                                        ? 'is-invalid'
+                                                        : ''
+                                                        }`}
                                                     value={product.measurementUnit}
-                                                    onChange={(e) =>
-                                                        handleProductChange(
-                                                            index,
-                                                            "measurementUnit",
-                                                            e.target.value
-                                                        )
-                                                    }
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    placeholder='"Cajas"'
                                                 />
+                                                {touched.products?.[index]?.measurementUnit &&
+                                                    errors.products?.[index]?.measurementUnit && (
+                                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                            {errors.products[index].measurementUnit}
+                                                        </div>
+                                                    )}
                                             </Col>
-                                            <Col md={4} className="mb-3">
-                                                <Form.Label>Cantidad de unidades:</Form.Label>
-                                                <Form.Control
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].quantity`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Cantidad:
+                                                </label>
+                                                <input
                                                     type="number"
-                                                    placeholder="0"
-                                                    min="1"
+                                                    id={`products[${index}].quantity`}
+                                                    name={`products[${index}].quantity`}
+                                                    className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity
+                                                        ? 'is-invalid'
+                                                        : ''
+                                                        }`}
                                                     value={product.quantity}
-                                                    onChange={(e) =>
-                                                        handleQuantityChange(index, "quantity", Number(e.target.value))
-                                                    }
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    placeholder="0"
                                                 />
-                                                {product.quantityError && (
-                                                    <div style={{ color: "red" }}>{product.quantityError}</div>
+                                                {touched.products?.[index]?.quantity && errors.products?.[index]?.quantity && (
+                                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                        {errors.products[index].quantity}
+                                                    </div>
                                                 )}
                                             </Col>
-                                            <Col md={4} className="mb-3">
-                                                <Form.Label>Precio de cada unidad:</Form.Label>
-                                                <InputGroup>
-                                                    <InputGroup.Text>$</InputGroup.Text>
-                                                    <Form.Control
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].unitPrice`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Precio de cada unidad:
+                                                </label>
+                                                <div className="input-group">
+                                                    <span className="input-group-text">$</span>
+                                                    <input
                                                         type="number"
-                                                        placeholder="0.00"
-                                                        min="1"
+                                                        id={`products[${index}].unitPrice`}
+                                                        name={`products[${index}].unitPrice`}
+                                                        className={`form-control ${touched.products?.[index]?.unitPrice && errors.products?.[index]?.unitPrice
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                            }`}
                                                         value={product.unitPrice}
-                                                        onChange={(e) =>
-                                                            handleProductChange(
-                                                                index,
-                                                                "unitPrice",
-                                                                Number(e.target.value)
-                                                            )
-                                                        }
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        placeholder="0.00"
                                                     />
-                                                </InputGroup>
+                                                </div>
+                                                {touched.products?.[index]?.unitPrice && errors.products?.[index]?.unitPrice && (
+                                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                        {errors.products[index].unitPrice}
+                                                    </div>
+                                                )}
                                             </Col>
                                         </Row>
-
-                                        {products.length > 1 && (
-                                            <Button
-                                                variant="outline-danger"
-                                                className="w-100 w-md-auto mt-2"
-                                                onClick={() => handleRemoveProduct(index)}
-                                            >
-                                                Eliminar producto
-                                            </Button>
+                                        {values.products.length > 1 && (
+                                            <div className="mt-2">
+                                                <button
+                                                    className={`rounded w-100 ${styles['danger-btn']}`}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const updatedProducts = values.products.filter((_, i) => i !== index);
+                                                        setFieldValue('products', updatedProducts);
+                                                    }}
+                                                >
+                                                    <div className={`btn d-flex justify-content-center ${styles['danger-content']}`}>
+                                                        Eliminar Producto<i className="bi bi-trash ms-2"></i>
+                                                    </div>
+                                                    <span></span>
+                                                </button>
+                                            </div>
                                         )}
-                                        <hr/>
                                     </div>
                                 ))}
-
-                                <Button
-                                    variant="success"
-                                    className="w-100 w-md-auto mb-3"
-                                    onClick={handleAddProduct}
-                                >
-                                    Agregar producto
-                                </Button>
-
-                                <div className="d-flex flex-column flex-md-row gap-3 justify-content-end mt-3">
-                                    <Button
-                                        variant="dark"
-                                        className="w-50 w-md-auto"
-                                        type="submit"
+                                <div className="mt-2">
+                                    <button
+                                        className={`rounded w-100 ${styles['secondary-btn']}`}
+                                        type="button"
+                                        onClick={() => {
+                                            const newProduct = {
+                                                productName: '',
+                                                measurementUnit: '',
+                                                quantity: '',
+                                                unitPrice: '',
+                                            };
+                                            setFieldValue('products', [...values.products, newProduct]);
+                                        }}
                                     >
-                                        Registrar
-                                    </Button>
+                                        <div className={`btn d-flex justify-content-center ${styles['secondary-content']}`}>
+                                            Agregar Producto<i className="bi bi-plus-lg ms-2"></i>
+                                        </div>
+                                        <span></span>
+                                    </button>
                                 </div>
-                            </Form>
-                        </div>
-                    </Col>
+                            </div>
 
-                    <Col lg={4} className="mt-4 mt-lg-0">
-                        <div className="bg-white rounded shadow-sm p-4 h-100">
-                            <h5 className="fw-bold mb-3">Recomendaciones</h5>
-                            <ul className="small">
-                                <li>Verifica que has llenado correctamente todos los campos.</li>
-                                <li>
-                                    Registra la entrada de los productos en cuanto lleguen al
-                                    almacén.
-                                </li>
-                                <li>
-                                    Verifica los datos de la entrada de productos antes de
-                                    confirmar el registro.
-                                </li>
-                                <li>
-                                    En caso de que exista algún error al registrar la entrada de
-                                    productos ve a la sección de entradas, cancela el registro y
-                                    vuelve a registrar la entrada de los productos correctamente.
-                                </li>
-                            </ul>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-        </Container>
+                            <div className="mt-4 w-100">
+                                {isSubmitting ? (
+                                    <button
+                                        className={`rounded w-100 ${styles['primary-btn']}`}
+                                        type="submit"
+                                        disabled
+                                    >
+                                        <div className={`d-flex align-items-center justify-content-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                                            Cargando
+                                            <output
+                                                className="spinner-border"
+                                                style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
+                                            >
+                                                <span className="visually-hidden"></span>
+                                            </output>
+                                        </div>
+                                        <span></span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        className={`rounded w-100 ${styles['primary-btn']}`}
+                                        type='submit'
+                                    >
+                                        <div className={`btn d-flex justify-content-center ${styles['primary-content']}`}>
+                                            Confirmar Entrada<i className="bi bi-check ms-2"></i>
+                                        </div>
+                                        <span></span>
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+                </Col>
+
+                <Col lg={4} className="mt-4 mt-lg-0 slide-in-right">
+                    <div className="bg-white rounded shadow-sm p-4 h-100">
+                        <h5 className={`fw-bold mb-3 ${styles['title']}`}>Recomendaciones</h5>
+                        <ul className="small">
+                            <li>Verifica que has llenado correctamente todos los campos.</li>
+                            <li>
+                                Registra la entrada de los productos en cuanto lleguen al
+                                almacén.
+                            </li>
+                            <li>
+                                Verifica los datos de la entrada de productos antes de
+                                confirmar el registro.
+                            </li>
+                            <li>
+                                En caso de que exista algún error al registrar la entrada de
+                                productos ve a la sección de entradas, cancela el registro y
+                                vuelve a registrar la entrada de los productos correctamente.
+                            </li>
+                        </ul>
+                    </div>
+                </Col>
+            </Row>
+        </>
     );
 };
 

@@ -9,9 +9,8 @@ const CHARACTERS_NOT_ALLOWED = "Este campo no puede contener los caracteres '<' 
 const INVISIBLE_CHARACTERS = 'Este campo no puede contener caracteres invisibles';
 const CONSECUTIVE_SPACES = "Este campo no puede contener espacios consecutivos";
 
-
-export const addUserSchema = Yup.object({
-    name: Yup.string()
+export const addCategorySchema = Yup.object({
+    categoryName: Yup.string()
         .required(REQUIRED_FIELDS)
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
@@ -33,7 +32,10 @@ export const addUserSchema = Yup.object({
             CONSECUTIVE_SPACES
         )
         .trim(NO_SPACES),
-    lastname: Yup.string()
+});
+
+export const addSupplierSchema = Yup.object({
+    name: Yup.string()
         .required(REQUIRED_FIELDS)
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
@@ -43,8 +45,8 @@ export const addUserSchema = Yup.object({
             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
             LETTERS_SPACES
         )
-        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
-        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
+        .min(3, 'El nombre debe tener al menos 3 caracteres')
+        .max(30, 'El nombre no puede exceder los 30 caracteres')
         .matches(
             /^[^<>]*$/,
             CHARACTERS_NOT_ALLOWED
@@ -59,64 +61,39 @@ export const addUserSchema = Yup.object({
         .email(INVALID_EMAIL)
         .required(REQUIRED_FIELDS)
         .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
             /^[^<>]*$/,
             CHARACTERS_NOT_ALLOWED
         )
         .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
         .trim(NO_SPACES),
-    role: Yup.string()
-        .required(REQUIRED_FIELDS),
-});
+})
 
-export const editUserSchema = Yup.object({
-    name: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            LETTERS_SPACES
-        )
-        .min(3, 'El nombre debe tener al menos 3 caracteres')
-        .max(30, 'El nombre no puede exceder los 30 caracteres')
-        .matches(
-            /^[^<>]*$/,
-            CHARACTERS_NOT_ALLOWED
-        )
-        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .matches(
-            /^\S+(?: \S+)*$/,
-            CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
-    lastname: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            LETTERS_SPACES
-        )
-        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
-        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
-        .matches(
-            /^[^<>]*$/,
-            CHARACTERS_NOT_ALLOWED
-        )
-        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .matches(
-            /^\S+(?: \S+)*$/,
-            CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
-    role: Yup.string()
-        .required(REQUIRED_FIELDS),
+export const productEntriesSchema = Yup.object({
+    selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
+    selectedCategory: Yup.string().required(REQUIRED_FIELDS),
+    products: Yup.array().of(
+        Yup.object({
+            productName: Yup.string()
+                .required(REQUIRED_FIELDS)
+                .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo letras y espacios')
+                .min(3, 'Debe tener al menos 3 caracteres')
+                .max(30, 'No puede exceder los 30 caracteres'),
+            measurementUnit: Yup.string()
+                .required(REQUIRED_FIELDS)
+                .min(3, 'Debe tener al menos 3 caracteres')
+                .max(30, 'No puede exceder los 30 caracteres'),
+            quantity: Yup.number()
+                .required(REQUIRED_FIELDS)
+                .positive('Debe ser un número positivo')
+                .integer('Debe ser un número entero'),
+            unitPrice: Yup.number()
+                .required(REQUIRED_FIELDS)
+                .positive('Debe ser un número positivo')
+                .test(
+                    'is-decimal',
+                    'Debe tener como máximo dos decimales',
+                    (value) => /^\d+(\.\d{1,2})?$/.test(value)
+                ),
+        })
+    ),
 });
