@@ -69,58 +69,31 @@ export const addSupplierSchema = Yup.object({
 })
 
 export const productEntriesSchema = Yup.object({
-    selectedSupplier: Yup.string()
-        .required(REQUIRED_FIELDS),
-    selectedCategory: Yup.string()
-        .required(REQUIRED_FIELDS),
-    productName: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            LETTERS_SPACES
-        )
-        .min(3, 'El nombre debe tener al menos 3 caracteres')
-        .max(30, 'El nombre no puede exceder los 30 caracteres')
-        .matches(
-            /^[^<>]*$/,
-            CHARACTERS_NOT_ALLOWED
-        )
-        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .matches(
-            /^\S+(?: \S+)*$/,
-            CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
-    measurementUnit: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            LETTERS_SPACES
-        )
-        .min(3, 'Este campo debe tener al menos 3 caracteres')
-        .max(30, 'Este campo no puede exceder los 30 caracteres')
-        .matches(
-            /^[^<>]*$/,
-            CHARACTERS_NOT_ALLOWED
-        )
-        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .matches(
-            /^\S+(?: \S+)*$/,
-            CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
-    quantity: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(/^\d+$/, 'Este campo solo puede contener números'),
-    unitPrice: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(/^\d+(\.\d{1,2})?$/, 'Este campo solo puede contener números y hasta dos decimales'),
+    selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
+    selectedCategory: Yup.string().required(REQUIRED_FIELDS),
+    products: Yup.array().of(
+        Yup.object({
+            productName: Yup.string()
+                .required(REQUIRED_FIELDS)
+                .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo letras y espacios')
+                .min(3, 'Debe tener al menos 3 caracteres')
+                .max(30, 'No puede exceder los 30 caracteres'),
+            measurementUnit: Yup.string()
+                .required(REQUIRED_FIELDS)
+                .min(3, 'Debe tener al menos 3 caracteres')
+                .max(30, 'No puede exceder los 30 caracteres'),
+            quantity: Yup.number()
+                .required(REQUIRED_FIELDS)
+                .positive('Debe ser un número positivo')
+                .integer('Debe ser un número entero'),
+            unitPrice: Yup.number()
+                .required(REQUIRED_FIELDS)
+                .positive('Debe ser un número positivo')
+                .test(
+                    'is-decimal',
+                    'Debe tener como máximo dos decimales',
+                    (value) => /^\d+(\.\d{1,2})?$/.test(value)
+                ),
+        })
+    ),
 });
