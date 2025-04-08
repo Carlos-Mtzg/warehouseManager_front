@@ -5,8 +5,12 @@ import AddSupplierModal from "../../components/AddSupplierModal";
 import AddCategoryModal from "../../components/AddCategoryModal";
 import styles from '../../assets/css/entries.module.css'
 import { fetchCategories, fetchSuppliers } from "../../services/ApiEntries";
+import { productEntriesSchema } from "../../validations/entriesValidation";
+import { useFormik } from "formik";
 
 const ProductEntryForm = () => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
     const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -37,6 +41,44 @@ const ProductEntryForm = () => {
         loadSuppliers();
     }, []);
 
+    const validationSchema = productEntriesSchema;
+
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        touched,
+        resetForm
+    } = useFormik({
+        initialValues: {
+            selectedSupplier: "",
+            selectedCategory: "",
+            productName: "",
+            measurementUnit: "",
+            quantity: "",
+            unitPrice: "",
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                setIsSubmitting(true);
+                setIsSubmitting(false);
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+            } finally {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+        }
+    })
+
     const handleAddCategoryModalClose = () => {
         setShowAddCategoryModal(false);
     };
@@ -61,49 +103,73 @@ const ProductEntryForm = () => {
                         <h1 className={`mb-5 ${styles['title']}`}>
                             Registro de entrada de productos
                         </h1>
-                        <form>
-                            <div className="form-group">
-                                <label
-                                    htmlFor="selectedSupplier"
-                                    className={`form-label fw-semibold ${styles['label']}`}
-                                >
-                                    Proveedor:
-                                </label>
-                                <select
-                                    id="selectedSupplier"
-                                    className="form-control"
-                                    value={selectedSupplier}
-                                    onChange={(e) => setSelectedSupplier(e.target.value)}
-                                >
-                                    <option value="">Selecciona un proveedor</option>
-                                    {suppliers.map((supplier) => (
-                                        <option key={supplier.id} value={supplier.id}>
-                                            {supplier.name}
-                                        </option>
-                                    ))}
-                                </select>
+                        <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+                            <div className="input-content">
+                                <div className="d-flex gap-3">
+                                    <div className="form-group flex-grow-1">
+                                        <label
+                                            htmlFor="selectedSupplier"
+                                            className={`form-label fw-semibold ${styles['label']}`}
+                                        >
+                                            Proveedor:
+                                        </label>
+                                        <select
+                                            id="selectedSupplier"
+                                            name="selectedSupplier"
+                                            className={`form-control ${touched.selectedSupplier && errors.selectedSupplier ? 'is-invalid' : ''}`}
+                                            value={values.selectedSupplier}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        >
+                                            <option value="">Selecciona un proveedor</option>
+                                            {suppliers.map((supplier) => (
+                                                <option key={supplier.id} value={supplier.id}>
+                                                    {supplier.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button className={`rounded mt-auto ${styles['btn-add-outline']}`} type="button" onClick={() => setShowAddSupplierModal(true)}><i className="bi bi-plus-lg"></i></button>
+                                </div>
+                                {touched.selectedSupplier && errors.selectedSupplier ? (
+                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                        {errors.selectedSupplier}
+                                    </div>
+                                ) : null}
                             </div>
 
-                            <div className="form-group">
-                                <label
-                                    htmlFor="selectedCategory"
-                                    className={`form-label fw-semibold ${styles['label']}`}
-                                >
-                                    Categoria:
-                                </label>
-                                <select
-                                    id="selectedCategory"
-                                    className="form-control"
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                >
-                                    <option value="">Selecciona una categoría</option>
-                                    {categories.map((category) => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className="input-content">
+                                <div className="d-flex gap-3">
+                                    <div className="form-group flex-grow-1">
+                                        <label
+                                            htmlFor="selectedCategory"
+                                            className={`form-label fw-semibold ${styles['label']}`}
+                                        >
+                                            Categoria:
+                                        </label>
+                                        <select
+                                            id="selectedCategory"
+                                            name="selectedCategory"
+                                            className={`form-control ${touched.selectedCategory && errors.selectedCategory ? 'is-invalid' : ''}`}
+                                            value={values.selectedCategory}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        >
+                                            <option value="">Selecciona una categoría</option>
+                                            {categories.map((category) => (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button className={`rounded mt-auto ${styles['btn-add-outline']}`} type="button" onClick={() => setShowAddCategoryModal(true)}><i className="bi bi-plus-lg"></i></button>
+                                </div>
+                                {touched.selectedCategory && errors.selectedCategory ? (
+                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                        {errors.selectedCategory}
+                                    </div>
+                                ) : null}
                             </div>
 
                             {/* TO DO: Esta parte del codigo es la que se duplicara segun cuantos productos se quierana gregar */}
@@ -114,6 +180,21 @@ const ProductEntryForm = () => {
                                 >
                                     Producto:
                                 </label>
+                                <input
+                                    type="text"
+                                    id="productName"
+                                    name="productName"
+                                    className={`form-control ${touched.productName && errors.productName ? 'is-invalid' : ''}`}
+                                    value={values.productName}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder="Escribe o selecciona el nombre del producto"
+                                />
+                                {touched.productName && errors.productName ? (
+                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                        {errors.productName}
+                                    </div>
+                                ) : null}
                             </div>
                             <Row>
                                 <Col sm={12} md={4} className="form-group">
@@ -125,10 +206,19 @@ const ProductEntryForm = () => {
                                     </label>
                                     <input
                                         type="text"
+                                        id="measurementUnit"
                                         name="measurementUnit"
-                                        className={`form-control`}
+                                        className={`form-control ${touched.measurementUnit && errors.measurementUnit ? 'is-invalid' : ''}`}
+                                        value={values.measurementUnit}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
                                         placeholder='"Cajas"'
                                     />
+                                    {touched.measurementUnit && errors.measurementUnit ? (
+                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                            {errors.measurementUnit}
+                                        </div>
+                                    ) : null}
                                 </Col>
                                 <Col sm={12} md={4} className="form-group">
                                     <label
@@ -139,10 +229,19 @@ const ProductEntryForm = () => {
                                     </label>
                                     <input
                                         type="number"
+                                        id="quantity"
                                         name="quantity"
-                                        className={`form-control`}
+                                        className={`form-control ${touched.quantity && errors.quantity ? 'is-invalid' : ''}`}
+                                        value={values.quantity}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
                                         placeholder="0"
                                     />
+                                    {touched.quantity && errors.quantity ? (
+                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                            {errors.quantity}
+                                        </div>
+                                    ) : null}
                                 </Col>
                                 <Col sm={12} md={4} className="form-group">
                                     <label
@@ -155,13 +254,52 @@ const ProductEntryForm = () => {
                                         <span className="input-group-text">$</span>
                                         <input
                                             type="number"
+                                            id="unitPrice"
                                             name="unitPrice"
-                                            className="form-control"
+                                            className={`form-control ${touched.unitPrice && errors.unitPrice ? 'is-invalid' : ''}`}
+                                            value={values.unitPrice}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
                                             placeholder="0.00"
                                         />
                                     </div>
+                                    {touched.unitPrice && errors.unitPrice ? (
+                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                            {errors.unitPrice}
+                                        </div>
+                                    ) : null}
                                 </Col>
                             </Row>
+                            <div className="mt-4 w-100">
+                                {isSubmitting ? (
+                                    <button
+                                        className={`rounded ${styles['primary-btn']}`}
+                                        type="submit"
+                                        disabled
+                                    >
+                                        <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                                            Cargando
+                                            <output
+                                                className="spinner-border"
+                                                style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
+                                            >
+                                                <span className="visually-hidden"></span>
+                                            </output>
+                                        </div>
+                                        <span></span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        className={`rounded w-100 ${styles['primary-btn']}`}
+                                        type='submit'
+                                    >
+                                        <div className={`btn d-flex justify-content-center ${styles['primary-content']}`}>
+                                            Confirmar Entrada<i className="bi bi-check ms-2"></i>
+                                        </div>
+                                        <span></span>
+                                    </button>
+                                )}
+                            </div>
                         </form>
                     </div>
                 </Col>
