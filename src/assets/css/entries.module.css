@@ -85,3 +85,17 @@
 .label {
     color: var(--color-primary);
 }
+
+.btn-add-outline {
+    background-color: transparent;
+    width: 37px;
+    height: 37px;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    transition: all 0.3 ease-in-out;
+}
+
+.btn-add-outline:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
