@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-const REQUIRED_FIELDS = 'Este campo obligatorio';
+const REQUIRED_FIELDS = 'Este campo es obligatorio';
 const NO_SPACES = 'Este campo no puede contener solo espacios';
 const INVALID_EMAIL = 'El correo electrónico no es válido';
 const WORLDS_NOT_ALLOWED = 'El campo contiene palabras no permitidas';
