@@ -4,9 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AddSupplierModal from "../../components/AddSupplierModal";
 import AddCategoryModal from "../../components/AddCategoryModal";
 import styles from '../../assets/css/entries.module.css'
-import { fetchCategories, fetchSuppliers } from "../../services/ApiEntries";
+import { fetchCategories, fetchSuppliers, registerProductEntry } from "../../services/ApiEntries";
 import { productEntriesSchema } from "../../validations/entriesValidation";
 import { useFormik } from "formik";
+import Swal from 'sweetalert2';
 
 const ProductEntryForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,8 +63,40 @@ const ProductEntryForm = () => {
         onSubmit: async (values) => {
             try {
                 setIsSubmitting(true);
+
+                const productEntryData = {
+                    supplierId: values.selectedSupplier,
+                    categoryId: values.selectedCategory,
+                    productName: values.productName,
+                    measurementUnit: values.measurementUnit,
+                    quantity: parseInt(values.quantity, 10),
+                    unitPrice: parseFloat(values.unitPrice),
+                };
+                console.log("Datos a enviar:", productEntryData);
+
+                const response = await registerProductEntry([productEntryData]);
+                console.log("Respuesta del servidor:", response);
+                if (response.state === "success") {
+                    Swal.fire({
+                        title: "Registro exitoso",
+                        text: "Se registró la entrada correctamente",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    resetForm();
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: response.message,
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                }
                 setIsSubmitting(false);
             } catch (error) {
+                console.error("Error inesperado:", error);
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error inesperado',
@@ -71,6 +104,7 @@ const ProductEntryForm = () => {
                     showConfirmButton: false,
                     timer: 2000
                 })
+                setIsSubmitting(false);
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }
@@ -273,11 +307,11 @@ const ProductEntryForm = () => {
                             <div className="mt-4 w-100">
                                 {isSubmitting ? (
                                     <button
-                                        className={`rounded ${styles['primary-btn']}`}
+                                        className={`rounded w-100 ${styles['primary-btn']}`}
                                         type="submit"
                                         disabled
                                     >
-                                        <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                                        <div className={`d-flex align-items-center justify-content-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
                                             Cargando
                                             <output
                                                 className="spinner-border"
