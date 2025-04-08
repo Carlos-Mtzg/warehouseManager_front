@@ -40,6 +40,10 @@ export const forgotPasswordSchema = Yup.object({
 export const passwordSchema = Yup.object({
     password: Yup.string()
         .required(REQUIRED_FIELDS)
+        .matches(
+            /^[^\u3164\u200B\uFEFF]*$/,
+            'Este campo no puede contener caracteres invisibles'
+        )
         .min(8, 'La contraseña debe tener al menos 8 caracteres')
         .matches(
             /[A-Z]/,
@@ -61,6 +65,10 @@ export const passwordSchema = Yup.object({
         .trim(NO_SPACES),
     repeatPassword: Yup.string()
         .required(REQUIRED_FIELDS)
+        .matches(
+            /^[^\u3164\u200B\uFEFF]*$/,
+            'Este campo no puede contener caracteres invisibles'
+        )
         .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
         .matches(
             /^[^<>]*$/,
