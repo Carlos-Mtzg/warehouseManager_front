@@ -100,3 +100,33 @@ export async function fetchSuppliers() {
         };
     }
 }
+
+export async function registerProductEntry(productEntryList) {
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.post(
+            `${API_URL}productEntry/`,
+            {
+                productEntryList: productEntryList,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        console.log("Response", response)
+        return {
+            state: 'success',
+            message: response.data.message,
+            data: response.data.data,
+        };
+    } catch (error) {
+        console.error("Error:", error.response)
+        return {
+            state: "error",
+            message: error.response?.data?.message || "Error al registrar la entrada.",
+        };
+    }
+}
