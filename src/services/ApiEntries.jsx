@@ -107,7 +107,7 @@ export async function registerProductEntry(productEntryList) {
         const response = await axios.post(
             `${API_URL}productEntry/`,
             {
-                productEntryList: productEntryList,
+                productEntryList
             },
             {
                 headers: {
