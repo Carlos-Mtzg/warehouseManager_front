@@ -49,33 +49,36 @@ const ProductEntryForm = () => {
         values,
         errors,
         touched,
-        resetForm
+        resetForm,
+        setFieldValue,
     } = useFormik({
         initialValues: {
-            selectedSupplier: "",
-            selectedCategory: "",
-            productName: "",
-            measurementUnit: "",
-            quantity: "",
-            unitPrice: "",
+            selectedSupplier: '',
+            selectedCategory: '',
+            products: [
+                {
+                    productName: '',
+                    measurementUnit: '',
+                    quantity: '',
+                    unitPrice: '',
+                },
+            ],
         },
         validationSchema,
         onSubmit: async (values) => {
             try {
                 setIsSubmitting(true);
 
-                const productEntryData = {
+                const productEntryList = values.products.map((product) => ({
                     supplierId: values.selectedSupplier,
                     categoryId: values.selectedCategory,
-                    productName: values.productName,
-                    measurementUnit: values.measurementUnit,
-                    quantity: parseInt(values.quantity, 10),
-                    unitPrice: parseFloat(values.unitPrice),
-                };
-                console.log("Datos a enviar:", productEntryData);
+                    productName: product.productName,
+                    measurementUnit: product.measurementUnit,
+                    quantity: parseInt(product.quantity, 10),
+                    unitPrice: parseFloat(product.unitPrice),
+                }));
 
-                const response = await registerProductEntry([productEntryData]);
-                console.log("Respuesta del servidor:", response);
+                const response = await registerProductEntry(productEntryList);
                 if (response.state === "success") {
                     Swal.fire({
                         title: "Registro exitoso",
@@ -96,7 +99,6 @@ const ProductEntryForm = () => {
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                console.error("Error inesperado:", error);
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error inesperado',
@@ -206,104 +208,161 @@ const ProductEntryForm = () => {
                                 ) : null}
                             </div>
 
-                            {/* TO DO: Esta parte del codigo es la que se duplicara segun cuantos productos se quierana gregar */}
-                            <div className="form-group">
-                                <label
-                                    htmlFor="productName"
-                                    className={`form-label fw-semibold ${styles['label']}`}
-                                >
-                                    Producto:
-                                </label>
-                                <input
-                                    type="text"
-                                    id="productName"
-                                    name="productName"
-                                    className={`form-control ${touched.productName && errors.productName ? 'is-invalid' : ''}`}
-                                    value={values.productName}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder="Escribe o selecciona el nombre del producto"
-                                />
-                                {touched.productName && errors.productName ? (
-                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                        {errors.productName}
+                            <div className="d-flex flex-column gap-3">
+                                {values.products.map((product, index) => (
+                                    <div key={index} className="d-flex flex-column gap-3">
+                                        <div className="form-group">
+                                            <label
+                                                htmlFor={`products[${index}].productName`}
+                                                className={`form-label fw-semibold ${styles['label']}`}
+                                            >
+                                                Producto:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`products[${index}].productName`}
+                                                name={`products[${index}].productName`}
+                                                className={`form-control ${touched.products?.[index]?.productName && errors.products?.[index]?.productName
+                                                    ? 'is-invalid'
+                                                    : ''
+                                                    }`}
+                                                value={product.productName}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                placeholder="Escribe o selecciona el nombre del producto"
+                                            />
+                                            {touched.products?.[index]?.productName && errors.products?.[index]?.productName && (
+                                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                    {errors.products[index].productName}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <Row>
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].measurementUnit`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Unidad de entrada:
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id={`products[${index}].measurementUnit`}
+                                                    name={`products[${index}].measurementUnit`}
+                                                    className={`form-control ${touched.products?.[index]?.measurementUnit &&
+                                                        errors.products?.[index]?.measurementUnit
+                                                        ? 'is-invalid'
+                                                        : ''
+                                                        }`}
+                                                    value={product.measurementUnit}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    placeholder='"Cajas"'
+                                                />
+                                                {touched.products?.[index]?.measurementUnit &&
+                                                    errors.products?.[index]?.measurementUnit && (
+                                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                            {errors.products[index].measurementUnit}
+                                                        </div>
+                                                    )}
+                                            </Col>
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].quantity`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Cantidad:
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    id={`products[${index}].quantity`}
+                                                    name={`products[${index}].quantity`}
+                                                    className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity
+                                                        ? 'is-invalid'
+                                                        : ''
+                                                        }`}
+                                                    value={product.quantity}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    placeholder="0"
+                                                />
+                                                {touched.products?.[index]?.quantity && errors.products?.[index]?.quantity && (
+                                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                        {errors.products[index].quantity}
+                                                    </div>
+                                                )}
+                                            </Col>
+                                            <Col sm={12} md={4} className="form-group">
+                                                <label
+                                                    htmlFor={`products[${index}].unitPrice`}
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                >
+                                                    Precio de cada unidad:
+                                                </label>
+                                                <div className="input-group">
+                                                    <span className="input-group-text">$</span>
+                                                    <input
+                                                        type="number"
+                                                        id={`products[${index}].unitPrice`}
+                                                        name={`products[${index}].unitPrice`}
+                                                        className={`form-control ${touched.products?.[index]?.unitPrice && errors.products?.[index]?.unitPrice
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                            }`}
+                                                        value={product.unitPrice}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        placeholder="0.00"
+                                                    />
+                                                </div>
+                                                {touched.products?.[index]?.unitPrice && errors.products?.[index]?.unitPrice && (
+                                                    <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                                        {errors.products[index].unitPrice}
+                                                    </div>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                        {values.products.length > 1 && (
+                                            <div className="mt-2">
+                                                <button
+                                                    className={`rounded w-100 ${styles['danger-btn']}`}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const updatedProducts = values.products.filter((_, i) => i !== index);
+                                                        setFieldValue('products', updatedProducts);
+                                                    }}
+                                                >
+                                                    <div className={`btn d-flex justify-content-center ${styles['danger-content']}`}>
+                                                        Eliminar Producto<i className="bi bi-trash ms-2"></i>
+                                                    </div>
+                                                    <span></span>
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
-                                ) : null}
+                                ))}
+                                <div className="mt-2">
+                                    <button
+                                        className={`rounded w-100 ${styles['secondary-btn']}`}
+                                        type="button"
+                                        onClick={() => {
+                                            const newProduct = {
+                                                productName: '',
+                                                measurementUnit: '',
+                                                quantity: '',
+                                                unitPrice: '',
+                                            };
+                                            setFieldValue('products', [...values.products, newProduct]);
+                                        }}
+                                    >
+                                        <div className={`btn d-flex justify-content-center ${styles['secondary-content']}`}>
+                                            Agregar Producto<i className="bi bi-plus-lg ms-2"></i>
+                                        </div>
+                                        <span></span>
+                                    </button>
+                                </div>
                             </div>
-                            <Row>
-                                <Col sm={12} md={4} className="form-group">
-                                    <label
-                                        htmlFor="measurementUnit"
-                                        className={`form-label fw-semibold ${styles['label']}`}
-                                    >
-                                        Unidad de entrada:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="measurementUnit"
-                                        name="measurementUnit"
-                                        className={`form-control ${touched.measurementUnit && errors.measurementUnit ? 'is-invalid' : ''}`}
-                                        value={values.measurementUnit}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder='"Cajas"'
-                                    />
-                                    {touched.measurementUnit && errors.measurementUnit ? (
-                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                            {errors.measurementUnit}
-                                        </div>
-                                    ) : null}
-                                </Col>
-                                <Col sm={12} md={4} className="form-group">
-                                    <label
-                                        htmlFor="quantity"
-                                        className={`form-label fw-semibold ${styles['label']}`}
-                                    >
-                                        Cantidad:
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="quantity"
-                                        name="quantity"
-                                        className={`form-control ${touched.quantity && errors.quantity ? 'is-invalid' : ''}`}
-                                        value={values.quantity}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder="0"
-                                    />
-                                    {touched.quantity && errors.quantity ? (
-                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                            {errors.quantity}
-                                        </div>
-                                    ) : null}
-                                </Col>
-                                <Col sm={12} md={4} className="form-group">
-                                    <label
-                                        htmlFor="unitPrice"
-                                        className={`form-label fw-semibold ${styles['label']}`}
-                                    >
-                                        Precio de cada unidad:
-                                    </label>
-                                    <div className="input-group">
-                                        <span className="input-group-text">$</span>
-                                        <input
-                                            type="number"
-                                            id="unitPrice"
-                                            name="unitPrice"
-                                            className={`form-control ${touched.unitPrice && errors.unitPrice ? 'is-invalid' : ''}`}
-                                            value={values.unitPrice}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            placeholder="0.00"
-                                        />
-                                    </div>
-                                    {touched.unitPrice && errors.unitPrice ? (
-                                        <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                            {errors.unitPrice}
-                                        </div>
-                                    ) : null}
-                                </Col>
-                            </Row>
+
                             <div className="mt-4 w-100">
                                 {isSubmitting ? (
                                     <button
