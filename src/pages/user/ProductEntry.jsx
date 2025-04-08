@@ -15,28 +15,26 @@ const ProductEntryForm = () => {
     const [showAddSupplierModal, setShowAddSupplierModal] = useState(false);
     const [categories, setCategories] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [selectedSupplier, setSelectedSupplier] = useState("");
+
+    const loadCategories = async () => {
+        const response = await fetchCategories();
+        if (response.state === "success" && Array.isArray(response.data.data)) {
+            setCategories(response.data.data);
+        } else {
+            setCategories([]);
+        }
+    };
+
+    const loadSuppliers = async () => {
+        const response = await fetchSuppliers();
+        if (response.state === "success" && Array.isArray(response.data.data)) {
+            setSuppliers(response.data.data);
+        } else {
+            setSuppliers([]);
+        }
+    };
 
     useEffect(() => {
-        const loadCategories = async () => {
-            const response = await fetchCategories();
-            if (response.state === "success" && Array.isArray(response.data)) {
-                setCategories(response.data);
-            } else {
-                setCategories([]);
-            }
-        };
-
-        const loadSuppliers = async () => {
-            const response = await fetchSuppliers();
-            if (response.state === "success" && Array.isArray(response.data)) {
-                setSuppliers(response.data);
-            } else {
-                setSuppliers([]);
-            }
-        };
-
         loadCategories();
         loadSuppliers();
     }, []);
@@ -81,10 +79,12 @@ const ProductEntryForm = () => {
 
     const handleAddCategoryModalClose = () => {
         setShowAddCategoryModal(false);
+        loadCategories();
     };
 
     const handleAddSupplierModalClose = () => {
         setShowAddSupplierModal(false);
+        loadSuppliers();
     };
 
     return (
