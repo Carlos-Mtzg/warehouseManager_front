@@ -1,98 +1,151 @@
-import React, {useState} from "react";
-import {Modal, Button, Form} from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import AxiosClient from "../config/axios-client";
+import PropTypes from 'prop-types';
 import Swal from "sweetalert2";
+import { useState } from "react";
+import { Modal } from "react-bootstrap";
+import { addCategorySchema } from "../validations/entriesValidation";
+import { useFormik } from "formik";
+import { createCategory } from "../services/ApiEntries";
+import styles from '../assets/css/entries.module.css'
 
-const AddCategoryModal = ({show, handleClose, onCategoryAdded}) => {
-    const [categoryName, setCategoryName] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+const AddCategoryModal = ({ show, handleClose }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleRegister = async () => {
-    const requestBody = {
-        name: categoryName
+    const validationSchema = addCategorySchema;
+
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        touched,
+        resetForm
+    } = useFormik({
+        initialValues: {
+            categoryName: ""
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                setIsSubmitting(true);
+                const response = await createCategory(values.categoryName);
+                if (response.status === 409) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Parece que ya hay una categoría registrada con ese nombre',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                }
+                if (response.state === 'success') {
+                    resetForm();
+                    handleClose();
+                    Swal.fire({
+                        title: 'Registro correcto',
+                        text: 'Categoría creada correctamente',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+                setIsSubmitting(false);
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error inesperado',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+            } finally {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+        }
+    });
+
+    const handleCancel = () => {
+        resetForm();
+        handleClose();
     };
 
-    try {
-        const token = localStorage.getItem("accessToken"); // Retrieve the token if needed
-        const response = await AxiosClient.post("category/", requestBody, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Add the token to the request headers
-            },
-        });
-        console.log("Categoria registrado exitosamente:", response);
-        await Swal.fire({
-            icon: "success",
-            title: "Categoria registrada exitosamente.",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-        handleClose();
-
-    } catch (error) {
-        console.error("Error al registrar el categoria:", error);
-        const errorMessage = error.response?.status === 409
-            ? "Parece que ya existe una categoria relacionada, prueba con otro nombre."
-            : error.response?.data?.message || "Error desconocido";
-        setErrorMessage(errorMessage);
-        await Swal.fire({
-            icon: "error",
-            title: "Error al registrar la categoria.",
-            text: errorMessage,
-        });
-    }
-};
-
     return (
-        <Modal show={show} onHide={handleClose} centered>
-            <Modal.Body className="p-5 rounded" style={{backgroundColor: "#fff"}}>
-                <h4 className="text-center fw-bold text-dark mb-4" style={{color: "#1f3f38"}}>
-                    Agregar categoría
-                </h4>
-
-                <Form.Control
-                    type="text"
-                    placeholder="Nombre de la categoría"
-                    className="mb-4 py-2"
-                    style={{
-                        backgroundColor: "#f8f8f8",
-                        borderRadius: "8px",
-                        border: "1px solid #eee",
-                        fontSize: "16px",
-                    }}
-                    value={categoryName}
-                    onChange={(e) => setCategoryName(e.target.value)}
-                />
-
-                <div className="d-flex justify-content-between">
-                    <Button
-                        variant="outline-success"
-                        className="w-50 me-2 fw-semibold"
-                        style={{
-                            borderWidth: "2px",
-                            fontSize: "18px",
-                            borderColor: "#3d5c51",
-                            color: "#3d5c51",
-                        }}
-                        onClick={handleClose}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        className="w-50 fw-semibold"
-                        style={{
-                            backgroundColor: "#1f3f38",
-                            borderColor: "#1f3f38",
-                            fontSize: "18px",
-                        }}
-                        onClick={handleRegister}
-                    >
-                        Registrar
-                    </Button>
-                </div>
-            </Modal.Body>
+        <Modal show={show} onHide={handleCancel} centered backdrop="static" keyboard={false}>
+            <Modal.Header className={`modal-title fs-5 ${styles['modal-header']}`}>
+                <h3>Agregar Categoría</h3>
+            </Modal.Header>
+            <form onSubmit={handleSubmit}>
+                <Modal.Body className="p-4 rounded">
+                    <div className="form-group">
+                        <label
+                            htmlFor="name"
+                            className={`form-label fw-semibold ${styles['label']}`}
+                        >
+                            Nueva Categoría:
+                        </label>
+                        <input
+                            type="text"
+                            id="categoryName"
+                            name="categoryName"
+                            value={values.categoryName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={`form-control py-3 ${touched.categoryName && errors.categoryName ? 'is-invalid' : ''}`}
+                            placeholder="Escribe aquí el nombre del usuario"
+                        />
+                        {touched.categoryName && errors.categoryName ? (
+                            <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                                {errors.categoryName}
+                            </div>
+                        ) : null}
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
+                        <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
+                            Cancelar
+                        </div>
+                        <span></span>
+                    </button>
+                    {isSubmitting ? (
+                        <button
+                            className={`rounded ${styles['primary-btn']}`}
+                            type="submit"
+                            disabled
+                        >
+                            <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                                Cargando
+                                <output
+                                    className="spinner-border"
+                                    style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
+                                >
+                                    <span className="visually-hidden"></span>
+                                </output>
+                            </div>
+                            <span></span>
+                        </button>
+                    ) : (
+                        <button
+                            className={`rounded ${styles['primary-btn']}`}
+                            type='submit'
+                            disabled={isSubmitting}
+                        >
+                            <div className={`btn d-flex text-center ${styles['primary-content']}`}>
+                                Confirmar
+                            </div>
+                            <span></span>
+                        </button>
+                    )}
+                </Modal.Footer>
+            </form>
         </Modal>
     );
+};
+
+AddCategoryModal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
 };
 
 export default AddCategoryModal;
