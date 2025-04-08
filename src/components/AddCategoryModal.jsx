@@ -91,7 +91,7 @@ const AddCategoryModal = ({ show, handleClose }) => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             className={`form-control py-3 ${touched.categoryName && errors.categoryName ? 'is-invalid' : ''}`}
-                            placeholder="Escribe aquí el nombre del usuario"
+                            placeholder="Escribe aquí el nombre de la categoría"
                         />
                         {touched.categoryName && errors.categoryName ? (
                             <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
