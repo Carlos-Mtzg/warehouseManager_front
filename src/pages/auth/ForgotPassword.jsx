@@ -1,28 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
 import { resetPasswordEmail } from '../../services/ApiAuth';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
+import { forgotPasswordSchema } from '../../validations/authValidation';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
-    const validationSchema = Yup.object({
-        email: Yup.string()
-            .email('El correo electrónico no es válido')
-            .required('El correo electrónico es obligatorio')
-            .matches(
-                /^[^<>]*$/,
-                "El correo electrónico no puede contener los caracteres '<' o '>'"
-            )
-            .trim('El correo electrónico no puede contener solo espacios'),
-    });
+    const validationSchema = forgotPasswordSchema;
 
     const {
         handleSubmit,
@@ -114,7 +105,7 @@ const ForgotPassword = () => {
                                 <div className={`${styles['submit-content']}`}>
                                     Cargando
                                     <output
-                                        className="spinner-border ms-1"
+                                        className="spinner-border ms-2"
                                         style={{ width: '1.25rem', height: '1.25rem' }}
                                     >
                                         <span className="visually-hidden"></span>

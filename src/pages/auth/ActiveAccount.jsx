@@ -1,4 +1,3 @@
-import * as yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,37 +6,14 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import Swal from 'sweetalert2';
 import { activateAccount } from '../../services/ApiAuth';
+import { passwordSchema } from '../../validations/authValidation';
 
 const ActiveAccount = () => {
   const { token } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const REQUIRED_FIELDS = 'Campo obligatorio';
-  const validationSchema = yup.object().shape({
-    password: yup
-      .string()
-      .required(REQUIRED_FIELDS)
-      .min(8, 'La contraseña debe tener al menos 8 caracteres')
-      .matches(
-        /[A-Z]/,
-        'La contraseña debe contener al menos una letra mayúscula'
-      )
-      .matches(
-        /[a-z]/,
-        'La contraseña debe contener al menos una letra minúscula'
-      )
-      .matches(
-        /[\W_]/,
-        'La contraseña debe contener al menos un carácter especial (como !, @, #, $, etc.)'
-      )
-      .trim(),
-    repeatPassword: yup
-      .string()
-      .required(REQUIRED_FIELDS)
-      .oneOf([yup.ref('password')], 'Las contraseñas no coinciden'),
-  });
-
+  const validationSchema = passwordSchema;
   const { handleSubmit, handleChange, handleBlur, values, errors, touched } =
     useFormik({
       initialValues: {
