@@ -83,8 +83,12 @@ export const productEntriesSchema = Yup.object().shape({
                 .trim()
                 .required(REQUIRED_FIELDS)
                 .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
-            quantity: Yup.number().min(0, 'La cantidad no puede ser negativa').required('La cantidad es obligatoria'),
-            unitPrice: Yup.number().min(0, 'El precio no puede ser negativo').required('El precio es obligatorio'),
+            quantity: Yup.number()
+                .min(1, 'La cantidad debe ser superior a 0')
+                .required('La cantidad es obligatoria'),
+            unitPrice: Yup.number()
+                .min(1, 'El precio debe ser superior a 0')
+                .required('El precio es obligatorio'),
         })
     ),
 });
