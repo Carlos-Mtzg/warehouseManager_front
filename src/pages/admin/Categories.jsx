@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import CategoryList from '../../components/CategoryList.jsx'
 import styles from '../../assets/css/users.module.css'
-import AddCategory from '../../components/AddCategory.jsx'
+import AddCategoryModal from '../../components/AddCategoryModal.jsx'
 const Categories = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
@@ -13,7 +13,7 @@ const Categories = () => {
 
   return (
     <>
-      <AddCategory
+      <AddCategoryModal
         show={showAddModal}
         handleClose={handleAddClose}
         onResetForm={handleResetForm}
