@@ -1,11 +1,29 @@
 import styles from '../assets/css/sidebar.module.css';
 import { Outlet, Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Header from './Header';
 import AuthContext from '../context/AuthProvider';
+import UserCard from './UserCard';
+import { getUserByUUID } from '../services/ApiUser';
 
 const Layout = () => {
   const { handleLogout, role } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  const loadUser = async () => {
+    const uuid = localStorage.getItem('uuid');
+    const response = await getUserByUUID(uuid);
+    if (response.state === 'success') {
+      setUser(response.user);
+    } else {
+      console.error('Error al cargar la información del usuario');
+    }
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <div className={`${styles['content']}`}>
       <Header />
@@ -62,6 +80,9 @@ const Layout = () => {
               </li>
             )}
           </ul>
+          <div className="px-3 mb-5">
+            <UserCard user={user} loadUser={loadUser} />
+          </div>
           <div className={styles['sidebar-footer']}>
             <Link
               onClick={handleLogout}

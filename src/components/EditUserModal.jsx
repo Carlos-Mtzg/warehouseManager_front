@@ -1,14 +1,16 @@
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { updateUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
 import styles from '../assets/css/users.module.css';
 import { editUserSchema } from '../validations/userValidations';
+import AuthContext from '../context/AuthProvider';
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { updateUser: updateUserContext } = useContext(AuthContext);
 
     const validationSchema = editUserSchema;
 
@@ -39,6 +41,7 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
 
                 const response = await updateUser(user.uuid, requestBody.name, requestBody.lastname, requestBody.role);
                 if (response.state === 'success') {
+                    await updateUserContext();
                     handleClose();
                     Swal.fire({
                         title: 'Usuario actualizado',

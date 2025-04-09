@@ -1,6 +1,7 @@
 import { useState, createContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
+import { getUserByUUID } from '../services/ApiUser';
 
 const AuthContext = createContext();
 
@@ -13,19 +14,39 @@ const AuthProvider = ({ children }) => {
   });
 
   const [role, setRole] = useState(() => localStorage.getItem('role') || '');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     setAuth(isTokenValid(accessToken));
     setRole(localStorage.getItem('role') || '');
+
+    const loadUser = async () => {
+      const uuid = localStorage.getItem('uuid');
+      if (uuid) {
+        const response = await getUserByUUID(uuid);
+        if (response.state === 'success') {
+          setUser(response.user);
+        }
+      }
+    };
+
+    loadUser();
   }, []);
 
-  const handleLogin = (accessToken, role, uuid) => {
+  const handleLogin = async (accessToken, role, uuid) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('role', role);
     localStorage.setItem('uuid', uuid);
     setAuth(true);
     setRole(role);
+
+    const response = await getUserByUUID(uuid);
+    if (response.state === 'success') {
+      setUser(response.user);
+    } else {
+      console.error('Error al cargar la información del usuario después del login');
+    }
   };
 
   const handleLogout = () => {
@@ -45,13 +66,25 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('uuid');
         setAuth(false);
         setRole('');
+        setUser(null);
       }
     });
   };
 
+  const updateUser = async () => {
+    const uuid = localStorage.getItem('uuid');
+    if (uuid) {
+      const response = await getUserByUUID(uuid);
+      if (response.state === 'success') {
+        setUser(response.user);
+      }
+    }
+  };
+
+
   const contextValue = useMemo(
-    () => ({ auth, role, handleLogin, handleLogout }),
-    [auth, role]
+    () => ({ auth, role, user, handleLogin, handleLogout, updateUser }),
+    [auth, role, user]
   );
 
   return (
