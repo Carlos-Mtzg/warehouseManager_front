@@ -2,9 +2,12 @@ import { getUserByUUID } from '../../services/ApiUser';
 import { useState, useEffect } from 'react';
 import styles from '../../assets/css/users.module.css'
 import profile from '../../assets/images/profile.png'
+import EditUserInfoModal from '../../components/EditUserInfoModal';
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+
 
     const loadUser = async () => {
         const uuid = localStorage.getItem('uuid');
@@ -19,6 +22,16 @@ const UserProfile = () => {
     useEffect(() => {
         loadUser();
     }, []);
+
+    const handleEditModalClose = () => {
+        setShowEditModal(false);
+    };
+
+    const handleUserUpdated = () => {
+        setShowEditModal(false);
+        loadUser();
+    };
+
 
     if (!user) {
         return <div>Cargando información del usuario...</div>;
@@ -42,6 +55,7 @@ const UserProfile = () => {
                     <button
                         className={`rounded ms-auto ${styles['primary-outline-btn']}`}
                         type='button'
+                        onClick={() => setShowEditModal(true)}
                     >
                         <div className={`d-flex text-center py-1 px-2 ${styles['primary-outline-content']}`}>
                             Editar<i className="bi bi-pencil-square ms-2"></i>
@@ -64,6 +78,13 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
+            {showEditModal && (
+                <EditUserInfoModal
+                    user={user}
+                    handleClose={handleEditModalClose}
+                    onUserUpdated={handleUserUpdated}
+                />
+            )}
         </div>
     );
 };
