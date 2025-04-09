@@ -3,6 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { useContext } from 'react';
 import Header from './Header';
 import AuthContext from '../context/AuthProvider';
+import UserCard from './UserCard';
 
 const Layout = () => {
   const { handleLogout, role } = useContext(AuthContext);
@@ -62,6 +63,9 @@ const Layout = () => {
               </li>
             )}
           </ul>
+          <div className="px-3 mb-5">
+            <UserCard />
+          </div>
           <div className={styles['sidebar-footer']}>
             <Link
               onClick={handleLogout}
