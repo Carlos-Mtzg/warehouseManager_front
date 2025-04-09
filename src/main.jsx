@@ -58,12 +58,12 @@ const router = createBrowserRouter([
           {
             path: 'product-entries',
             element: <ProductEntry />,
-            children: [{ index: true, element: <ProductEntry />, errorElement: <Error500 /> }],
+            errorElement: <Error500 />,
           },
           {
             path: 'entries',
             element: <Entries />,
-            errorElement: <Error500 />
+            errorElement: <Error500 />,
           },
         ],
       },
@@ -75,13 +75,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Layout />,
+        element: <Layout />, // Mantén el Layout
         children: [
-          { index: true, element: <Home />, errorElement: <Error500 /> },
           {
-            path: 'user-management',
+            path: '',
             element: <RoleBasedRoute allowedRoles={['ROLE_ADMIN']} />,
-            children: [{ index: true, element: <Users />, errorElement: <Error500 /> }],
+            children: [
+              { index: true, element: <Home />, errorElement: <Error500 /> },
+              {
+                path: 'user-management',
+                element: <Users />,
+                errorElement: <Error500 />,
+              },
+            ],
           },
         ],
       },
@@ -93,17 +99,23 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Layout />,
+        element: <Layout />, // Mantén el Layout
         children: [
-          { index: true, element: <Home />, errorElement: <Error500 /> },
           {
-            path: "my-profile",
+            path: '',
             element: <RoleBasedRoute allowedRoles={['ROLE_USER']} />,
-            children: [{ index: true, element: <UserProfile />, errorElement: <Error500 /> }],
-          }
-        ]
+            children: [
+              { index: true, element: <ProductEntry />, errorElement: <Error500 /> },
+              {
+                path: 'my-profile',
+                element: <UserProfile />,
+                errorElement: <Error500 />,
+              },
+            ],
+          },
+        ],
       },
-    ]
+    ],
   },
   { path: '*', element: <Error404 /> },
 ]);
