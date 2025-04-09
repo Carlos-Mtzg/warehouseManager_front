@@ -1,25 +1,10 @@
+import { useContext } from 'react';
 import styles from '../assets/css/users.module.css'
 import profile from '../assets/images/profile.png'
-import { getUserByUUID } from '../services/ApiUser';
-import { useEffect, useState } from 'react';
+import AuthContext from '../context/AuthProvider';
 
 const UserCard = () => {
-    const [user, setUser] = useState(null);
-
-    const loadUser = async () => {
-        const uuid = localStorage.getItem('uuid');
-        const response = await getUserByUUID(uuid);
-        if (response.state === "success") {
-            setUser(response.user);
-        } else {
-            console.log("Ocurrió un error al obtener la información del usuario");
-        }
-    };
-
-    useEffect(() => {
-        loadUser();
-    }, []);
-
+    const { user } = useContext(AuthContext);
     if (!user) {
         return <div>Cargando información del usuario...</div>;
     }
@@ -36,6 +21,6 @@ const UserCard = () => {
             </div>
         </div>
     )
-}
+};
 
 export default UserCard
