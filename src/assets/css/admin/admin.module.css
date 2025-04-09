@@ -4,7 +4,7 @@
     padding: 0.5rem;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
     border: none;
     position: relative;
     background-color: var(--color-primary);
