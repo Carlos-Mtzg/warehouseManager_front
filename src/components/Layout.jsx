@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import Header from './Header'
 import AuthContext from '../context/AuthProvider'
 
+
 const Layout = () => {
   const { handleLogout, role } = useContext(AuthContext)
   return (

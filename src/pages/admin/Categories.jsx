@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import AddCategoryModal from '../../components/AddCategoryModal'
 import CategoryList from '../../components/CategoryList.jsx'
 import styles from '../../assets/css/users.module.css'
 import AddCategory from '../../components/AddCategory.jsx'
