@@ -28,7 +28,7 @@ const UserProfile = () => {
 
     return (
         <div className="d-flex flex-column gap-4">
-            <div className='bg-white rounded p-4 slide-up'>
+            <div className='bg-white rounded p-4 slide-in-left'>
                 <div className='col-12 col-md-8 d-flex gap-2'>
                     <img className={`d-none d-lg-block ${styles['profile']}`} src={profile} alt="profile" />
                     <div className="user-info">
@@ -38,7 +38,7 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-            <div className='d-flex flex-column bg-white rounded p-4 gap-3 slide-up'>
+            <div className='d-flex flex-column bg-white rounded p-4 gap-3 slide-in-right'>
                 <div className="d-flex align-items-center">
                     <p className={`fw-bold text-uppercase fs-4 mb-0 ${styles['title']}`}>Mi información</p>
                     <button
