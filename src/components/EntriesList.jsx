@@ -69,9 +69,9 @@ const EntriesList = () => {
   };
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive slide-in-right">
       <table className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}>
-        <thead>
+        <thead className='text-center'>
           <tr>
             <th>Cantidad</th>
             <th>Unidad de Medida</th>
@@ -81,7 +81,7 @@ const EntriesList = () => {
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='text-center'>
           {currentEntries.map((entry) => (
             <tr key={entry.uuid}>
               <td>{entry.quantity}</td>
@@ -94,7 +94,7 @@ const EntriesList = () => {
                   className={`text-danger ${styles['btn-custom']}`}
                   onClick={() => handleCancelEntry(entry.uuid)}
                 >
-                  <i className="bi bi-trash"></i> Cancelar
+                  <i className="bi bi-trash"></i>
                 </button>
               </td>
             </tr>
