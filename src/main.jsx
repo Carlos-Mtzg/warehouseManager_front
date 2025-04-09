@@ -75,7 +75,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Layout />, // Mantén el Layout
+        element: <Layout />,
         children: [
           {
             path: '',
@@ -99,7 +99,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <Layout />, // Mantén el Layout
+        element: <Layout />,
         children: [
           {
             path: '',
