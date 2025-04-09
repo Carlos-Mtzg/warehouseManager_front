@@ -133,10 +133,10 @@ const Login = () => {
               </div>
             ) : null}
           </div>
-          <div className="row mt-3">
+          <div className="mt-3">
             {isSubmitting ? (
               <button
-                className={`rounded ${styles['submit-btn']}`}
+                className={`rounded w-100 ${styles['submit-btn']}`}
                 type="submit"
                 disabled
               >
@@ -153,7 +153,7 @@ const Login = () => {
               </button>
             ) : (
               <button
-                className={`rounded ${styles['submit-btn']}`}
+                className={`rounded w-100 ${styles['submit-btn']}`}
                 type="submit"
                 disabled={isSubmitting}
               >
