@@ -40,6 +40,7 @@ const SupplierList = ({ refresh }) => {
       if (response.state === 'success') {
         await Swal.fire({
           title: 'Proveedor eliminado',
+          text: 'El proveedor ha sido eliminado correctamente',
           icon: 'success',
           showConfirmButton: false,
           timer: 2000,

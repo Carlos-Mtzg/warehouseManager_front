@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import AddSupplier from '../../components/AddSupplier'
 import SupplierList from '../../components/SupplierList'
 import styles from '../../assets/css/users.module.css'
+import AddSupplierModal from '../../components/AddSupplierModal'
 
 const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)
@@ -13,7 +13,7 @@ const Suppliers = () => {
 
   return (
     <>
-      <AddSupplier
+      <AddSupplierModal
         show={showAddModal}
         handleClose={handleAddClose}
         onResetForm={handleResetForm}

@@ -6,11 +6,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { addSupplierSchema } from "../validations/entriesValidation";
 import { useFormik } from "formik";
 import { createSupplier } from "../services/ApiEntries";
-import styles from '../assets/css/entries.module.css'
+import styles from '../assets/css/entries.module.css';
 
-const AddSupplierModal = ({ show, handleClose }) => {
+const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const validationSchema = addSupplierSchema;
 
     const {
@@ -29,20 +28,30 @@ const AddSupplierModal = ({ show, handleClose }) => {
         validationSchema,
         onSubmit: async (values) => {
             try {
-                setIsSubmitting(true)
+                setIsSubmitting(true);
                 const response = await createSupplier(values.name, values.email);
-                if (response.state === 'success') {
-                    resetForm();
-                    handleClose();
+
+                if (response.state === 'success' || response.status === 'OK') {
                     Swal.fire({
                         title: 'Registro correcto',
                         text: 'Proveedor registrado correctamente',
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 2000
+                    }).then(() => {
+                        resetForm();
+                        handleClose();
+                        if (onSupplierAdded) onSupplierAdded(); // ✅ Ejecutar si está definida
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message || 'Ocurrió un error inesperado',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
                     });
                 }
-                setIsSubmitting(false)
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
@@ -50,9 +59,9 @@ const AddSupplierModal = ({ show, handleClose }) => {
                     icon: 'error',
                     showConfirmButton: false,
                     timer: 2000
-                })
+                });
             } finally {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
+                setIsSubmitting(false);
             }
         }
     });
@@ -63,7 +72,7 @@ const AddSupplierModal = ({ show, handleClose }) => {
     };
 
     return (
-        <Modal show={show} onHide={handleClose} centered backdrop="static" keyboard={false}>
+        <Modal show={show} onHide={handleCancel} centered backdrop="static" keyboard={false}>
             <Modal.Header className={`modal-title fs-5 ${styles['modal-header']}`}>
                 <h3>Agregar Proveedor</h3>
             </Modal.Header>
@@ -71,10 +80,7 @@ const AddSupplierModal = ({ show, handleClose }) => {
                 <Modal.Body className="p-4 rounded">
                     <div className="d-flex flex-column gap-3">
                         <div className="form-group">
-                            <label
-                                htmlFor="name"
-                                className={`form-label fw-semibold ${styles['label']}`}
-                            >
+                            <label htmlFor="name" className={`form-label fw-semibold ${styles['label']}`}>
                                 Proveedor:
                             </label>
                             <input
@@ -87,17 +93,14 @@ const AddSupplierModal = ({ show, handleClose }) => {
                                 className={`form-control py-3 ${touched.name && errors.name ? 'is-invalid' : ''}`}
                                 placeholder="Escribe aquí el nombre del proveedor"
                             />
-                            {touched.name && errors.name ? (
+                            {touched.name && errors.name && (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
                                     {errors.name}
                                 </div>
-                            ) : null}
+                            )}
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="email"
-                                className={`form-label fw-semibold ${styles['label']}`}
-                            >
+                            <label htmlFor="email" className={`form-label fw-semibold ${styles['label']}`}>
                                 Correo Electrónico:
                             </label>
                             <input
@@ -110,61 +113,45 @@ const AddSupplierModal = ({ show, handleClose }) => {
                                 className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''}`}
                                 placeholder="Escribe aquí el correo del proveedor"
                             />
-                            {touched.email && errors.email ? (
+                            {touched.email && errors.email && (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
                                     {errors.email}
                                 </div>
-                            ) : null}
+                            )}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
-                        className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
+                        className={`rounded ${styles['secondary-btn']}`}
+                        onClick={handleCancel}
+                        type="button"
+                    >
                         <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
                             Cancelar
                         </div>
                         <span></span>
                     </button>
-                    {isSubmitting ? (
-                        <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type="submit"
-                            disabled
-                        >
-                            <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
-                                Cargando
-                                <output
-                                    className="spinner-border"
-                                    style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
-                                >
-                                    <span className="visually-hidden"></span>
-                                </output>
-                            </div>
-                            <span></span>
-                        </button>
-                    ) : (
-                        <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type='submit'
-                            disabled={isSubmitting}
-                        >
-                            <div className={`btn d-flex text-center ${styles['primary-content']}`}>
-                                Confirmar
-                            </div>
-                            <span></span>
-                        </button>
-                    )}
+                    <button
+                        className={`rounded ${styles['primary-btn']}`}
+                        type="submit"
+                        disabled={isSubmitting}
+                    >
+                        <div className={`btn d-flex text-center ${styles['primary-content']}`}>
+                            {isSubmitting ? 'Cargando...' : 'Confirmar'}
+                        </div>
+                        <span></span>
+                    </button>
                 </Modal.Footer>
             </form>
         </Modal>
     );
 };
 
-
 AddSupplierModal.propTypes = {
     show: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
+    onSupplierAdded: PropTypes.func, // ✅ OPCIONAL
 };
 
 export default AddSupplierModal;
