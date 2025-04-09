@@ -20,7 +20,7 @@ const Layout = () => {
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link
-                to="/admin/productEntries"
+                to="/product-entries"
                 className={`${styles['sidebar-link']}`}
               >
                 <i className="bi bi-building-add me-3"></i>
@@ -36,7 +36,7 @@ const Layout = () => {
             {role === 'ROLE_ADMIN' && (
               <li className={`${styles['sidebar-item']}`}>
                 <Link
-                  to="/admin/users"
+                  to="/admin/user-management"
                   className={`${styles['sidebar-link']}`}
                 >
                   <i className="bi bi-person-plus me-3"></i>
@@ -45,20 +45,22 @@ const Layout = () => {
               </li>
             )}
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="/admin/entries" className={`${styles['sidebar-link']}`}>
+              <Link to="/entries" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-add me-3"></i>
                 <span>Entradas registradas</span>
               </Link>
             </li>
-            <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="#"
-                className={`${styles['sidebar-link']}`}
-              >
-                <i className="bi bi-person-fill me-3"></i>
-                <span>Mi Perfil</span>
-              </Link>
-            </li>
+            {role === "ROLE_USER" && (
+              <li className={`${styles['sidebar-item']}`}>
+                <Link
+                  to="/user/my-profile"
+                  className={`${styles['sidebar-link']}`}
+                >
+                  <i className="bi bi-person-fill me-3"></i>
+                  <span>Mi Perfil</span>
+                </Link>
+              </li>
+            )}
           </ul>
           <div className={styles['sidebar-footer']}>
             <Link
