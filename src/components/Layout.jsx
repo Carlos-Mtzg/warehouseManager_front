@@ -76,7 +76,7 @@ const Layout = () => {
             </Link>
           </div>
         </aside>
-        <div className={`p-4 overflow-auto ${styles['main']}`}>
+        <div className={`p-4 overflow-auto ${styles['main']}`} style={{ height: 'calc(95vh - 80px)', overflowY: 'auto' }}>
           <Outlet />
         </div>
       </div>
