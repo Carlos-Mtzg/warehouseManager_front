@@ -30,11 +30,10 @@ const UserList = ({ refresh, onEditUser }) => {
                 title: 'Error',
                 text: 'No puedes eliminar tu propio usuario',
                 icon: 'error',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#16423C',
+                showConfirmButton: false,
                 allowOutsideClick: false,
+                timer: 2000,
             });
-            return;
         } else {
             const result = await Swal.fire({
                 title: '¿Estás seguro de eliminar el usuario?',
@@ -48,7 +47,7 @@ const UserList = ({ refresh, onEditUser }) => {
                 allowOutsideClick: false,
             });
 
-            if (result.isConfirmed) { 
+            if (result.isConfirmed) {
                 const response = await deleteUser(uuid);
                 if (response.state === 'success') {
                     Swal.fire({
