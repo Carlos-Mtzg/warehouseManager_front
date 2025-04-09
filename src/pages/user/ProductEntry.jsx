@@ -329,7 +329,7 @@ const ProductEntryForm = () => {
                                                             }`}
                                                         value={product.unitPrice}
                                                         onChange={(e) => {
-                                                            const value = Math.max(0, parseFloat(e.target.value) || 0);
+                                                            const value = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10) || 0);
                                                             setFieldValue(`products[${index}].unitPrice`, value);
                                                         }}
                                                         onBlur={handleBlur}
