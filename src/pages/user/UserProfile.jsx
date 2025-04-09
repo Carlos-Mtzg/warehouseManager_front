@@ -32,7 +32,7 @@ const UserProfile = () => {
                     <div className="user-info">
                         <p className={`mb-1 fs-1 fw-semibold ${styles['primary-text']}`}>{user.name} {user.lastname}</p>
                         <p className={`mb-1 ${styles['secondary-text']}`}>{user.email}</p>
-                        <p className={`mb-1 ${styles['secondary-text']}`}>{user.role?.name === 'ROLE_ADMIN' ? 'Administrador' : 'Usuario'}</p>
+                        <p className={`mb-1 fw-bold ${styles['secondary-text']}`}>{user.role?.name === 'ROLE_ADMIN' ? 'Administrador' : 'Almacenista'}</p>
                     </div>
                 </div>
             </div>
