@@ -143,3 +143,24 @@ export async function activateUser(uuid) {
     };
   }
 }
+
+export async function getUserByUUID(uuid) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    const response = await axios.get(`${API_URL}user/${uuid}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return {
+      state: 'success',
+      user: response.data,
+    };
+  } catch (error) {
+    return {
+      state: 'error',
+      message: error.response?.data?.message || 'Error al encontrar al usuario',
+    };
+  }
+}
