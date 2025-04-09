@@ -53,7 +53,7 @@ const Layout = () => {
             {role === "ROLE_USER" && (
               <li className={`${styles['sidebar-item']}`}>
                 <Link
-                  to="/"
+                  to="/user/my-profile"
                   className={`${styles['sidebar-link']}`}
                 >
                   <i className="bi bi-person-fill me-3"></i>
