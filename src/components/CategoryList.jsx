@@ -40,6 +40,7 @@ const CategoryList = ({ refresh }) => {
       if (response.state === 'success') {
         await Swal.fire({
           title: 'Categoría eliminada',
+          text: 'La categoría ha sido eliminada correctamente',
           icon: 'success',
           showConfirmButton: false,
           timer: 2000,
