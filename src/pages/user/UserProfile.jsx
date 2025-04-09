@@ -37,7 +37,18 @@ const UserProfile = () => {
                 </div>
             </div>
             <div className='d-flex flex-column bg-white rounded p-4 gap-3 slide-up'>
-                <p className={`fw-bold text-uppercase fs-4 ${styles['title']}`}>Mi información</p>
+                <div className="d-flex align-items-center">
+                    <p className={`fw-bold text-uppercase fs-4 mb-0 ${styles['title']}`}>Mi información</p>
+                    <button
+                        className={`rounded ms-auto ${styles['primary-outline-btn']}`}
+                        type='button'
+                    >
+                        <div className={`d-flex text-center py-1 px-2 ${styles['primary-outline-content']}`}>
+                            Editar<i className="bi bi-pencil-square ms-2"></i>
+                        </div>
+                        <span></span>
+                    </button>
+                </div>
                 <div className='row'>
                     <div className="form-group col-12 col-md-4 mb-4">
                         <label className={`fw-semibold ${styles['label']}`} htmlFor="name">Nombre:</label>
@@ -51,17 +62,6 @@ const UserProfile = () => {
                         <label className={`fw-semibold ${styles['label']}`} htmlFor="email">Correo Electrónico:</label>
                         <input className='form-control mt-2' type="text" readOnly value={user.email} />
                     </div>
-                </div>
-                <div className="d-flex">
-                    <button
-                        className={`rounded ms-auto ${styles['primary-btn']}`}
-                        type='button'
-                    >
-                        <div className={`d-flex text-center py-1 px-2 ${styles['primary-content']}`}>
-                            Editar Información<i className="bi bi-pencil-square ms-2"></i>
-                        </div>
-                        <span></span>
-                    </button>
                 </div>
             </div>
         </div>
