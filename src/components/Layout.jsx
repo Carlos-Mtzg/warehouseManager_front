@@ -13,7 +13,10 @@ const Layout = () => {
         <aside className={`${styles['sidebar']} slide-in-left`}>
           <ul className={`${styles['sidebar-nav']}`}>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="#" className={`${styles['sidebar-link']}`}>
+              <Link
+                to={role === 'ROLE_ADMIN' ? '/admin/' : '/product-entries'}
+                className={`${styles['sidebar-link']}`}
+              >
                 <i className="bi bi-grid me-3"></i>
                 <span>Inicio</span>
               </Link>
