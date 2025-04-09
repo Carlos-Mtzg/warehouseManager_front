@@ -1,26 +1,15 @@
-import { getUserByUUID } from '../../services/ApiUser';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styles from '../../assets/css/users.module.css'
 import profile from '../../assets/images/profile.png'
 import EditUserInfoModal from '../../components/EditUserInfoModal';
+import AuthContext from '../../context/AuthProvider';
 
 const UserProfile = () => {
-    const [user, setUser] = useState(null);
+    const { user, updateUser } = useContext(AuthContext);
     const [showEditModal, setShowEditModal] = useState(false);
 
-
-    const loadUser = async () => {
-        const uuid = localStorage.getItem('uuid');
-        const response = await getUserByUUID(uuid);
-        if (response.state === "success") {
-            setUser(response.user);
-        } else {
-            console.log("Ocurrió un error al obtener la información del usuario");
-        }
-    };
-
     useEffect(() => {
-        loadUser();
+        updateUser();
     }, []);
 
     const handleEditModalClose = () => {
@@ -29,7 +18,7 @@ const UserProfile = () => {
 
     const handleUserUpdated = () => {
         setShowEditModal(false);
-        loadUser();
+        updateUser();
     };
 
 
