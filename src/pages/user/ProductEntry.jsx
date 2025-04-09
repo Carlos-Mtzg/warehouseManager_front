@@ -297,7 +297,7 @@ const ProductEntryForm = () => {
                                                         }`}
                                                     value={product.quantity}
                                                     onChange={(e) => {
-                                                        const value = Math.max(0, parseInt(e.target.value, 10) || 0);
+                                                        const value = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10) || 0);
                                                         setFieldValue(`products[${index}].quantity`, value);
                                                     }}
                                                     onBlur={handleBlur}
