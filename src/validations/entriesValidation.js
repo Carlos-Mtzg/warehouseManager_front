@@ -76,7 +76,7 @@ export const productEntriesSchema = Yup.object().shape({
             productName: Yup.string()
                 .trim()
                 .required(REQUIRED_FIELDS)
-                .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0),
+                .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0)
                 .min(3, 'Debe tener al menos 3 caracteres')
                 .max(30, 'No puede exceder los 30 caracteres'),
             measurementUnit: Yup.string()
