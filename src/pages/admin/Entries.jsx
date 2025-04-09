@@ -4,8 +4,8 @@ import EntriesList from '../../components/EntriesList';
 
 const Entries = () => {
   return (
-    <div className="bg-transparent rounded shadow-sm p-4 slide-up">
-      <h1 className={`${styles['title']}`}>Gestión de entradas</h1>
+    <div className="p-4">
+      <h1 className={`${styles['title']} mb-3 slide-in-left`}>Gestión de entradas</h1>
       <EntriesList />
     </div>
   );
