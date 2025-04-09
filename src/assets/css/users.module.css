@@ -109,3 +109,15 @@
 .btn-custom:hover {
     transform: scale(1.1);
 }
+
+.profile {
+    width: 120px;
+}
+
+.primary-text {
+    color: var(--color-text-primary);
+}
+
+.secondary-text {
+    color: var(--color-text);
+}
