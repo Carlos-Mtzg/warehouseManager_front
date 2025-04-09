@@ -228,11 +228,11 @@ const ProductEntryForm = () => {
                                                     }`}
                                                 value={product.productName}
                                                 onChange={(e) => {
-                                                    const value = e.target.value.trimStart(); // Evita espacios al inicio
+                                                    const value = e.target.value.trimStart();
                                                     setFieldValue(`products[${index}].productName`, value);
                                                 }}
                                                 onBlur={(e) => {
-                                                    const value = e.target.value.trim(); // Elimina espacios al inicio y al final
+                                                    const value = e.target.value.trim();
                                                     setFieldValue(`products[${index}].productName`, value);
                                                     handleBlur(e);
                                                 }}
@@ -263,11 +263,11 @@ const ProductEntryForm = () => {
                                                         }`}
                                                     value={product.measurementUnit}
                                                     onChange={(e) => {
-                                                        const value = e.target.value.trimStart(); // Evita espacios al inicio
+                                                        const value = e.target.value.trimStart();
                                                         setFieldValue(`products[${index}].measurementUnit`, value);
                                                     }}
                                                     onBlur={(e) => {
-                                                        const value = e.target.value.trim(); // Elimina espacios al inicio y al final
+                                                        const value = e.target.value.trim();
                                                         setFieldValue(`products[${index}].measurementUnit`, value);
                                                         handleBlur(e);
                                                     }}
