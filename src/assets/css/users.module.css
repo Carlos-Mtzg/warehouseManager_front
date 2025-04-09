@@ -160,6 +160,10 @@
         inset -4px 0px 6px rgba(0, 0, 0, 0.04);
 }
 
+.user-card {
+    background-color: var(--color-background);
+}
+
 .user-card .name {
     font-size: 14px;
     color: var(--color-primary);
