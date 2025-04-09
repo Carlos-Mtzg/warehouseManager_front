@@ -144,7 +144,7 @@ const UserList = ({ refresh, onEditUser }) => {
                                             "Administrador"
                                         )}
                                         {user.role.name === "ROLE_USER" && (
-                                            "Usuario"
+                                            "Almacenista"
                                         )}
                                     </td>
                                     <td className='d-flex gap-3 justify-content-center'>

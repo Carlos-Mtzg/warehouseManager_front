@@ -227,15 +227,8 @@ const ProductEntryForm = () => {
                                                     : ''
                                                     }`}
                                                 value={product.productName}
-                                                onChange={(e) => {
-                                                    const value = e.target.value.trimStart();
-                                                    setFieldValue(`products[${index}].productName`, value);
-                                                }}
-                                                onBlur={(e) => {
-                                                    const value = e.target.value.trim();
-                                                    setFieldValue(`products[${index}].productName`, value);
-                                                    handleBlur(e);
-                                                }}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
                                                 placeholder="Escribe o selecciona el nombre del producto"
                                             />
                                             {touched.products?.[index]?.productName && errors.products?.[index]?.productName && (
@@ -262,15 +255,8 @@ const ProductEntryForm = () => {
                                                         : ''
                                                         }`}
                                                     value={product.measurementUnit}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value.trimStart();
-                                                        setFieldValue(`products[${index}].measurementUnit`, value);
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        const value = e.target.value.trim();
-                                                        setFieldValue(`products[${index}].measurementUnit`, value);
-                                                        handleBlur(e);
-                                                    }}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
                                                     placeholder='"Cajas"'
                                                 />
                                                 {touched.products?.[index]?.measurementUnit &&
@@ -302,7 +288,6 @@ const ProductEntryForm = () => {
                                                     }}
                                                     onBlur={handleBlur}
                                                     placeholder="0"
-                                                    min="0"
                                                 />
                                                 {touched.products?.[index]?.quantity && errors.products?.[index]?.quantity && (
                                                     <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
@@ -334,7 +319,6 @@ const ProductEntryForm = () => {
                                                         }}
                                                         onBlur={handleBlur}
                                                         placeholder="0.00"
-                                                        min="0"
                                                     />
                                                 </div>
                                                 {touched.products?.[index]?.unitPrice && errors.products?.[index]?.unitPrice && (
