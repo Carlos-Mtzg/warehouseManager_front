@@ -69,17 +69,19 @@ export const addSupplierSchema = Yup.object({
 })
 
 export const productEntriesSchema = Yup.object().shape({
-    selectedSupplier: Yup.string().required('El proveedor es obligatorio'),
-    selectedCategory: Yup.string().required('La categoría es obligatoria'),
+    selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
+    selectedCategory: Yup.string().required(REQUIRED_FIELDS),
     products: Yup.array().of(
         Yup.object().shape({
             productName: Yup.string()
                 .trim()
-                .required('El nombre del producto es obligatorio')
+                .required(REQUIRED_FIELDS)
                 .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0),
+                .min(3, 'Debe tener al menos 3 caracteres')
+                .max(30, 'No puede exceder los 30 caracteres'),
             measurementUnit: Yup.string()
                 .trim()
-                .required('La unidad de entrada es obligatoria')
+                .required(REQUIRED_FIELDS)
                 .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
             quantity: Yup.number().min(0, 'La cantidad no puede ser negativa').required('La cantidad es obligatoria'),
             unitPrice: Yup.number().min(0, 'El precio no puede ser negativo').required('El precio es obligatorio'),
