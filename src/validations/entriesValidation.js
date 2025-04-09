@@ -68,32 +68,23 @@ export const addSupplierSchema = Yup.object({
         .trim(NO_SPACES),
 })
 
-export const productEntriesSchema = Yup.object({
+export const productEntriesSchema = Yup.object().shape({
     selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
     selectedCategory: Yup.string().required(REQUIRED_FIELDS),
     products: Yup.array().of(
-        Yup.object({
+        Yup.object().shape({
             productName: Yup.string()
+                .trim()
                 .required(REQUIRED_FIELDS)
-                .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo letras y espacios')
+                .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0),
                 .min(3, 'Debe tener al menos 3 caracteres')
                 .max(30, 'No puede exceder los 30 caracteres'),
             measurementUnit: Yup.string()
+                .trim()
                 .required(REQUIRED_FIELDS)
-                .min(3, 'Debe tener al menos 3 caracteres')
-                .max(30, 'No puede exceder los 30 caracteres'),
-            quantity: Yup.number()
-                .required(REQUIRED_FIELDS)
-                .positive('Debe ser un número positivo')
-                .integer('Debe ser un número entero'),
-            unitPrice: Yup.number()
-                .required(REQUIRED_FIELDS)
-                .positive('Debe ser un número positivo')
-                .test(
-                    'is-decimal',
-                    'Debe tener como máximo dos decimales',
-                    (value) => /^\d+(\.\d{1,2})?$/.test(value)
-                ),
+                .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
+            quantity: Yup.number().min(0, 'La cantidad no puede ser negativa').required('La cantidad es obligatoria'),
+            unitPrice: Yup.number().min(0, 'El precio no puede ser negativo').required('El precio es obligatorio'),
         })
     ),
 });
