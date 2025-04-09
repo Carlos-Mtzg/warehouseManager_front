@@ -129,7 +129,7 @@ const UserList = ({ refresh, onEditUser }) => {
     };
 
     return (
-        <div>
+        <div className='slide-in-right'>
             {error && <div className="alert alert-danger"><i className="bi bi-exclamation-circle me-2"></i>{error}</div>}
             <div className="table-responsive">
                 <table className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}>
