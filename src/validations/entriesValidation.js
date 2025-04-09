@@ -68,32 +68,21 @@ export const addSupplierSchema = Yup.object({
         .trim(NO_SPACES),
 })
 
-export const productEntriesSchema = Yup.object({
-    selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
-    selectedCategory: Yup.string().required(REQUIRED_FIELDS),
+export const productEntriesSchema = Yup.object().shape({
+    selectedSupplier: Yup.string().required('El proveedor es obligatorio'),
+    selectedCategory: Yup.string().required('La categoría es obligatoria'),
     products: Yup.array().of(
-        Yup.object({
+        Yup.object().shape({
             productName: Yup.string()
-                .required(REQUIRED_FIELDS)
-                .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo letras y espacios')
-                .min(3, 'Debe tener al menos 3 caracteres')
-                .max(30, 'No puede exceder los 30 caracteres'),
+                .trim()
+                .required('El nombre del producto es obligatorio')
+                .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0),
             measurementUnit: Yup.string()
-                .required(REQUIRED_FIELDS)
-                .min(3, 'Debe tener al menos 3 caracteres')
-                .max(30, 'No puede exceder los 30 caracteres'),
-            quantity: Yup.number()
-                .required(REQUIRED_FIELDS)
-                .positive('Debe ser un número positivo')
-                .integer('Debe ser un número entero'),
-            unitPrice: Yup.number()
-                .required(REQUIRED_FIELDS)
-                .positive('Debe ser un número positivo')
-                .test(
-                    'is-decimal',
-                    'Debe tener como máximo dos decimales',
-                    (value) => /^\d+(\.\d{1,2})?$/.test(value)
-                ),
+                .trim()
+                .required('La unidad de entrada es obligatoria')
+                .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
+            quantity: Yup.number().min(0, 'La cantidad no puede ser negativa').required('La cantidad es obligatoria'),
+            unitPrice: Yup.number().min(0, 'El precio no puede ser negativo').required('El precio es obligatorio'),
         })
     ),
 });
