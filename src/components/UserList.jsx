@@ -48,7 +48,7 @@ const UserList = ({ refresh, onEditUser }) => {
                 allowOutsideClick: false,
             });
 
-            if (result.isConfirmed) { // Mover este bloque dentro del else
+            if (result.isConfirmed) { 
                 const response = await deleteUser(uuid);
                 if (response.state === 'success') {
                     Swal.fire({
