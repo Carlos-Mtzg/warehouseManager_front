@@ -31,7 +31,10 @@ const Layout = () => {
         <aside className={`${styles['sidebar']} slide-in-left`}>
           <ul className={`${styles['sidebar-nav']}`}>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="#" className={`${styles['sidebar-link']}`}>
+              <Link
+                to={role === 'ROLE_ADMIN' ? '/admin/' : '/product-entries'}
+                className={`${styles['sidebar-link']}`}
+              >
                 <i className="bi bi-grid me-3"></i>
                 <span>Inicio</span>
               </Link>
@@ -94,7 +97,7 @@ const Layout = () => {
             </Link>
           </div>
         </aside>
-        <div className={`p-4 overflow-auto ${styles['main']}`}>
+        <div className={`p-4 overflow-auto ${styles['main']}`} style={{ height: 'calc(95vh - 80px)', overflowY: 'auto' }}>
           <Outlet />
         </div>
       </div>
