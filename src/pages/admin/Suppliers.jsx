@@ -1,27 +1,27 @@
 import { useState } from 'react'
-import styles from '../../assets/css/users.module.css'
-import AddSupplierModal from '../../components/AddSupplierModal'
+import AddSupplier from '../../components/AddSupplier'
 import SupplierList from '../../components/SupplierList'
+import styles from '../../assets/css/users.module.css'
 
 const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
 
   const handleAddClose = () => setShowAddModal(false)
-
+  const handleResetForm = (resetForm) => resetForm()
   const handleSupplierAdded = () => setRefreshTable((prev) => !prev)
 
   return (
     <>
-      <AddSupplierModal
+      <AddSupplier
         show={showAddModal}
         handleClose={handleAddClose}
+        onResetForm={handleResetForm}
         onSupplierAdded={handleSupplierAdded}
       />
 
       <div className="content d-flex flex-column gap-3 slide-up">
         <h1 className={styles.title}>Gestión de Proveedores</h1>
-
         <div className="d-flex align-items-center gap-3">
           <div className="input-group">
             <input
@@ -48,7 +48,6 @@ const Suppliers = () => {
             <span></span>
           </button>
         </div>
-
         <SupplierList refresh={refreshTable} />
       </div>
     </>

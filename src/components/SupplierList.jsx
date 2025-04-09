@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import styles from '../assets/css/users.module.css'
-import AxiosClient from '../config/axios-client'
+import { getAllSuppliers, deleteSupplier } from '../services/ApiSupplier'
 
 const SupplierList = ({ refresh }) => {
   const [suppliers, setSuppliers] = useState([])
@@ -13,20 +13,16 @@ const SupplierList = ({ refresh }) => {
   }, [refresh])
 
   const fetchSuppliers = async () => {
-    try {
-      const response = await AxiosClient.get('supplier/')
-      if (response) {
-        setSuppliers(response.data)
-        setError(null)
-      } else {
-        throw new Error(response.message || 'Error al obtener proveedores')
-      }
-    } catch (err) {
-      setError(err.message || 'Error inesperado al cargar proveedores')
+    const result = await getAllSuppliers()
+    if (result.state === 'success') {
+      setSuppliers(result.data)
+      setError(null)
+    } else {
+      setError(result.message)
     }
   }
 
-  const deleteSupplier = async (uuid) => {
+  const handleDeleteSupplier = async (uuid) => {
     const result = await Swal.fire({
       title: '¿Eliminar proveedor?',
       text: 'Esta acción no se puede deshacer.',
@@ -40,22 +36,21 @@ const SupplierList = ({ refresh }) => {
     })
 
     if (result.isConfirmed) {
-      try {
-        const response = await AxiosClient.delete(`supplier/${uuid}`)
-        if (response.state === 'success') {
-          Swal.fire({
-            title: 'Proveedor eliminado',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(fetchSuppliers)
-        } else {
-          throw new Error(
-            response.message || 'No se pudo eliminar el proveedor'
-          )
-        }
-      } catch (error) {
-        Swal.fire('Error', error.message, 'error')
+      const response = await deleteSupplier(uuid)
+      if (response.state === 'success') {
+        await Swal.fire({
+          title: 'Proveedor eliminado',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000,
+        })
+        fetchSuppliers() // Refrescar lista
+      } else {
+        Swal.fire(
+          'Error',
+          response.message || 'No se pudo eliminar el proveedor',
+          'error'
+        )
       }
     }
   }
@@ -76,7 +71,7 @@ const SupplierList = ({ refresh }) => {
             <tr>
               <th className="text-center">#</th>
               <th className="text-center">Nombre</th>
-              <th className="text-center">Correo electrónico</th>
+              <th className="text-center">Correo</th>
               <th className="text-center">Acciones</th>
             </tr>
           </thead>
@@ -90,7 +85,7 @@ const SupplierList = ({ refresh }) => {
                   <td className="text-center d-flex justify-content-center gap-3">
                     <button
                       className={`text-danger ${styles['btn-custom']}`}
-                      onClick={() => deleteSupplier(supplier.uuid)}
+                      onClick={() => handleDeleteSupplier(supplier.uuid)}
                     >
                       <i className="bi bi-trash"></i>
                     </button>
@@ -113,7 +108,6 @@ const SupplierList = ({ refresh }) => {
 
 SupplierList.propTypes = {
   refresh: PropTypes.bool.isRequired,
-  onEditSupplier: PropTypes.func.isRequired,
 }
 
 export default SupplierList
