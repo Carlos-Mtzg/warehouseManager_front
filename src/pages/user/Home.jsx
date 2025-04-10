@@ -60,7 +60,7 @@ const UserHome = () => {
                 className={localStyles.image}
               />
               <p className="text-muted mt-3">
-                Registra todas la entrada de todos los productos que lleguen al
+                Registra todas las entradas de todos los productos que lleguen al
                 almacén.
               </p>
             </div>
@@ -71,11 +71,11 @@ const UserHome = () => {
               className={`bg-card p-4 rounded shadow text-center ${localStyles['card-hover']}`}
             >
               <button
-                className={`rounded mb-3 w-100 ${styles['primary-outline-btn']}`}
+                className={`rounded mb-3 w-100 ${styles['submit-btn']}`}
                 onClick={() => navigate('/product-outs')}
               >
                 <div
-                  className={`btn d-flex justify-content-center ${styles['primary-outline-content']}`}
+                  className={`btn d-flex justify-content-center ${styles['submit-content']}`}
                 >
                   Registrar salida<i className="bi bi-box-arrow-up ms-2"></i>
                 </div>
@@ -87,7 +87,7 @@ const UserHome = () => {
                 className={localStyles.image}
               />
               <p className="text-muted mt-3">
-                Registra todas la salida de todos los productos que salgan del
+                Registra todas las salidas de todos los productos que salgan del
                 almacén.
               </p>
             </div>
