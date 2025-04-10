@@ -67,6 +67,8 @@ const ProductEntryForm = () => {
         validationSchema,
         onSubmit: async (values) => {
             try {
+                const relatedUserUUID = localStorage.getItem('uuid'); 
+
                 setIsSubmitting(true);
 
                 const productEntryList = values.products.map((product) => ({
@@ -76,6 +78,7 @@ const ProductEntryForm = () => {
                     measurementUnit: product.measurementUnit,
                     quantity: parseInt(product.quantity, 10),
                     unitPrice: parseFloat(product.unitPrice),
+                    relatedUserUUID: relatedUserUUID,
                 }));
 
                 const response = await registerProductEntry(productEntryList);
