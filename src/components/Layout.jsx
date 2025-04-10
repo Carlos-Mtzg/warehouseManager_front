@@ -32,7 +32,7 @@ const Layout = () => {
           <ul className={`${styles['sidebar-nav']}`}>
             <li className={`${styles['sidebar-item']}`}>
               <Link
-                to={role === 'ROLE_ADMIN' ? '/admin/' : '/product-entries'}
+                to={role === 'ROLE_ADMIN' ? '/admin/' : '/user'}
                 className={`${styles['sidebar-link']}`}
               >
                 <i className="bi bi-grid me-3"></i>

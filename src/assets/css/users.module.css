@@ -1,180 +1,195 @@
 :root {
-    --color-primary: #16423C;
-    --color-secondary: #6A9C89;
-    --color-green: #C4DAD2;
-    --color-white: #FFFFFF;
-    --color-background: #E9EFEC;
-    --color-background-section: #F9F9F9;
-    --color-text: #626766;
-    --color-text-primary: #565C5F;
-    --sign-out: #8a0000;
+  --color-primary: #16423c;
+  --color-secondary: #6a9c89;
+  --color-green: #c4dad2;
+  --color-white: #ffffff;
+  --color-background: #e9efec;
+  --color-background-section: #f9f9f9;
+  --color-text: #626766;
+  --color-text-primary: #565c5f;
+  --sign-out: #8a0000;
 }
 
 .title {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .primary-btn {
-    border: none;
-    position: relative;
-    background-color: var(--color-primary);
-    font-size: 1rem;
-    color: var(--color-white);
-    cursor: pointer;
-    overflow: hidden;
+  border: none;
+  position: relative;
+  background-color: var(--color-primary);
+  font-size: 1rem;
+  color: var(--color-white);
+  cursor: pointer;
+  overflow: hidden;
 }
 
-
 .primary-content {
-    color: var(--color-white);
-    position: relative;
-    z-index: 2;
+  color: var(--color-white);
+  position: relative;
+  z-index: 2;
 }
 
 .primary-btn span {
-    position: absolute;
-    width: 100%;
-    height: 95px;
-    background-color: var(--color-secondary);
-    top: -50%;
-    left: -100%;
-    transition: all 0.3s;
-    z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 95px;
+  background-color: var(--color-secondary);
+  top: -50%;
+  left: -100%;
+  transition: all 0.3s;
+  z-index: 1;
 }
 
 .primary-btn:hover span {
-    left: -0%;
+  left: -0%;
 }
 
-
 .secondary-btn {
-    border: 1px solid var(--color-primary);
-    color: var(--color-primary);
-    background-color: transparent;
-    position: relative;
-    cursor: pointer;
-    overflow: hidden;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .secondary-content {
-    position: relative;
-    color: var(--color-primary);
-    z-index: 2;
+  position: relative;
+  color: var(--color-primary);
+  z-index: 2;
 }
 
 .secondary-btn span {
-    position: absolute;
-    width: 100%;
-    height: 95px;
-    background-color: #16423c37;
-    top: -50%;
-    left: -100%;
-    transition: all 0.3s;
-    z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 95px;
+  background-color: #16423c37;
+  top: -50%;
+  left: -100%;
+  transition: all 0.3s;
+  z-index: 1;
 }
 
 .secondary-btn:hover span {
-    left: -0%;
+  left: -0%;
 }
 
 .modal-header {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .label {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .table-custom {
-    border: transparent;
+  border: transparent;
 }
 
 .table-custom th {
-    color: var(--color-primary);
-    background-color: transparent;
+  color: var(--color-primary);
+  background-color: transparent;
 }
 
 .table-custom td {
-    background-color: transparent;
-    border: transparent;
+  background-color: transparent;
+  border: transparent;
 }
 
 .btn-custom {
-    background-color: transparent;
-    border: none;
-    transition: all 0.3s ease-in-out !important;
+  background-color: transparent;
+  border: none;
+  transition: all 0.3s ease-in-out !important;
 }
 
 .btn-custom:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .profile {
-    width: 120px;
+  width: 120px;
 }
 
 .primary-text {
-    color: var(--color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .secondary-text {
-    color: var(--color-text);
+  color: var(--color-text);
 }
 
 .primary-outline-btn {
-    border: 1px solid var(--color-primary);
-    position: relative;
-    background-color: transparent;
-    color: var(--color-primary);
-    cursor: pointer;
-    overflow: hidden;
+  border: 1px solid var(--color-primary);
+  position: relative;
+  background-color: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  overflow: hidden;
 }
 
-
 .primary-outline-content {
-    color: var(--color-primary);
-    position: relative;
-    z-index: 2;
+  color: var(--color-primary);
+  position: relative;
+  z-index: 2;
 }
 
 .primary-outline-btn span {
-    position: absolute;
-    width: 100%;
-    height: 95px;
-    background-color: #16423c3f;
-    top: -50%;
-    left: -100%;
-    transition: all 0.3s;
-    z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 95px;
+  background-color: #16423c3f;
+  top: -50%;
+  left: -100%;
+  transition: all 0.3s;
+  z-index: 1;
 }
 
 .primary-outline-btn:hover span {
-    left: -0%;
+  left: -0%;
 }
 
 .inner-shadow {
-    box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.04),
-        inset 0px -4px 6px rgba(0, 0, 0, 0.04),
-        inset 4px 0px 6px rgba(0, 0, 0, 0.04),
-        inset -4px 0px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.04),
+    inset 0px -4px 6px rgba(0, 0, 0, 0.04),
+    inset 4px 0px 6px rgba(0, 0, 0, 0.04),
+    inset -4px 0px 6px rgba(0, 0, 0, 0.04);
 }
 
 .user-card {
-    background-color: var(--color-background);
+  background-color: var(--color-background);
 }
 
 .user-card .name {
-    font-size: 14px;
-    color: var(--color-primary);
+  font-size: 14px;
+  color: var(--color-primary);
 }
 
 .user-card .email {
-    font-size: 12px;
-    color: var(--color-text);
+  font-size: 12px;
+  color: var(--color-text);
 }
 
 .profile-card {
-    width: 52px;
-    height: 52px;
+  width: 52px;
+  height: 52px;
+}
+.user-home-container {
+  background-color: #f5f7f6;
+  min-height: 100vh;
+}
+
+.image {
+  max-height: 150px;
+  width: auto;
+  object-fit: contain;
+}
+
+.card-hover {
+  transition: transform 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: scale(1.03);
 }
