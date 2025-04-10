@@ -11,11 +11,20 @@ const EntriesList = () => {
   const fetchEntries = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await AxiosClient.get(`productEntry/`, {
+      const role = localStorage.getItem('role'); // Obtener el rol del localStorage
+      const uuid = localStorage.getItem('uuid'); // Obtener el uuid del localStorage
+
+      let endpoint = 'productEntry/';
+      if (role !== 'ROLE_ADMIN') {
+        endpoint = `productEntry/user/${uuid}`; // Cambiar el endpoint si el rol no es ROLE_ADMIN
+      }
+
+      const response = await AxiosClient.get(endpoint, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setEntries(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error al obtener las entradas.', 'error');
