@@ -60,8 +60,8 @@ const UserHome = () => {
                 className={localStyles.image}
               />
               <p className="text-muted mt-3">
-                Registra todas las entradas de todos los productos que lleguen al
-                almacén.
+                Registra todas las entradas de los productos que lleguen
+                al almacén.
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ const UserHome = () => {
                 className={localStyles.image}
               />
               <p className="text-muted mt-3">
-                Registra todas las salidas de todos los productos que salgan del
+                Registra todas las salidas de los productos que salgan del
                 almacén.
               </p>
             </div>
@@ -109,8 +109,9 @@ const UserHome = () => {
             registro.
           </li>
           <li>
-            En caso de error al registrar la entrada, cancela el registro y
-            vuelve a intentarlo correctamente.
+            En caso de que exista algún error al registrar la entrada de
+            productos ve a la sección de entradas, cancela el registro y vuelve
+            a registrar la entrada de los productos correctamente.
           </li>
           <br />
           <li>
@@ -119,8 +120,7 @@ const UserHome = () => {
           <li>Registra las salidas en cuanto se realicen.</li>
           <li>Verifica los datos de salida antes de confirmar el registro.</li>
           <li>
-            En caso de error al registrar la salida, cancela el registro y
-            vuelve a intentarlo correctamente.
+          En caso de que exista algún error al registrar la salida de productos ve a la sección de entradas, cancela el registro y vuelve a registrar la salida de los productos correctamente.
           </li>
         </ul>
       </div>
