@@ -71,6 +71,7 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
           handleError('Error', response.message || 'Error desconocido');
         }
       } catch (error) {
+        handleClose()
         handleError('Error', 'Ocurrió un error inesperado');
       } finally {
         setIsSubmitting(false);
