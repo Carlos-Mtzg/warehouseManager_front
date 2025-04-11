@@ -1,35 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
 import { useContext, useState } from 'react';
 import { authLogin } from '../../services/ApiAuth';
 import AuthContext from '../../context/AuthProvider';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
-
-const handleSuccess = (title, text, callback) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'success',
-    showConfirmButton: false,
-    timer: 1000,
-  }).then(() => {
-    if (callback) callback();
-  });
-};
-
-const handleError = (title, text) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'error',
-    showConfirmButton: false,
-    timer: 2000,
-  });
-};
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);

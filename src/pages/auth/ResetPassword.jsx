@@ -2,33 +2,12 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../../services/ApiAuth';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
-import Swal from 'sweetalert2';
 import { passwordSchema } from '../../validations/authValidation';
 
-const handleSuccess = (title, text, callback) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'success',
-    showConfirmButton: false,
-    timer: 2000,
-  }).then(() => {
-    if (callback) callback();
-  });
-};
-
-const handleError = (title, text) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'error',
-    showConfirmButton: false,
-    timer: 2000,
-  });
-};
 
 const ResetPassword = () => {
   const { token } = useParams();

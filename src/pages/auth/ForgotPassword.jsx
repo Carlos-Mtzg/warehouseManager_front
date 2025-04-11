@@ -1,35 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import { resetPasswordEmail } from '../../services/ApiAuth';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
-
-const handleSuccess = (title, text, callback) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        if (callback) callback();
-    });
-};
-
-const handleError = (title, text) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-    });
-};
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
