@@ -6,7 +6,33 @@ import AuthContext from '../context/AuthProvider'
 
 
 const Layout = () => {
-  const { handleLogout, role } = useContext(AuthContext)
+const { handleLogout, role } = useContext(AuthContext)
+import styles from '../assets/css/sidebar.module.css';
+import { Outlet, Link } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import Header from './Header';
+import AuthContext from '../context/AuthProvider';
+import UserCard from './UserCard';
+import { getUserByUUID } from '../services/ApiUser';
+
+const Layout = () => {
+  const { handleLogout, role } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  const loadUser = async () => {
+    const uuid = localStorage.getItem('uuid');
+    const response = await getUserByUUID(uuid);
+    if (response.state === 'success') {
+      setUser(response.user);
+    } else {
+      console.error('Error al cargar la información del usuario');
+    }
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <div className={`${styles['content']}`}>
       <Header />
@@ -14,7 +40,10 @@ const Layout = () => {
         <aside className={`${styles['sidebar']} slide-in-left`}>
           <ul className={`${styles['sidebar-nav']}`}>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="#" className={`${styles['sidebar-link']}`}>
+              <Link
+                to={role === 'ROLE_ADMIN' ? '/admin/' : '/product-entries'}
+                className={`${styles['sidebar-link']}`}
+              >
                 <i className="bi bi-grid me-3"></i>
                 <span>Inicio</span>
               </Link>
@@ -72,6 +101,9 @@ const Layout = () => {
               </li>
             )}
           </ul>
+          <div className="px-3 mb-5">
+            <UserCard user={user} loadUser={loadUser} />
+          </div>
           <div className={styles['sidebar-footer']}>
             <Link
               onClick={handleLogout}
@@ -83,7 +115,7 @@ const Layout = () => {
             </Link>
           </div>
         </aside>
-        <div className={`p-4 overflow-auto ${styles['main']}`}>
+        <div className={`p-4 overflow-auto ${styles['main']}`} style={{ height: 'calc(95vh - 80px)', overflowY: 'auto' }}>
           <Outlet />
         </div>
       </div>

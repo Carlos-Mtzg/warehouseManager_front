@@ -7,7 +7,7 @@ const RoleBasedRoute = ({ allowedRoles }) => {
     const { auth, role } = useContext(AuthContext);
 
     if (!auth) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
     }
 
     if (!allowedRoles.includes(role)) {

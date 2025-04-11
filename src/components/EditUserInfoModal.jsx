@@ -1,56 +1,45 @@
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import { updateUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
 import styles from '../assets/css/users.module.css';
-import { editUserSchema } from '../validations/userValidations';
-import AuthContext from '../context/AuthProvider';
+import { editUserInfoSchema } from '../validations/userValidations';
+import { updateInfoUser } from '../services/ApiUser';
 
-const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
+const EditUserInfoModal = ({ user, handleClose, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { updateUser: updateUserContext } = useContext(AuthContext);
 
-    const validationSchema = editUserSchema;
+    const validationSchema = editUserInfoSchema;
 
-    const formik = useFormik({
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        touched,
+        resetForm,
+    } = useFormik({
         initialValues: {
             name: user.name || '',
             lastname: user.lastname || '',
-            role: user.role.name === 'ROLE_ADMIN' ? 'admin' : user.role.name === 'ROLE_USER' ? 'user' : '',
         },
         validationSchema,
-        enableReinitialize: true,
         onSubmit: async (values) => {
             try {
                 setIsSubmitting(true);
-
-                const roleMapping = {
-                    admin: 1,
-                    user: 2,
-                };
-
-                const requestBody = {
-                    name: values.name,
-                    lastname: values.lastname,
-                    role: {
-                        id: roleMapping[values.role],
-                    },
-                };
-
-                const response = await updateUser(user.uuid, requestBody.name, requestBody.lastname, requestBody.role);
+                const response = await updateInfoUser(user.uuid, values.name, values.lastname);
                 if (response.state === 'success') {
-                    await updateUserContext();
                     handleClose();
                     Swal.fire({
-                        title: 'Usuario actualizado',
-                        text: 'La información del usuario se actualizó correctamente',
+                        title: 'Actualización Correcta',
+                        text: 'Tu información se actualizó correctamente',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2000,
                     }).then(() => {
-                        formik.resetForm();
+                        resetForm();
                         onUserUpdated();
                     });
                 } else {
@@ -59,8 +48,8 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                         text: 'Ocurrió un error inesperado',
                         icon: 'error',
                         showConfirmButton: false,
-                        timer: 2000
-                    })
+                        timer: 2000,
+                    });
                 }
             } catch (error) {
                 Swal.fire({
@@ -68,8 +57,8 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                     text: 'Ocurrió un error inesperado',
                     icon: 'error',
                     showConfirmButton: false,
-                    timer: 2000
-                })
+                    timer: 2000,
+                });
             } finally {
                 setIsSubmitting(false);
             }
@@ -77,16 +66,16 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
     });
 
     const handleCancel = () => {
-        formik.resetForm();
+        resetForm();
         handleClose();
     };
 
     return (
-        <Modal show={show} onHide={handleClose} centered backdrop="static" keyboard={false}>
+        <Modal show={true} onHide={handleCancel} centered backdrop="static" keyboard={false}>
             <Modal.Header className={`modal-title fs-5 ${styles['modal-header']}`}>
-                <h3>Editar Usuario</h3>
+                <h3>Editar mi Información</h3>
             </Modal.Header>
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <Modal.Body className="p-4 rounded">
                     <div className="d-flex flex-column gap-3">
                         <div className="form-group">
@@ -100,17 +89,17 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                                 type="text"
                                 id="name"
                                 name="name"
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`form-control py-3 ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
+                                value={values.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={`form-control py-3 ${touched.name && errors.name ? 'is-invalid' : ''}`}
                                 placeholder="Escribe aquí el nombre"
                             />
-                            {formik.touched.name && formik.errors.name ? (
+                            {touched.name && errors.name && (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {formik.errors.name}
+                                    {errors.name}
                                 </div>
-                            ) : null}
+                            )}
                         </div>
                         <div className="form-group">
                             <label
@@ -123,50 +112,26 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                                 type="text"
                                 id="lastname"
                                 name="lastname"
-                                value={formik.values.lastname}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`form-control py-3 ${formik.touched.lastname && formik.errors.lastname ? 'is-invalid' : ''}`}
+                                value={values.lastname}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={`form-control py-3 ${touched.lastname && errors.lastname ? 'is-invalid' : ''}`}
                                 placeholder="Escribe aquí el apellido"
                             />
-                            {formik.touched.lastname && formik.errors.lastname ? (
+                            {touched.lastname && errors.lastname && (
                                 <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {formik.errors.lastname}
+                                    {errors.lastname}
                                 </div>
-                            ) : null}
-                        </div>
-                        <div className="form-group">
-                            <label
-                                htmlFor="role"
-                                className={`form-label fw-semibold ${styles['label']}`}
-                            >
-                                Rol de Usuario:
-                            </label>
-                            <select
-                                id="role"
-                                name="role"
-                                value={formik.values.role}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`form-control py-3 ${formik.touched.role && formik.errors.role ? 'is-invalid' : ''}`}
-                            >
-                                <option value="" disabled>
-                                    Selecciona una opción
-                                </option>
-                                <option value="admin">Administrador</option>
-                                <option value="user">Almacenista</option>
-                            </select>
-                            {formik.touched.role && formik.errors.role ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {formik.errors.role}
-                                </div>
-                            ) : null}
+                            )}
                         </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
-                        className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type="button">
+                        className={`rounded ${styles['secondary-btn']}`}
+                        onClick={handleCancel}
+                        type="button"
+                    >
                         <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
                             Cancelar
                         </div>
@@ -178,11 +143,14 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                             type="submit"
                             disabled
                         >
-                            <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                            <div
+                                className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`}
+                                style={{ height: '37.6px' }}
+                            >
                                 Cargando
                                 <output
                                     className="spinner-border"
-                                    style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
+                                    style={{ height: '1.2rem', width: '1.2rem', fontSize: '10px' }}
                                 >
                                     <span className="visually-hidden"></span>
                                 </output>
@@ -207,11 +175,10 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
     );
 };
 
-EditUserModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
+EditUserInfoModal.propTypes = {
     user: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
     onUserUpdated: PropTypes.func.isRequired,
 };
 
-export default EditUserModal;
+export default EditUserInfoModal;

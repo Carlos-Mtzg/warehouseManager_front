@@ -282,7 +282,10 @@ const ProductEntryForm = () => {
                                                         : ''
                                                         }`}
                                                     value={product.quantity}
-                                                    onChange={handleChange}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10) || 0);
+                                                        setFieldValue(`products[${index}].quantity`, value);
+                                                    }}
                                                     onBlur={handleBlur}
                                                     placeholder="0"
                                                 />
@@ -310,7 +313,10 @@ const ProductEntryForm = () => {
                                                             : ''
                                                             }`}
                                                         value={product.unitPrice}
-                                                        onChange={handleChange}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value, 10) || 0);
+                                                            setFieldValue(`products[${index}].unitPrice`, value);
+                                                        }}
                                                         onBlur={handleBlur}
                                                         placeholder="0.00"
                                                     />
