@@ -54,7 +54,7 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
                     }).then(() => {
                         resetForm();
                         handleClose();
-                        if (onSupplierAdded) onSupplierAdded(); // ✅ Ejecutar si está definida
+                        if (onSupplierAdded) onSupplierAdded();
                     });
                 } else {
                     Swal.fire({
