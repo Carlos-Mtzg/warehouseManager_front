@@ -56,14 +56,6 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
                         handleClose();
                         if (onSupplierAdded) onSupplierAdded();
                     });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: response.message || 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
                 }
             } catch (error) {
                 Swal.fire({
