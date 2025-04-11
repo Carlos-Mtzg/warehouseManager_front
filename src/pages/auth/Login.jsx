@@ -43,7 +43,11 @@ const Login = () => {
             showConfirmButton: false,
             timer: 1000
           }).then(() => {
-            navigate('/product-entries');
+            if (role === 'ROLE_USER') {
+              navigate('/user');
+            } else if (role === 'ROLE_ADMIN') {
+              navigate('/admin');
+            }
           });
         } else {
           Swal.fire({
@@ -52,7 +56,7 @@ const Login = () => {
             icon: 'error',
             showConfirmButton: false,
             timer: 2000
-          })
+          });
         }
         setIsSubmitting(false);
       } catch (error) {
@@ -62,7 +66,7 @@ const Login = () => {
           icon: 'error',
           showConfirmButton: false,
           timer: 2000
-        })
+        });
       } finally {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
@@ -129,10 +133,10 @@ const Login = () => {
               </div>
             ) : null}
           </div>
-          <div className="row mt-3">
+          <div className="mt-3">
             {isSubmitting ? (
               <button
-                className={`rounded ${styles['submit-btn']}`}
+                className={`rounded w-100 ${styles['submit-btn']}`}
                 type="submit"
                 disabled
               >
@@ -149,7 +153,7 @@ const Login = () => {
               </button>
             ) : (
               <button
-                className={`rounded ${styles['submit-btn']}`}
+                className={`rounded w-100 ${styles['submit-btn']}`}
                 type="submit"
                 disabled={isSubmitting}
               >

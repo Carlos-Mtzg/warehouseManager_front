@@ -47,7 +47,7 @@ const ForgotPassword = () => {
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {
-                        navigate('/login');
+                        navigate('/');
                     });
                 }
                 setIsSubmitting(false);
@@ -125,7 +125,7 @@ const ForgotPassword = () => {
                                 <span></span>
                             </button>
                         )}
-                        <Link className={`rounded ${styles['cancel-btn']}`} to='/login'>Cancelar</Link>
+                        <Link className={`rounded ${styles['cancel-btn']}`} to='/'>Cancelar</Link>
                     </div>
                 </form>
             </div>

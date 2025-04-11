@@ -9,6 +9,7 @@ import UserStatus from './UserStatus';
 const UserList = ({ refresh, onEditUser }) => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
+    const loggedInUserUUID = localStorage.getItem('uuid');
 
     useEffect(() => {
         fetchUsers();
@@ -24,32 +25,43 @@ const UserList = ({ refresh, onEditUser }) => {
     };
 
     const handleDeleteUser = async (uuid) => {
-        const result = await Swal.fire({
-            title: '¿Estás seguro de eliminar el usuario?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#16423C',
-            reverseButtons: true,
-            allowOutsideClick: false,
-        });
+        if (uuid === loggedInUserUUID) {
+            Swal.fire({
+                title: 'Error',
+                text: 'No puedes eliminar tu propio usuario',
+                icon: 'error',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 2000,
+            });
+        } else {
+            const result = await Swal.fire({
+                title: '¿Estás seguro de eliminar el usuario?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#16423C',
+                reverseButtons: true,
+                allowOutsideClick: false,
+            });
 
-        if (result.isConfirmed) {
-            const response = await deleteUser(uuid);
-            if (response.state === 'success') {
-                Swal.fire({
-                    title: 'Usuario eliminado',
-                    text: 'El usuario ya no tiene acceso al sistema',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    fetchUsers();
-                });
-            } else {
-                Swal.fire('Error', response.message, 'error');
+            if (result.isConfirmed) {
+                const response = await deleteUser(uuid);
+                if (response.state === 'success') {
+                    Swal.fire({
+                        title: 'Usuario eliminado',
+                        text: 'El usuario ya no tiene acceso al sistema',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        fetchUsers();
+                    });
+                } else {
+                    Swal.fire('Error', response.message, 'error');
+                }
             }
         }
     };
@@ -117,7 +129,7 @@ const UserList = ({ refresh, onEditUser }) => {
     };
 
     return (
-        <div>
+        <div className='slide-in-right'>
             {error && <div className="alert alert-danger"><i className="bi bi-exclamation-circle me-2"></i>{error}</div>}
             <div className="table-responsive">
                 <table className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}>
@@ -144,7 +156,7 @@ const UserList = ({ refresh, onEditUser }) => {
                                             "Administrador"
                                         )}
                                         {user.role.name === "ROLE_USER" && (
-                                            "Usuario"
+                                            "Almacenista"
                                         )}
                                     </td>
                                     <td className='d-flex gap-3 justify-content-center'>
@@ -161,10 +173,12 @@ const UserList = ({ refresh, onEditUser }) => {
                                         <button className={`${styles['btn-custom']}`} onClick={() => onEditUser(user)}>
                                             <i className="bi bi-pencil-square"></i>
                                         </button>
-                                        <button className={`text-danger ${styles['btn-custom']}`} onClick={() => handleDeleteUser(user.uuid)}>
+                                        <button
+                                            className={`text-danger ${styles['btn-custom']}`}
+                                            onClick={() => handleDeleteUser(user.uuid)}
+                                        >
                                             <i className="bi bi-trash"></i>
                                         </button>
-
                                     </td>
                                 </tr>
                             ))

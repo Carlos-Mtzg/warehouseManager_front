@@ -120,3 +120,50 @@ export const editUserSchema = Yup.object({
     role: Yup.string()
         .required(REQUIRED_FIELDS),
 });
+
+export const editUserInfoSchema = Yup.object({
+    name: Yup.string()
+        .required(REQUIRED_FIELDS)
+        .matches(
+            /^[^\u3164\u200B\uFEFF]*$/,
+            INVISIBLE_CHARACTERS
+        )
+        .matches(
+            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            LETTERS_SPACES
+        )
+        .min(3, 'El nombre debe tener al menos 3 caracteres')
+        .max(30, 'El nombre no puede exceder los 30 caracteres')
+        .matches(
+            /^[^<>]*$/,
+            CHARACTERS_NOT_ALLOWED
+        )
+        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
+        .matches(
+            /^\S+(?: \S+)*$/,
+            CONSECUTIVE_SPACES
+        )
+        .trim(NO_SPACES),
+    lastname: Yup.string()
+        .required(REQUIRED_FIELDS)
+        .matches(
+            /^[^\u3164\u200B\uFEFF]*$/,
+            INVISIBLE_CHARACTERS
+        )
+        .matches(
+            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            LETTERS_SPACES
+        )
+        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
+        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
+        .matches(
+            /^[^<>]*$/,
+            CHARACTERS_NOT_ALLOWED
+        )
+        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
+        .matches(
+            /^\S+(?: \S+)*$/,
+            CONSECUTIVE_SPACES
+        )
+        .trim(NO_SPACES),
+});
