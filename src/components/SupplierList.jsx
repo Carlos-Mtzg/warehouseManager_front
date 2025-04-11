@@ -2,29 +2,29 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import styles from '../assets/css/users.module.css'
-import { deleteCategory, getAllCategories } from '../services/ApiCategories'
+import { getAllSuppliers, deleteSupplier } from '../services/ApiSupplier'
 
-const CategoryList = ({ refresh }) => {
-  const [categories, setCategories] = useState([])
+const SupplierList = ({ refresh }) => {
+  const [suppliers, setSuppliers] = useState([])
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchCategories()
+    fetchSuppliers()
   }, [refresh])
 
-  const fetchCategories = async () => {
-    const result = await getAllCategories()
+  const fetchSuppliers = async () => {
+    const result = await getAllSuppliers()
     if (result.state === 'success') {
-      setCategories(result.data)
+      setSuppliers(result.data)
       setError(null)
     } else {
       setError(result.message)
     }
   }
 
-  const handleDeleteCategory = async (uuid) => {
+  const handleDeleteSupplier = async (uuid) => {
     const result = await Swal.fire({
-      title: '¿Eliminar categoría?',
+      title: '¿Eliminar proveedor?',
       text: 'Esta acción no se puede deshacer.',
       icon: 'warning',
       showCancelButton: true,
@@ -36,20 +36,20 @@ const CategoryList = ({ refresh }) => {
     })
 
     if (result.isConfirmed) {
-      const response = await deleteCategory(uuid)
+      const response = await deleteSupplier(uuid)
       if (response.state === 'success') {
         await Swal.fire({
-          title: 'Categoría eliminada',
-          text: 'La categoría ha sido eliminada correctamente',
+          title: 'Proveedor eliminado',
+          text: 'El proveedor ha sido eliminado correctamente',
           icon: 'success',
           showConfirmButton: false,
           timer: 2000,
         })
-        fetchCategories()
+        fetchSuppliers()
       } else {
-        await Swal.fire(
+        Swal.fire(
           'Error',
-          response.message || 'No se pudo eliminar la categoría',
+          response.message || 'No se pudo eliminar el proveedor',
           'error'
         )
       }
@@ -72,19 +72,21 @@ const CategoryList = ({ refresh }) => {
             <tr>
               <th className="text-center">#</th>
               <th className="text-center">Nombre</th>
+              <th className="text-center">Correo</th>
               <th className="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(categories) && categories.length > 0 ? (
-              categories.map((category, index) => (
-                <tr key={category.id}>
+            {Array.isArray(suppliers) && suppliers.length > 0 ? (
+              suppliers.map((supplier, index) => (
+                <tr key={supplier.id}>
                   <td className="text-center">{index + 1}</td>
-                  <td className="text-center">{category.name}</td>
+                  <td className="text-center">{supplier.name}</td>
+                  <td className="text-center">{supplier.email}</td>
                   <td className="text-center d-flex justify-content-center gap-3">
                     <button
                       className={`text-danger ${styles['btn-custom']}`}
-                      onClick={() => handleDeleteCategory(category.uuid)}
+                      onClick={() => handleDeleteSupplier(supplier.uuid)}
                     >
                       <i className="bi bi-trash"></i>
                     </button>
@@ -93,8 +95,8 @@ const CategoryList = ({ refresh }) => {
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="text-center">
-                  No hay categorías disponibles
+                <td colSpan="4" className="text-center">
+                  No hay proveedores disponibles
                 </td>
               </tr>
             )}
@@ -105,8 +107,8 @@ const CategoryList = ({ refresh }) => {
   )
 }
 
-CategoryList.propTypes = {
+SupplierList.propTypes = {
   refresh: PropTypes.bool.isRequired,
 }
 
-export default CategoryList
+export default SupplierList

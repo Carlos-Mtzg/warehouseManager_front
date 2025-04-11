@@ -1,34 +1,34 @@
 import { useState } from 'react'
-import CategoryList from '../../components/CategoryList.jsx'
+import SupplierList from '../../components/SupplierList'
 import styles from '../../assets/css/users.module.css'
-import AddCategoryModal from '../../components/AddCategoryModal.jsx'
-const Categories = () => {
+import AddSupplierModal from '../../components/AddSupplierModal'
+
+const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
 
   const handleAddClose = () => setShowAddModal(false)
   const handleResetForm = (resetForm) => resetForm()
-
-  const handleCategoryAdded = () => setRefreshTable((prev) => !prev)
+  const handleSupplierAdded = () => setRefreshTable((prev) => !prev)
 
   return (
     <>
-      <AddCategoryModal
+      <AddSupplierModal
         show={showAddModal}
         handleClose={handleAddClose}
         onResetForm={handleResetForm}
-        onCategoryAdded={handleCategoryAdded}
+        onSupplierAdded={handleSupplierAdded}
       />
 
       <div className="content d-flex flex-column gap-3">
         <div className="slide-in-left d-flex flex-column gap-2">
-          <h1 className={styles.title}>Gestión de Categorías</h1>
+          <h1 className={styles.title}>Gestión de Proveedores</h1>
           <div className="d-flex align-items-center gap-3">
             <div className="input-group">
               <input
                 type="text"
                 className="form-control py-2"
-                placeholder="Buscar categoría por nombre"
+                placeholder="Buscar proveedor por nombre"
               />
               <button
                 type="submit"
@@ -50,10 +50,10 @@ const Categories = () => {
             </button>
           </div>
         </div>
-        <CategoryList refresh={refreshTable} />
+        <SupplierList refresh={refreshTable} />
       </div>
     </>
   )
 }
 
-export default Categories
+export default Suppliers
