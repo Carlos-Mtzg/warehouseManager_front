@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import AddSupplierModal from "../../components/AddSupplierModal";
-import AddCategoryModal from "../../components/AddCategoryModal";
+import AddSupplierModal from "../../components/modals/AddSupplierModal.jsx";
+import AddCategoryModal from "../../components/modals/AddCategoryModal.jsx";
 import styles from '../../assets/css/entries.module.css'
 import { fetchCategories, fetchSuppliers, registerProductEntry } from "../../services/ApiEntries";
 import { productEntriesSchema } from "../../validations/entriesValidation";

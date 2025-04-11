@@ -8,7 +8,7 @@ import { resetPasswordEmail } from '../../services/ApiAuth';
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
-import EmailField from '../../components/EmailField';
+import EmailField from '../../components/inputs/EmailField.jsx';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);

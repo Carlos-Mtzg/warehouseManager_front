@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from '../assets/css/auth/authentication.module.css'
+import styles from '../../assets/css/auth/authentication.module.css'
 
 const EmailField = ({
     id,

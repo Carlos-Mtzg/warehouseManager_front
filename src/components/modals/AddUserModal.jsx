@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { Modal } from 'react-bootstrap';
-import styles from "../assets/css/users.module.css"
+import styles from "../../assets/css/users.module.css"
 import { useState } from 'react';
-import { registerUser } from '../services/ApiUser';
-import { handleError, handleSuccess } from '../utils/userAlerts';
-import { addUserSchema } from '../validations/userValidations';
-import InputField from './InputField';
+import { registerUser } from '../../services/ApiUser.jsx';
+import { handleError, handleSuccess } from '../../utils/userAlerts.js';
+import { addUserSchema } from '../../validations/userValidations.js';
+import InputField from '../inputs/InputField.jsx';
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);

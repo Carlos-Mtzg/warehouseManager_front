@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../../assets/css/users.module.css';
-import EntriesList from '../../components/EntriesList';
+import EntriesList from '../../components/lists/EntriesList.jsx';
 
 const Entries = () => {
   return (

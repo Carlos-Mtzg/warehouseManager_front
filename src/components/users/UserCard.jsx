@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import styles from '../assets/css/users.module.css'
-import profile from '../assets/images/profile.png'
-import AuthContext from '../context/AuthProvider';
+import styles from '../../assets/css/users.module.css'
+import profile from '../../assets/images/profile.png'
+import AuthContext from '../../context/AuthProvider.jsx';
 
 const UserCard = () => {
     const { user } = useContext(AuthContext);

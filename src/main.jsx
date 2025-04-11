@@ -14,12 +14,12 @@ import Error404 from './pages/errors/Error404.jsx';
 import Error500 from './pages/errors/Error500.jsx';
 import Home from './pages/admin/Home.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
-import PrivateRoute from './components/PrivateRoute.jsx';
-import PublicRoute from './components/PublicRoute.jsx';
+import PrivateRoute from './components/routes/PrivateRoute.jsx';
+import PublicRoute from './components/routes/PublicRoute.jsx';
 import ProductEntry from './pages/user/ProductEntry.jsx';
 import Entries from './pages/admin/Entries.jsx';
 import Users from './pages/admin/Users.jsx';
-import RoleBasedRoute from './components/RoleBasedRoute.jsx';
+import RoleBasedRoute from './components/routes/RoleBasedRoute.jsx';
 import UserProfile from './pages/user/UserProfile.jsx';
 import UserHome from './pages/user/Home.jsx';
 import Categories from './pages/admin/Categories.jsx'

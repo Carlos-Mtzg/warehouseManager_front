@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addSupplierSchema } from "../validations/entriesValidation";
+import { addSupplierSchema } from "../../validations/entriesValidation.js";
 import { useFormik } from "formik";
-import { createSupplier } from "../services/ApiEntries";
-import styles from '../assets/css/entries.module.css';
-import { handleError, handleSuccess } from '../utils/simpleAlerts';
+import { createSupplier } from "../../services/ApiEntries.jsx";
+import styles from '../../assets/css/entries.module.css';
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 
 const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);

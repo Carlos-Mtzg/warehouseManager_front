@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { Modal } from 'react-bootstrap'
-import { addCategorySchema } from '../validations/entriesValidation'
+import { addCategorySchema } from '../../validations/entriesValidation.js'
 import { useFormik } from 'formik'
-import { createCategory } from '../services/ApiEntries'
-import styles from '../assets/css/entries.module.css'
-import { handleError, handleSuccess } from '../utils/simpleAlerts';
+import { createCategory } from '../../services/ApiEntries.jsx'
+import styles from '../../assets/css/entries.module.css'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 
 const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)

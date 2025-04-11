@@ -3,9 +3,9 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import styles from '../assets/css/users.module.css';
-import { editUserInfoSchema } from '../validations/userValidations';
-import { updateInfoUser } from '../services/ApiUser';
+import styles from '../../assets/css/users.module.css';
+import { editUserInfoSchema } from '../../validations/userValidations.js';
+import { updateInfoUser } from '../../services/ApiUser.jsx';
 
 const handleSuccess = (title, text, resetForm, callback) => {
     Swal.fire({

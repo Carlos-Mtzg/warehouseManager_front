@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import styles from '../../assets/css/users.module.css'
-import AddUserModal from '../../components/AddUserModal'
-import EditUserModal from '../../components/EditUserModal';
-import UserList from '../../components/UserList';
+import AddUserModal from '../../components/modals/AddUserModal.jsx'
+import EditUserModal from '../../components/modals/EditUserModal.jsx';
+import UserList from '../../components/users/UserList.jsx';
 
 const Users = () => {
     const [showAddUserModel, setShowAddUserModel] = useState(false);

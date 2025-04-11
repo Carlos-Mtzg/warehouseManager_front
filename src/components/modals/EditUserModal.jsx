@@ -2,12 +2,12 @@ import { useFormik } from 'formik';
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import { updateUser } from '../services/ApiUser';
-import { handleError, handleSuccess } from '../utils/userAlerts';
-import styles from '../assets/css/users.module.css';
-import { editUserSchema } from '../validations/userValidations';
-import AuthContext from '../context/AuthProvider';
-import InputField from './InputField';
+import { updateUser } from '../../services/ApiUser.jsx';
+import { handleError, handleSuccess } from '../../utils/userAlerts.js';
+import styles from '../../assets/css/users.module.css';
+import { editUserSchema } from '../../validations/userValidations.js';
+import AuthContext from '../../context/AuthProvider.jsx';
+import InputField from '../inputs/InputField.jsx';
 
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
