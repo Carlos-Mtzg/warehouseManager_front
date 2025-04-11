@@ -84,6 +84,30 @@ a.sidebar-link:hover {
     border-left: 3px solid var(--color-primary);
 }
 
+a.sidebar-ul-link {
+    padding: .925rem 1.625rem;
+    color: var(--color-primary);
+    display: block;
+    font-size: 1.05rem;
+    white-space: nowrap;
+    transition: all .3s ease-out;
+    text-decoration: none;
+}
+
+a.sidebar-ul-link:hover {
+    background-color: #002f5d23;
+
+}
+
+a.sidebar-ul-link span {
+    transition: all .3s ease-out;
+    margin-left: 2rem;
+}
+
+a.sidebar-ul-link:hover span {
+    margin-left: 2.5rem;
+}
+
 a.sign-out {
     color: var(--sign-out);
 }
