@@ -4,7 +4,6 @@ import AxiosClient from '../../config/axios-client';
 
 const StockMoney = () => {
     const chartRef = useRef(null);
-    const [totalAmounts, setTotalAmounts] = useState([]);
     const [formattedTotal, setFormattedTotal] = useState('0.00');
 
     useEffect(() => {
@@ -16,7 +15,6 @@ const StockMoney = () => {
                     name: item.productName,
                     value: item.totalAmount,
                 }));
-                setTotalAmounts(data);
 
                 const totalSum = data.reduce((sum, item) => sum + item.value, 0);
                 setFormattedTotal(totalSum.toLocaleString('en-US', {

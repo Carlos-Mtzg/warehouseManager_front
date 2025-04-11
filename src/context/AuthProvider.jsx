@@ -16,22 +16,22 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(() => localStorage.getItem('role') || '');
   const [user, setUser] = useState(null);
 
+  const fetchAndSetUser = async (setUser) => {
+    const uuid = localStorage.getItem('uuid');
+    if (uuid) {
+      const response = await getUserByUUID(uuid);
+      if (response.state === 'success') {
+        setUser(response.user);
+      }
+    }
+  };
+
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     setAuth(isTokenValid(accessToken));
     setRole(localStorage.getItem('role') || '');
 
-    const loadUser = async () => {
-      const uuid = localStorage.getItem('uuid');
-      if (uuid) {
-        const response = await getUserByUUID(uuid);
-        if (response.state === 'success') {
-          setUser(response.user);
-        }
-      }
-    };
-
-    loadUser();
+    fetchAndSetUser(setUser);
   }, []);
 
   const handleLogin = async (accessToken, role, uuid) => {
@@ -72,13 +72,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async () => {
-    const uuid = localStorage.getItem('uuid');
-    if (uuid) {
-      const response = await getUserByUUID(uuid);
-      if (response.state === 'success') {
-        setUser(response.user);
-      }
-    }
+    await fetchAndSetUser(setUser);
   };
 
 
