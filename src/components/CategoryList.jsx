@@ -45,7 +45,7 @@ const CategoryList = ({ refresh }) => {
           showConfirmButton: false,
           timer: 2000,
         })
-        fetchCategories() // Refrescar la tabla
+        fetchCategories()
       } else {
         await Swal.fire(
           'Error',
@@ -57,7 +57,7 @@ const CategoryList = ({ refresh }) => {
   }
 
   return (
-    <div>
+    <div className='slide-in-right'>
       {error && (
         <div className="alert alert-danger">
           <i className="bi bi-exclamation-circle me-2"></i>
