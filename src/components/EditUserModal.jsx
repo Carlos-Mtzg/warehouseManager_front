@@ -24,7 +24,6 @@ const handleSuccess = (resetForm, handleClose, onUserUpdated) => {
 };
 
 const handleError = (error) => {
-    console.error('Error al actualizar el usuario:', error);
     Swal.fire({
         title: 'Error',
         text: 'Ocurrió un error inesperado. Por favor, intenta de nuevo.',
