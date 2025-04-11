@@ -7,6 +7,32 @@ import Swal from 'sweetalert2';
 import styles from '../assets/css/users.module.css';
 import { editUserSchema } from '../validations/userValidations';
 import AuthContext from '../context/AuthProvider';
+import InputField from './charts/InputField';
+
+const handleSuccess = (resetForm, handleClose, onUserUpdated) => {
+    handleClose();
+    Swal.fire({
+        title: 'Usuario actualizado',
+        text: 'La información del usuario se actualizó correctamente',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+    }).then(() => {
+        resetForm();
+        if (onUserUpdated) onUserUpdated();
+    });
+};
+
+const handleError = (error) => {
+    console.error('Error al actualizar el usuario:', error);
+    Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error inesperado. Por favor, intenta de nuevo.',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+    });
+};
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -14,11 +40,21 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
 
     const validationSchema = editUserSchema;
 
+    const getRoleValue = (roleName) => {
+        if (roleName === 'ROLE_ADMIN') {
+            return 'admin';
+        }
+        if (roleName === 'ROLE_USER') {
+            return 'user';
+        }
+        return '';
+    };
+
     const formik = useFormik({
         initialValues: {
             name: user.name || '',
             lastname: user.lastname || '',
-            role: user.role.name === 'ROLE_ADMIN' ? 'admin' : user.role.name === 'ROLE_USER' ? 'user' : '',
+            role: getRoleValue(user.role.name),
         },
         validationSchema,
         enableReinitialize: true,
@@ -42,34 +78,12 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                 const response = await updateUser(user.uuid, requestBody.name, requestBody.lastname, requestBody.role);
                 if (response.state === 'success') {
                     await updateUserContext();
-                    handleClose();
-                    Swal.fire({
-                        title: 'Usuario actualizado',
-                        text: 'La información del usuario se actualizó correctamente',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        formik.resetForm();
-                        onUserUpdated();
-                    });
+                    handleSuccess(formik.resetForm, handleClose, onUserUpdated);
                 } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+                    handleError(response.message || 'Error desconocido');
                 }
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                handleError(error);
             } finally {
                 setIsSubmitting(false);
             }
@@ -96,44 +110,38 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                             >
                                 Nombre(s):
                             </label>
-                            <input
+                            <InputField
                                 type="text"
                                 id="name"
                                 name="name"
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                className={`form-control py-3 ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
-                                placeholder="Escribe aquí el nombre"
+                                touched={formik.touched.name}
+                                error={formik.errors.name}
+                                placeholder="Escribe aquí el nombre del usuario"
+                                className="form-control py-3"
                             />
-                            {formik.touched.name && formik.errors.name ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {formik.errors.name}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="form-group">
                             <label
                                 htmlFor="lastname"
                                 className={`form-label fw-semibold ${styles['label']}`}
                             >
-                                Apellido(s):
+                                Apellidos(s):
                             </label>
-                            <input
+                            <InputField
                                 type="text"
                                 id="lastname"
                                 name="lastname"
                                 value={formik.values.lastname}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                className={`form-control py-3 ${formik.touched.lastname && formik.errors.lastname ? 'is-invalid' : ''}`}
-                                placeholder="Escribe aquí el apellido"
+                                touched={formik.touched.lastname}
+                                error={formik.errors.lastname}
+                                placeholder="Escribe aquí los apellidos del usuario"
+                                className="form-control py-3"
                             />
-                            {formik.touched.lastname && formik.errors.lastname ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {formik.errors.lastname}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="form-group">
                             <label
