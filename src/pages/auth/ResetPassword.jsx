@@ -42,7 +42,7 @@ const ResetPassword = () => {
               showConfirmButton: false,
               timer: 2000
             }).then(() => {
-              navigate('/login');
+              navigate('/');
             });
           }
           setIsSubmitting(false);

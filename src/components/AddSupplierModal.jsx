@@ -30,8 +30,21 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
             try {
                 setIsSubmitting(true);
                 const response = await createSupplier(values.name, values.email);
-
-                if (response.state === 'success' || response.status === 'OK') {
+                if (response.status === 409) {
+                    handleClose();
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este proveedor ya ha sido registrado anteriormente',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        resetForm();
+                    })
+                }
+                if (response.state === 'success') {
+                    resetForm();
+                    handleClose();
                     Swal.fire({
                         title: 'Registro correcto',
                         text: 'Proveedor registrado correctamente',
@@ -41,7 +54,7 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
                     }).then(() => {
                         resetForm();
                         handleClose();
-                        if (onSupplierAdded) onSupplierAdded(); // ✅ Ejecutar si está definida
+                        if (onSupplierAdded) onSupplierAdded();
                     });
                 } else {
                     Swal.fire({
