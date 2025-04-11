@@ -6,6 +6,34 @@ import { useState } from 'react';
 import { registerUser } from '../services/ApiUser';
 import Swal from 'sweetalert2';
 import { addUserSchema } from '../validations/userValidations';
+import InputField from './charts/InputField';
+
+const handleSuccess = (resetForm, handleClose, onUserAdded) => {
+    handleClose();
+    Swal.fire({
+        title: 'Registro correcto',
+        text: 'Usuario registrado correctamente',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+    }).then(() => {
+        resetForm();
+        if (onUserAdded) onUserAdded();
+    });
+};
+
+const handleError = (resetForm, handleClose) => {
+    handleClose();
+    Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error inesperado',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+    }).then(() => {
+        resetForm();
+    })
+};
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,35 +76,13 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
 
                 const response = await registerUser(requestBody.name, requestBody.lastname, requestBody.email, requestBody.role);
                 if (response.state === 'success') {
-                    handleClose();
-                    Swal.fire({
-                        title: 'Registro correcto',
-                        text: 'Usuario registrado correctamente',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        resetForm();
-                        if (onUserAdded) onUserAdded();
-                    });
+                    handleSuccess(resetForm, handleClose, onUserAdded);
                 } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+                    handleError(resetForm, handleClose);
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                handleError(resetForm, handleClose);
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }
@@ -104,21 +110,18 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                             >
                                 Nombre(s):
                             </label>
-                            <input
+                            <InputField
                                 type="text"
                                 id="name"
                                 name="name"
                                 value={values.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={`form-control py-3 ${touched.name && errors.name ? 'is-invalid' : ''}`}
+                                touched={touched.name}
+                                error={errors.name}
                                 placeholder="Escribe aquí el nombre del usuario"
+                                className="form-control py-3"
                             />
-                            {touched.name && errors.name ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {errors.name}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="form-group">
                             <label
@@ -127,21 +130,18 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                             >
                                 Apellidos(s):
                             </label>
-                            <input
+                            <InputField
                                 type="text"
                                 id="lastname"
                                 name="lastname"
                                 value={values.lastname}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={`form-control py-3 ${touched.lastname && errors.lastname ? 'is-invalid' : ''}`}
+                                touched={touched.lastname}
+                                error={errors.lastname}
                                 placeholder="Escribe aquí los apellidos del usuario"
+                                className="form-control py-3"
                             />
-                            {touched.lastname && errors.lastname ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {errors.lastname}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="form-group">
                             <label
@@ -150,21 +150,18 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                             >
                                 Correo Electrónico:
                             </label>
-                            <input
+                            <InputField
                                 type="email"
                                 id="email"
                                 name="email"
                                 value={values.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''}`}
+                                touched={touched.email}
+                                error={errors.email}
                                 placeholder="Escribe aquí el correo electrónico del usuario"
+                                className="form-control py-3"
                             />
-                            {touched.email && errors.email ? (
-                                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                    {errors.email}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="form-group">
                             <label
@@ -196,13 +193,6 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button
-                        className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
-                        <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                            Cancelar
-                        </div>
-                        <span></span>
-                    </button>
                     {isSubmitting ? (
                         <button
                             className={`rounded ${styles['primary-btn']}`}
@@ -221,16 +211,25 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                             <span></span>
                         </button>
                     ) : (
-                        <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type='submit'
-                            disabled={isSubmitting}
-                        >
-                            <div className={`btn d-flex text-center ${styles['primary-content']}`}>
-                                Confirmar
-                            </div>
-                            <span></span>
-                        </button>
+                        <>
+                            <button
+                                className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
+                                <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
+                                    Cancelar
+                                </div>
+                                <span></span>
+                            </button>
+                            <button
+                                className={`rounded ${styles['primary-btn']}`}
+                                type='submit'
+                                disabled={isSubmitting}
+                            >
+                                <div className={`btn d-flex text-center ${styles['primary-content']}`}>
+                                    Confirmar
+                                </div>
+                                <span></span>
+                            </button>
+                        </>
                     )}
                 </Modal.Footer>
             </form>
