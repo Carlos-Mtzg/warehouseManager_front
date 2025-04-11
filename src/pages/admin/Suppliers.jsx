@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import SupplierList from '../../components/SupplierList'
+import SupplierList from '../../components/lists/SupplierList.jsx'
 import styles from '../../assets/css/users.module.css'
-import AddSupplierModal from '../../components/AddSupplierModal'
+import AddSupplierModal from '../../components/modals/AddSupplierModal.jsx'
 
 const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)

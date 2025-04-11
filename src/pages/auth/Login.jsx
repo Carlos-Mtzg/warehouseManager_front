@@ -8,8 +8,8 @@ import { handleError, handleSuccess } from '../../utils/authAlerts';
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
-import PasswordField from '../../components/PasswordField';
-import EmailField from '../../components/EmailField';
+import PasswordField from '../../components/inputs/PasswordField.jsx';
+import EmailField from '../../components/inputs/EmailField.jsx';
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);

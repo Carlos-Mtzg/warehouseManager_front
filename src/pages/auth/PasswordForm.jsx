@@ -7,7 +7,7 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { activateAccount, resetPassword } from '../../services/ApiAuth';
 import { passwordSchema } from '../../validations/authValidation';
-import PasswordField from '../../components/PasswordField';
+import PasswordField from '../../components/inputs/PasswordField.jsx';
 
 const PasswordForm = () => {
     const { token } = useParams();
