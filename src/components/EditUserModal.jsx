@@ -3,36 +3,12 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { updateUser } from '../services/ApiUser';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../utils/userAlerts';
 import styles from '../assets/css/users.module.css';
 import { editUserSchema } from '../validations/userValidations';
 import AuthContext from '../context/AuthProvider';
 import InputField from './charts/InputField';
 
-const handleSuccess = (resetForm, handleClose, onUserUpdated) => {
-    handleClose();
-    Swal.fire({
-        title: 'Usuario actualizado',
-        text: 'La información del usuario se actualizó correctamente',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        resetForm();
-        if (onUserUpdated) onUserUpdated();
-    });
-};
-
-const handleError = (error) => {
-    console.error('Error al actualizar el usuario:', error);
-    Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error inesperado. Por favor, intenta de nuevo.',
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-    });
-};
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,12 +54,28 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                 const response = await updateUser(user.uuid, requestBody.name, requestBody.lastname, requestBody.role);
                 if (response.state === 'success') {
                     await updateUserContext();
-                    handleSuccess(formik.resetForm, handleClose, onUserUpdated);
+                    handleSuccess(
+                        'Actualización Correcta',
+                        'La información del usuario se actualizó correctamente',
+                        formik.resetForm,
+                        handleClose,
+                        onUserUpdated
+                    );
                 } else {
-                    handleError(response.message || 'Error desconocido');
+                    handleError(
+                        'Error',
+                        'Ocurrió un error inesperado',
+                        formik.resetForm,
+                        handleClose
+                    );
                 }
             } catch (error) {
-                handleError(error);
+                handleError(
+                    'Error',
+                    'Ocurrió un error inesperado',
+                    formik.resetForm,
+                    handleClose
+                );
             } finally {
                 setIsSubmitting(false);
             }

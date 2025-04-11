@@ -7,6 +7,29 @@ import styles from '../assets/css/users.module.css';
 import { editUserInfoSchema } from '../validations/userValidations';
 import { updateInfoUser } from '../services/ApiUser';
 
+const handleSuccess = (title, text, resetForm, callback) => {
+    Swal.fire({
+        title,
+        text,
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 2000,
+    }).then(() => {
+        if (resetForm) resetForm();
+        if (callback) callback();
+    });
+};
+
+const handleError = (title, text) => {
+    Swal.fire({
+        title,
+        text,
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+    });
+};
+
 const EditUserInfoModal = ({ user, handleClose, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,35 +53,22 @@ const EditUserInfoModal = ({ user, handleClose, onUserUpdated }) => {
             try {
                 setIsSubmitting(true);
                 const response = await updateInfoUser(user.uuid, values.name, values.lastname);
+
                 if (response.state === 'success') {
-                    handleClose();
-                    Swal.fire({
-                        title: 'Actualización Correcta',
-                        text: 'Tu información se actualizó correctamente',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000,
-                    }).then(() => {
-                        resetForm();
-                        onUserUpdated();
-                    });
+                    handleClose()
+                    handleSuccess(
+                        'Actualización Correcta',
+                        'Tu información se actualizó correctamente',
+                        resetForm,
+                        onUserUpdated
+                    );
                 } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000,
-                    });
+                    handleClose()
+                    handleError('Error', 'Ocurrió un error inesperado');
                 }
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000,
-                });
+                handleClose()
+                handleError('Error', 'Ocurrió un error inesperado');
             } finally {
                 setIsSubmitting(false);
             }

@@ -4,36 +4,9 @@ import { Modal } from 'react-bootstrap';
 import styles from "../assets/css/users.module.css"
 import { useState } from 'react';
 import { registerUser } from '../services/ApiUser';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../utils/userAlerts';
 import { addUserSchema } from '../validations/userValidations';
 import InputField from './charts/InputField';
-
-const handleSuccess = (resetForm, handleClose, onUserAdded) => {
-    handleClose();
-    Swal.fire({
-        title: 'Registro correcto',
-        text: 'Usuario registrado correctamente',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        resetForm();
-        if (onUserAdded) onUserAdded();
-    });
-};
-
-const handleError = (resetForm, handleClose) => {
-    handleClose();
-    Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error inesperado',
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        resetForm();
-    })
-};
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,13 +49,29 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
 
                 const response = await registerUser(requestBody.name, requestBody.lastname, requestBody.email, requestBody.role);
                 if (response.state === 'success') {
-                    handleSuccess(resetForm, handleClose, onUserAdded);
+                    handleSuccess(
+                        'Registro correcto',
+                        'Usuario registrado correctamente',
+                        resetForm,
+                        handleClose,
+                        onUserAdded
+                    );
                 } else {
-                    handleError(resetForm, handleClose);
+                    handleError(
+                        'Error',
+                        'Ocurrió un error inesperado',
+                        resetForm,
+                        handleClose
+                    );
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                handleError(resetForm, handleClose);
+                handleError(
+                    'Error',
+                    'Ocurrió un error inesperado',
+                    resetForm,
+                    handleClose
+                );
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }

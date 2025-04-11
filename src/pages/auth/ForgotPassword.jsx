@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import { resetPasswordEmail } from '../../services/ApiAuth';
 
@@ -31,35 +31,20 @@ const ForgotPassword = () => {
             try {
                 setIsSubmitting(true);
                 const response = await resetPasswordEmail(values.email);
+
                 if (response.state === "error") {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+                    handleError('Error', 'Ocurrió un error inesperado');
                 } else {
-                    Swal.fire({
-                        title: 'Correo de recuperación enviado con éxito',
-                        text: 'Revisa tu bandeja de entrada para continuar con el proceso',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        navigate('/');
-                    });
+                    handleSuccess(
+                        'Correo de recuperación enviado con éxito',
+                        'Revisa tu bandeja de entrada para continuar con el proceso',
+                        () => navigate('/')
+                    );
                 }
-                setIsSubmitting(false);
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                handleError('Error', 'Ocurrió un error inesperado');
             } finally {
+                setIsSubmitting(false);
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }
         }
