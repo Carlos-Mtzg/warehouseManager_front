@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../assets/css/auth/authentication.module.css'
 
-const PasswordField = ({
+const EmailField = ({
     id,
     name,
     label,
@@ -20,7 +20,7 @@ const PasswordField = ({
                 {label}
             </label>
             <input
-                type="password"
+                type="email"
                 id={id}
                 name={name}
                 value={value}
@@ -38,7 +38,7 @@ const PasswordField = ({
     );
 };
 
-PasswordField.propTypes = {
+EmailField.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
@@ -51,11 +51,11 @@ PasswordField.propTypes = {
     className: PropTypes.string,
 };
 
-PasswordField.defaultProps = {
+EmailField.defaultProps = {
     touched: false,
     error: '',
     placeholder: '',
     className: '',
 };
 
-export default PasswordField;
+export default EmailField;

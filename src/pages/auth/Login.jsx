@@ -8,6 +8,8 @@ import { handleError, handleSuccess } from '../../utils/authAlerts';
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
+import PasswordField from '../../components/PasswordField';
+import EmailField from '../../components/EmailField';
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,52 +76,30 @@ const Login = () => {
           Inicio de Sesión
         </h1>
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-          <div className="form-group">
-            <label
-              htmlFor="email"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Correo electrónico:
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
-              placeholder="Escribe aquí tu correo electrónico"
-            />
-            {touched.email && errors.email ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.email}
-              </div>
-            ) : null}
-          </div>
-          <div className="form-group">
-            <label
-              htmlFor="password"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Contraseña:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
-              placeholder="Escribe aquí tu contraseña"
-            />
-            {touched.password && errors.password ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.password}
-              </div>
-            ) : null}
-          </div>
+          <EmailField
+            id="email"
+            name="email"
+            label="Correo Electrónico:"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.email}
+            error={errors.email}
+            placeholder="Escribe aquí tu correo electrónico"
+            className={styles['email-input']}
+          />
+          <PasswordField
+            id="password"
+            name="password"
+            label="Contraseña:"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.password}
+            error={errors.password}
+            placeholder="Escribe aquí tu contraseña"
+            className={styles['password-input']}
+          />
           <div className="mt-3">
             {isSubmitting ? (
               <button

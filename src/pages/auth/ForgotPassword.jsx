@@ -8,6 +8,7 @@ import { resetPasswordEmail } from '../../services/ApiAuth';
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
+import EmailField from '../../components/EmailField';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,23 +64,18 @@ const ForgotPassword = () => {
                 </p>
                 <p className={`${styles['text']}`}>Se te hará llegar un mensaje a tu correo electrónico con un enlace para que puedas restablecer tu contraseña</p>
                 <form onSubmit={handleSubmit} className='d-flex flex-column gap-5'>
-                    <div className="form-group">
-                        <input
-                            type='email'
-                            id='email'
-                            name='email'
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
-                            placeholder='Escribe aquí tu correo electrónico'
-                        />
-                        {touched.email && errors.email ? (
-                            <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                {errors.email}
-                            </div>
-                        ) : null}
-                    </div>
+                    <EmailField
+                        id="email"
+                        name="email"
+                        label=""
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        touched={touched.email}
+                        error={errors.email}
+                        placeholder="Escribe aquí tu correo electrónico"
+                        className={styles['email-input']}
+                    />
                     <div className="d-flex flex-column gap-3">
                         {isSubmitting ? (
                             <button
