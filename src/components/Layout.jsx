@@ -71,16 +71,6 @@ const Layout = () => {
                 <span>Salidas</span>
               </Link>
             </li>
-            <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="/admin/suppliers-management"
-                className={`${styles['sidebar-link']}`}
-              >
-                <i className="bi bi-person-badge me-3"></i>
-                <span>Proveedores</span>
-              </Link>
-            </li>
-
             {role === 'ROLE_ADMIN' && (
               <li className={`${styles['sidebar-item']}`}>
                 <Link
@@ -129,7 +119,7 @@ const Layout = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
