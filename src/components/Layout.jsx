@@ -1,12 +1,3 @@
-import styles from '../assets/css/sidebar.module.css'
-import { Outlet, Link } from 'react-router-dom'
-import { useContext } from 'react'
-import Header from './Header'
-import AuthContext from '../context/AuthProvider'
-
-
-const Layout = () => {
-const { handleLogout, role } = useContext(AuthContext)
 import styles from '../assets/css/sidebar.module.css';
 import { Outlet, Link } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
@@ -49,27 +40,35 @@ const Layout = () => {
               </Link>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="/product-entries"
-                className={`${styles['sidebar-link']}`}
-              >
+              <Link href="#" className={`${styles['sidebar-link']} collapsed d-flex`} data-bs-target="#entries" data-bs-toggle="collapse" aria-expanded="false">
                 <i className="bi bi-building-add me-3"></i>
                 <span>Entradas</span>
               </Link>
+              <ul id="entries" className="sidebar-dropdown list-unstyled collapse">
+                <Link
+                  to="/product-entries"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Registrar Entrada</span>
+                </Link>
+                <Link
+                  to="/categories"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Categorías</span>
+                </Link>
+                <Link
+                  to="#"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Proveedores</span>
+                </Link>
+              </ul>
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link to="#" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-dash me-3"></i>
                 <span>Salidas</span>
-              </Link>
-            </li>
-            <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="/admin/categories-management"
-                className={`${styles['sidebar-link']}`}
-              >
-                <i className="bi bi-tags me-3"></i>
-                <span>Categorías</span>
               </Link>
             </li>
             {role === 'ROLE_ADMIN' && (
@@ -89,7 +88,7 @@ const Layout = () => {
                 <span>Entradas registradas</span>
               </Link>
             </li>
-            {role === 'ROLE_USER' && (
+            {role === "ROLE_USER" && (
               <li className={`${styles['sidebar-item']}`}>
                 <Link
                   to="/user/my-profile"
@@ -120,7 +119,7 @@ const Layout = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
