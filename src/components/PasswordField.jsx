@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from '../assets/css/auth/authentication.module.css'
 
 const PasswordField = ({
     id,
@@ -15,7 +16,7 @@ const PasswordField = ({
 }) => {
     return (
         <div className="form-group">
-            <label htmlFor={id} className="form-label fw-semibold">
+            <label htmlFor={id} className={`form-label fw-semibold ${styles['label']}`}>
                 {label}
             </label>
             <input
