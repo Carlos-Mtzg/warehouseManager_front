@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import AxiosClient from '../../config/axios-client';
 
 const ProductGauge = () => {
     const chartRef = useRef(null);
-    const [totalQuantities, setTotalQuantities] = useState(0);
 
     useEffect(() => {
         const fetchTotalQuantities = async () => {
@@ -12,7 +11,6 @@ const ProductGauge = () => {
                 const response = await AxiosClient.get('stock/');
                 const stockData = response.data || [];
                 const total = stockData.reduce((sum, item) => sum + item.quantity, 0);
-                setTotalQuantities(total);
 
                 const chartInstance = echarts.init(chartRef.current);
                 const options = {
