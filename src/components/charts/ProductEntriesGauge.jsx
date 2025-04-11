@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import AxiosClient from '../../config/axios-client';
 
 const ProductEntriesGauge = () => {
     const chartRef = useRef(null);
-    const [totalEntries, setTotalEntries] = useState(0);
 
     useEffect(() => {
         const fetchProductEntries = async () => {
             try {
                 const response = await AxiosClient.get('productEntry/');
                 const entriesData = response.data || [];
-                setTotalEntries(entriesData.length);
                 const chartInstance = echarts.init(chartRef.current);
                 const options = {
                     title: {
