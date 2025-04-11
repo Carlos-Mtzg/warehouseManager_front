@@ -7,6 +7,7 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { activateAccount } from '../../services/ApiAuth';
 import { passwordSchema } from '../../validations/authValidation';
+import PasswordField from '../../components/PasswordField';
 
 const ActiveAccount = () => {
   const { token } = useParams();
@@ -63,52 +64,30 @@ const ActiveAccount = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-          <div className="form-group">
-            <label
-              htmlFor="password"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Nueva Contraseña:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['email-input']}`}
-              placeholder="Escribe aquí tu correo electrónico"
-            />
-            {touched.password && errors.password ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.password}
-              </div>
-            ) : null}
-          </div>
-          <div className="form-group">
-            <label
-              htmlFor="repeat-password"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Repite tu contraseña:
-            </label>
-            <input
-              type="password"
-              id="repeatPassword"
-              name="repeatPassword"
-              value={values.repeatPassword}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.repeatPassword && errors.repeatPassword ? 'is-invalid' : ''} ${styles['email-input']}`}
-              placeholder="Escribe aquí tu correo electrónico"
-            />
-            {touched.repeatPassword && errors.repeatPassword ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.repeatPassword}
-              </div>
-            ) : null}
-          </div>
+          <PasswordField
+            id="password"
+            name="password"
+            label="Nueva Contraseña:"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.password}
+            error={errors.password}
+            placeholder="Escribe aquí tu nueva contraseña"
+            className={styles['email-input']}
+          />
+          <PasswordField
+            id="repeatPassword"
+            name="repeatPassword"
+            label="Repite tu contraseña:"
+            value={values.repeatPassword}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.repeatPassword}
+            error={errors.repeatPassword}
+            placeholder="Repite aquí tu nueva contraseña"
+            className={styles['email-input']}
+          />
           <div className="d-flex flex-column mt-3">
             {isSubmitting ? (
               <button

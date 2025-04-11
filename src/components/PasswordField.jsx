@@ -1,0 +1,60 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const PasswordField = ({
+    id,
+    name,
+    label,
+    value,
+    onChange,
+    onBlur,
+    touched,
+    error,
+    placeholder,
+    className,
+}) => {
+    return (
+        <div className="form-group">
+            <label htmlFor={id} className="form-label fw-semibold">
+                {label}
+            </label>
+            <input
+                type="password"
+                id={id}
+                name={name}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                className={`form-control py-3 ${touched && error ? 'is-invalid' : ''} ${className}`}
+                placeholder={placeholder}
+            />
+            {touched && error && (
+                <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
+                    {error}
+                </div>
+            )}
+        </div>
+    );
+};
+
+PasswordField.propTypes = {
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired,
+    touched: PropTypes.bool,
+    error: PropTypes.string,
+    placeholder: PropTypes.string,
+    className: PropTypes.string,
+};
+
+PasswordField.defaultProps = {
+    touched: false,
+    error: '',
+    placeholder: '',
+    className: '',
+};
+
+export default PasswordField;

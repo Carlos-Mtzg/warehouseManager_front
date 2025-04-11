@@ -7,7 +7,7 @@ import { handleError, handleSuccess } from '../utils/userAlerts';
 import styles from '../assets/css/users.module.css';
 import { editUserSchema } from '../validations/userValidations';
 import AuthContext from '../context/AuthProvider';
-import InputField from './charts/InputField';
+import InputField from './InputField';
 
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
