@@ -28,17 +28,17 @@ const UserHome = () => {
 
   return (
     <div
-      className={`container mx-auto p-4 ${localStyles['user-home-container']}`}
+      className={`container-fluid mx-auto p-4 ${localStyles['user-home-container']}`}
     >
-      <div className="slide-in-right">
+      <div>
         <div className="mb-4 d-flex align-items-center gap-3 flex-wrap">
-          <h1 className={`font-bold text-2xl me-auto ${styles.title}`}>
-            Bienvenido, {userName} {lastname}
+          <h1 className={`font-bold text-2xl me-auto ${styles.title} slide-in-right` }>
+            Bienvenido(a), {userName} {lastname}
           </h1>
         </div>
 
         <div className="row justify-content-center g-4">
-          <div className="col-12 col-md-6 col-lg-5">
+          <div className="col-12 col-md-6 slide-in-left">
             <div
               className={`bg-card p-4 rounded shadow text-center ${localStyles['card-hover']}`}
             >
@@ -49,8 +49,7 @@ const UserHome = () => {
                 <div
                   className={`btn d-flex justify-content-center ${styles['submit-content']}`}
                 >
-                  Registrar entrada
-                  <i className="bi bi-box-arrow-in-down ms-2"></i>
+                  Registrar entrada<i className="bi bi-box-arrow-in-down ms-2"></i>
                 </div>
                 <span></span>
               </button>
@@ -66,7 +65,7 @@ const UserHome = () => {
             </div>
           </div>
 
-          <div className="col-12 col-md-6 col-lg-5">
+          <div className="col-12 col-md-6 slide-in-right">
             <div
               className={`bg-card p-4 rounded shadow text-center ${localStyles['card-hover']}`}
             >
@@ -95,7 +94,7 @@ const UserHome = () => {
         </div>
       </div>
 
-      <div className={`bg-card p-4 rounded shadow mt-5 slide-in-left`}>
+      <div className={`bg-card p-4 rounded shadow mt-5 slide-up`}>
         <h5 className={`fw-bold mb-3 ${styles.title}`}>Recomendaciones</h5>
         <ul className="text-muted">
           <li>
@@ -120,7 +119,7 @@ const UserHome = () => {
           <li>Registra las salidas en cuanto se realicen.</li>
           <li>Verifica los datos de salida antes de confirmar el registro.</li>
           <li>
-          En caso de que exista algún error al registrar la salida de productos ve a la sección de entradas, cancela el registro y vuelve a registrar la salida de los productos correctamente.
+            En caso de que exista algún error al registrar la salida de productos ve a la sección de entradas, cancela el registro y vuelve a registrar la salida de los productos correctamente.
           </li>
         </ul>
       </div>
