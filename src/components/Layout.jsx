@@ -40,13 +40,30 @@ const Layout = () => {
               </Link>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link
-                to="/product-entries"
-                className={`${styles['sidebar-link']}`}
-              >
+              <Link href="#" className={`${styles['sidebar-link']} collapsed d-flex`} data-bs-target="#entries" data-bs-toggle="collapse" aria-expanded="false">
                 <i className="bi bi-building-add me-3"></i>
                 <span>Entradas</span>
               </Link>
+              <ul id="entries" className="sidebar-dropdown list-unstyled collapse">
+                <Link
+                  to="/product-entries"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Registrar Entrada</span>
+                </Link>
+                <Link
+                  to="/categories"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Categorías</span>
+                </Link>
+                <Link
+                  to="/suppliers"
+                  className={`fw-light ${styles['sidebar-ul-link']}`}
+                >
+                  <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Proveedores</span>
+                </Link>
+              </ul>
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link to="#" className={`${styles['sidebar-link']}`}>

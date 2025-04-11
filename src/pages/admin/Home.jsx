@@ -31,7 +31,7 @@ const Home = () => {
   }, [userUuid]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container-fluid mx-auto p-4">
       <div className="slide-in-right">
         <div className="mb-4 d-flex align-items-center gap-3">
           <h1 className={`font-bold text-2xl me-auto ${styles['title']}`}>Bienvenido, {userName} {lastname}</h1>

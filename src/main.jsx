@@ -24,6 +24,8 @@ import Users from './pages/admin/Users.jsx';
 import RoleBasedRoute from './components/RoleBasedRoute.jsx';
 import UserProfile from './pages/user/UserProfile.jsx';
 import UserHome from './pages/user/Home.jsx';
+import Categories from './pages/admin/Categories.jsx'
+import Suppliers from './pages/admin/Suppliers.jsx';
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,16 @@ const router = createBrowserRouter([
           {
             path: 'entries',
             element: <Entries />,
+            errorElement: <Error500 />,
+          },
+          {
+            path: 'categories',
+            element: <Categories />,
+            errorElement: <Error500 />,
+          },
+          {
+            path: 'suppliers',
+            element: <Suppliers />,
             errorElement: <Error500 />,
           },
         ],
