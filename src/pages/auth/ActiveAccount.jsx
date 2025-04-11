@@ -8,6 +8,28 @@ import Swal from 'sweetalert2';
 import { activateAccount } from '../../services/ApiAuth';
 import { passwordSchema } from '../../validations/authValidation';
 
+const handleSuccess = (title, text, callback) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'success',
+    showConfirmButton: false,
+    timer: 2000,
+  }).then(() => {
+    if (callback) callback();
+  });
+};
+
+const handleError = (title, text) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'error',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+
 const ActiveAccount = () => {
   const { token } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,35 +47,20 @@ const ActiveAccount = () => {
         try {
           setIsSubmitting(true);
           const response = await activateAccount(token, values.password);
+
           if (response.state === 'error') {
-            Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error inesperado',
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 2000
-            })
+            handleError('Error', 'Ocurrió un error inesperado');
           } else {
-            Swal.fire({
-              title: 'Tu cuenta ha sido activada correctamente',
-              text: 'Ahora puedes iniciar sesión',
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 2000
-            }).then(() => {
-              navigate('/');
-            });
+            handleSuccess(
+              'Tu cuenta ha sido activada correctamente',
+              'Ahora puedes iniciar sesión',
+              () => navigate('/')
+            );
           }
-          setIsSubmitting(false);
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error inesperado',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000
-          })
+          handleError('Error', 'Ocurrió un error inesperado');
         } finally {
+          setIsSubmitting(false);
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       },

@@ -9,6 +9,28 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
 
+const handleSuccess = (title, text, callback) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'success',
+    showConfirmButton: false,
+    timer: 1000,
+  }).then(() => {
+    if (callback) callback();
+  });
+};
+
+const handleError = (title, text) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'error',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -33,16 +55,12 @@ const Login = () => {
       try {
         setIsSubmitting(true);
         const response = await authLogin(values);
+
         if (response?.accessToken) {
           const { accessToken, role, uuid } = response;
           handleLogin(accessToken, role, uuid);
-          Swal.fire({
-            title: 'Inicio de Sesión Correcto',
-            text: 'Bienvenido al sistema',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          }).then(() => {
+
+          handleSuccess('Inicio de Sesión Correcto', 'Bienvenido al sistema', () => {
             if (role === 'ROLE_USER') {
               navigate('/user');
             } else if (role === 'ROLE_ADMIN') {
@@ -50,24 +68,15 @@ const Login = () => {
             }
           });
         } else {
-          Swal.fire({
-            title: 'Error',
-            text: 'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000
-          });
+          handleError(
+            'Error',
+            'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.'
+          );
         }
-        setIsSubmitting(false);
       } catch (error) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error inesperado',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000
-        });
+        handleError('Error', 'Ocurrió un error inesperado');
       } finally {
+        setIsSubmitting(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     },

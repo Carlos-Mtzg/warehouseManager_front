@@ -8,6 +8,28 @@ import logo from '../../assets/images/logo-color.png';
 import Swal from 'sweetalert2';
 import { passwordSchema } from '../../validations/authValidation';
 
+const handleSuccess = (title, text, callback) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'success',
+    showConfirmButton: false,
+    timer: 2000,
+  }).then(() => {
+    if (callback) callback();
+  });
+};
+
+const handleError = (title, text) => {
+  Swal.fire({
+    title,
+    text,
+    icon: 'error',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+
 const ResetPassword = () => {
   const { token } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,35 +48,20 @@ const ResetPassword = () => {
         try {
           setIsSubmitting(true);
           const response = await resetPassword(token, values.password);
+
           if (response.state === 'error') {
-            Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error inesperado',
-              icon: 'error',
-              showConfirmButton: false,
-              timer: 2000
-            })
+            handleError('Error', 'Ocurrió un error inesperado');
           } else {
-            Swal.fire({
-              title: 'Contraseña restablecida con éxito',
-              text: 'Ahora puedes iniciar sesión',
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 2000
-            }).then(() => {
-              navigate('/');
-            });
+            handleSuccess(
+              'Contraseña restablecida con éxito',
+              'Ahora puedes iniciar sesión',
+              () => navigate('/')
+            );
           }
-          setIsSubmitting(false);
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error inesperado',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000
-          })
+          handleError('Error', 'Ocurrió un error inesperado');
         } finally {
+          setIsSubmitting(false);
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       },
