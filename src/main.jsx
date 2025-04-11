@@ -23,6 +23,7 @@ import ActiveAccount from './pages/auth/ActiveAccount.jsx';
 import Users from './pages/admin/Users.jsx';
 import RoleBasedRoute from './components/RoleBasedRoute.jsx';
 import UserProfile from './pages/user/UserProfile.jsx';
+import Categories from './pages/admin/Categories.jsx'
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
           {
             path: 'entries',
             element: <Entries />,
+            errorElement: <Error500 />,
+          },
+          {
+            path: 'categories',
+            element: <Categories />,
             errorElement: <Error500 />,
           },
         ],
