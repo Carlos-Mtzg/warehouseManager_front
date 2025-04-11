@@ -31,6 +31,18 @@ const AddSupplierModal = ({ show, handleClose }) => {
             try {
                 setIsSubmitting(true)
                 const response = await createSupplier(values.name, values.email);
+                if (response.status === 409) {
+                    handleClose();
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este proveedor ya ha sido registrado anteriormente',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(() => {
+                        resetForm();
+                    })
+                }
                 if (response.state === 'success') {
                     resetForm();
                     handleClose();
