@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { registerUser } from '../services/ApiUser';
 import { handleError, handleSuccess } from '../utils/userAlerts';
 import { addUserSchema } from '../validations/userValidations';
-import InputField from './charts/InputField';
+import InputField from './InputField';
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
