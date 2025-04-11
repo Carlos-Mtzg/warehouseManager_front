@@ -58,7 +58,7 @@ const Layout = () => {
                   <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Categorías</span>
                 </Link>
                 <Link
-                  to="#"
+                  to="/suppliers"
                   className={`fw-light ${styles['sidebar-ul-link']}`}
                 >
                   <span><i className="bi bi-arrow-right-short me-2"></i>Gestión de Proveedores</span>
