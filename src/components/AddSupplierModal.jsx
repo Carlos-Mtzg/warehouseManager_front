@@ -34,7 +34,7 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
                     handleClose();
                     Swal.fire({
                         title: 'Error',
-                        text: 'Este proveedor ya ha sido registrado anteriormente',
+                        text: `${response.message}`,
                         icon: 'error',
                         showConfirmButton: false,
                         timer: 2000
