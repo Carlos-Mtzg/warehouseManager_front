@@ -1,34 +1,11 @@
 import PropTypes from 'prop-types'
-import Swal from 'sweetalert2'
 import { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { addCategorySchema } from '../validations/entriesValidation'
 import { useFormik } from 'formik'
 import { createCategory } from '../services/ApiEntries'
 import styles from '../assets/css/entries.module.css'
-
-const handleSuccess = (title, text, resetForm, callback) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'success',
-    showConfirmButton: false,
-    timer: 2000,
-  }).then(() => {
-    if (resetForm) resetForm();
-    if (callback) callback();
-  });
-};
-
-const handleError = (title, text) => {
-  Swal.fire({
-    title,
-    text,
-    icon: 'error',
-    showConfirmButton: false,
-    timer: 2000,
-  });
-};
+import { handleError, handleSuccess } from '../utils/simpleAlerts';
 
 const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)

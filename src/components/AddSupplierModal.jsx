@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import Swal from "sweetalert2";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,29 +6,7 @@ import { addSupplierSchema } from "../validations/entriesValidation";
 import { useFormik } from "formik";
 import { createSupplier } from "../services/ApiEntries";
 import styles from '../assets/css/entries.module.css';
-
-const handleSuccess = (title, text, resetForm, callback) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        if (resetForm) resetForm();
-        if (callback) callback();
-    });
-};
-
-const handleError = (title, text) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-    });
-};
+import { handleError, handleSuccess } from '../utils/simpleAlerts';
 
 const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
