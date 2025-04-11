@@ -45,19 +45,13 @@ export async function fetchProductByUUID(uuid) {
 
 export async function registerProductOut(productOutList) {
     try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.post(
-            `${API_URL}productOut/`,
-            {
-                productOutList,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.post(`${API_URL}productOut/`, productOutList, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        );
+        });
         return {
             state: 'success',
             message: response.data.message,

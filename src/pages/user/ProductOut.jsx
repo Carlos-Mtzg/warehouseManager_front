@@ -18,7 +18,7 @@ const ProductOutForm = () => {
 
         if (response.state === "success" && Array.isArray(response.data)) {
             const options = response.data.map(product => ({
-                value: product.uuid || product.id, 
+                value: product.uuid || product.id,
                 label: `${product.productName} (${product.measurementUnit})`
             }));
             setProducts(options);
@@ -26,7 +26,7 @@ const ProductOutForm = () => {
             console.error("Error al cargar productos o datos inválidos:", response);
             setProducts([]);
         }
-        setLoadingProducts(false); 
+        setLoadingProducts(false);
     };
 
     const handleProductSelect = async (selectedOption, index) => {
@@ -37,7 +37,7 @@ const ProductOutForm = () => {
                 updatedProducts[index] = {
                     ...updatedProducts[index],
                     product: selectedOption,
-                    productName: selectedOption.label.split(' (')[0], 
+                    productName: selectedOption.label.split(' (')[0],
                     measurementUnit: response.data.measurementUnit,
                     currentStock: response.data.quantity,
                     unitPrice: response.data.unitPrice,
@@ -58,6 +58,8 @@ const ProductOutForm = () => {
         errors,
         touched,
         setFieldValue,
+        setFieldTouched,
+        resetForm
     } = useFormik({
         initialValues: {
             receiverName: '',
@@ -75,24 +77,26 @@ const ProductOutForm = () => {
             try {
                 setIsSubmitting(true);
 
-                const productOutList = {
+                
+                const productOutData = {
                     receiverName: values.receiverName,
-                    products: values.products.map(product => ({
+                    productOutList: values.products.map(product => ({
                         productName: product.productName,
                         measurementUnit: product.measurementUnit,
                         quantity: parseInt(product.quantity, 10),
                         unitPrice: parseFloat(product.unitPrice),
+                        receiverName: values.receiverName,
                     }))
                 };
-
-                const response = await registerProductOut(productOutList);
+                
+                const response = await registerProductOut(productOutData);
                 if (response.status === 200) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Salida registrada',
                         text: 'La salida de productos se ha registrado correctamente.',
                     });
-                    resetform();
+                    resetForm();
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -122,9 +126,9 @@ const ProductOutForm = () => {
         <Row className='h-100'>
             <Col lg={8} className='slide-up'>
                 <div className='bg-white rounded shadow-sm p-4 h-100'>
-                    <h1 className={`mb-5 ${styles['title']}`}> </h1>
-                    Registro de salida de productos
-
+                    <h1 className={`mb-5 ${styles['title']}`}>
+                        Registro de salida de productos
+                    </h1>
                     <form onSubmit={handleSubmit} className='d-flex flex-column gap-3'>
                         <div className='form-group'>
                             <label className={`form-label fw-semibold ${styles['label']}`}>
@@ -154,7 +158,7 @@ const ProductOutForm = () => {
                                         options={products}
                                         isLoading={loadingProducts}
                                         onChange={(selected) => handleProductSelect(selected, index)}
-                                        value={product.product || null} 
+                                        value={product.product || null}
                                         placeholder="Buscar producto..."
                                         noOptionsMessage={() => "No se encontraron productos"}
                                         className={`${touched.products?.[index]?.product && errors.products?.[index]?.product ? 'is-invalid' : ''}`}
@@ -184,7 +188,7 @@ const ProductOutForm = () => {
                                                 <input
                                                     type="number"
                                                     className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity ? 'is-invalid' : ''}`}
-                                                    value={product.quantity || 0} 
+                                                    value={product.quantity || 0}
                                                     onChange={(e) => {
                                                         const inputValue = parseInt(e.target.value, 10);
                                                         const value = isNaN(inputValue) ? 0 : Math.min(product.currentStock, Math.max(0, inputValue));
