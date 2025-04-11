@@ -23,6 +23,7 @@ import ActiveAccount from './pages/auth/ActiveAccount.jsx';
 import Users from './pages/admin/Users.jsx';
 import RoleBasedRoute from './components/RoleBasedRoute.jsx';
 import UserProfile from './pages/user/UserProfile.jsx';
+import UserHome from './pages/user/Home.jsx';
 import Categories from './pages/admin/Categories.jsx'
 import Suppliers from './pages/admin/Suppliers.jsx';
 
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
             path: '',
             element: <RoleBasedRoute allowedRoles={['ROLE_USER']} />,
             children: [
-              { index: true, element: <ProductEntry />, errorElement: <Error500 /> },
+              { index: true, element: <UserHome />, errorElement: <Error500 /> },
               {
                 path: 'my-profile',
                 element: <UserProfile />,
