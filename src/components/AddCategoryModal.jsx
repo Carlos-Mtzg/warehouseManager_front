@@ -30,14 +30,18 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
         const response = await createCategory(values.categoryName)
 
         if (response.status === 409) {
+          handleClose()
           Swal.fire({
             title: 'Error',
             text: 'Parece que ya hay una categoría registrada con ese nombre',
             icon: 'error',
             showConfirmButton: false,
             timer: 2000,
+          }).then(() => {
+            resetForm()
           })
         } else if (response.status === 'OK' || response.state === 'success') {
+          handleClose()
           Swal.fire({
             title: 'Registro correcto',
             text: 'Categoría creada correctamente',
@@ -46,16 +50,18 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
             timer: 2000,
           }).then(() => {
             resetForm()
-            handleClose()
             if (onCategoryAdded) onCategoryAdded()
           })
         } else {
+          handleClose()
           Swal.fire({
             title: 'Error',
             text: response.message || 'Ocurrió un error',
             icon: 'error',
             showConfirmButton: false,
             timer: 2000,
+          }).then(() => {
+            resetForm()
           })
         }
       } catch (error) {
@@ -104,9 +110,8 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
               value={values.categoryName}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control py-3 ${
-                touched.categoryName && errors.categoryName ? 'is-invalid' : ''
-              }`}
+              className={`form-control py-3 ${touched.categoryName && errors.categoryName ? 'is-invalid' : ''
+                }`}
               placeholder="Escribe aquí el nombre de la categoría"
             />
             {touched.categoryName && errors.categoryName && (
