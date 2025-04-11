@@ -66,7 +66,7 @@ const Layout = () => {
               </ul>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="#" className={`${styles['sidebar-link']}`}>
+              <Link to="/product-out" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-dash me-3"></i>
                 <span>Salidas</span>
               </Link>
