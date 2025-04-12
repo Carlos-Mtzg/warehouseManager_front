@@ -205,13 +205,13 @@ const ProductOutForm = () => {
                                                     id='quantity'
                                                     name='quantity'
                                                     className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity ? 'is-invalid' : ''}`}
-                                                    value={product.quantity || 0}
+                                                    value={product.quantity || 1}
                                                     onChange={(e) => {
                                                         const inputValue = parseInt(e.target.value, 10);
                                                         const value = isNaN(inputValue) ? 0 : Math.min(product.currentStock, Math.max(0, inputValue));
                                                         setFieldValue(`products[${index}].quantity`, value);
                                                     }}
-                                                    min="0"
+                                                    min="1"
                                                     max={product.currentStock}
                                                     placeholder="Cantidad a retirar"
                                                 />
