@@ -76,6 +76,7 @@ const ProductEntryForm = () => {
                     measurementUnit: product.measurementUnit,
                     quantity: parseInt(product.quantity, 10),
                     unitPrice: parseFloat(product.unitPrice),
+                    relatedUserUUID: localStorage.getItem('uuid'),
                 }));
 
                 const response = await registerProductEntry(productEntryList);
