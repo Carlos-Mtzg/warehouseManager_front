@@ -27,6 +27,7 @@ import UserHome from './pages/user/Home.jsx';
 import Categories from './pages/admin/Categories.jsx'
 import Suppliers from './pages/admin/Suppliers.jsx';
 import ProductOut from './pages/user/ProductOut.jsx';
+import Outs from './pages/admin/Outs.jsx';
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,11 @@ const router = createBrowserRouter([
             element: <ProductOut />,
             errorElement: <Error500 />, 
           },
+          {
+            path: 'outs',
+            element: <Outs />,
+            errorElement: <Error500 />,
+          }
         ],
       },
     ],
