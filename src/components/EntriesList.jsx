@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './../assets/css/users.module.css';
 import AxiosClient from './../config/axios-client';
 import Swal from 'sweetalert2';
+const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const EntriesList = () => {
   const [entries, setEntries] = useState([]);
@@ -10,15 +11,25 @@ const EntriesList = () => {
 
   const fetchEntries = async () => {
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await AxiosClient.get(`productEntry/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setEntries(response.data);
+        const token = localStorage.getItem('accessToken');
+        const role = localStorage.getItem('role');
+        const uuid = localStorage.getItem('uuid');
+
+        let endpoint = 'productEntry/';
+        if (role !== 'ROLE_ADMIN') {
+            endpoint = `productEntry/user/${uuid}`;
+        }
+
+        const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Datos devueltos por la API:", response.data); 
+        setEntries(response.data); 
     } catch (error) {
-      Swal.fire('Error', 'Error al obtener las entradas.', 'error');
+        Swal.fire('Error', 'Error al obtener las entradas.', 'error');
     }
   };
 
