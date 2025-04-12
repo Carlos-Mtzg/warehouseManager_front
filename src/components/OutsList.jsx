@@ -27,8 +27,12 @@ const OutsList = () => {
 
         setOuts(response.data);
     } catch (error) {
-        console.error("Error al obtener las salidas:", error);
-        Swal.fire('Error', 'Error al obtener las salidas.', 'error');
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay salidas',
+          text: 'No has registrado ninguna salida para mostrar',
+          confirmButtonColor: '#16423C',
+      });
     }
   };
 
