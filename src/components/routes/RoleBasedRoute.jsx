@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import AuthContext from '../context/AuthProvider';
+import AuthContext from '../../context/AuthProvider.jsx';
 
 const RoleBasedRoute = ({ allowedRoles }) => {
     const { auth, role } = useContext(AuthContext);

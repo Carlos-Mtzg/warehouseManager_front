@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import Header from './Header';
 import AuthContext from '../context/AuthProvider';
-import UserCard from './UserCard';
+import UserCard from './users/UserCard.jsx';
 import { getUserByUUID } from '../services/ApiUser';
 
 const Layout = () => {

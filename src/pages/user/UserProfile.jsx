@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import styles from '../../assets/css/users.module.css'
 import profile from '../../assets/images/profile.png'
-import EditUserInfoModal from '../../components/EditUserInfoModal';
+import EditUserInfoModal from '../../components/modals/EditUserInfoModal.jsx';
 import AuthContext from '../../context/AuthProvider';
 
 const UserProfile = () => {

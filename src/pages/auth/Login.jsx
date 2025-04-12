@@ -1,13 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
 import { useContext, useState } from 'react';
 import { authLogin } from '../../services/ApiAuth';
 import AuthContext from '../../context/AuthProvider';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
+import PasswordField from '../../components/inputs/PasswordField.jsx';
+import EmailField from '../../components/inputs/EmailField.jsx';
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,16 +35,12 @@ const Login = () => {
       try {
         setIsSubmitting(true);
         const response = await authLogin(values);
+
         if (response?.accessToken) {
           const { accessToken, role, uuid } = response;
           handleLogin(accessToken, role, uuid);
-          Swal.fire({
-            title: 'Inicio de Sesión Correcto',
-            text: 'Bienvenido al sistema',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000
-          }).then(() => {
+
+          handleSuccess('Inicio de Sesión Correcto', 'Bienvenido al sistema', () => {
             if (role === 'ROLE_USER') {
               navigate('/user');
             } else if (role === 'ROLE_ADMIN') {
@@ -50,24 +48,15 @@ const Login = () => {
             }
           });
         } else {
-          Swal.fire({
-            title: 'Error',
-            text: 'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000
-          });
+          handleError(
+            'Error',
+            'Correo y/o contraseña incorrectos. Por favor, verifica tus datos.'
+          );
         }
-        setIsSubmitting(false);
       } catch (error) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error inesperado',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000
-        });
+        handleError('Error', 'Ocurrió un error inesperado');
       } finally {
+        setIsSubmitting(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     },
@@ -87,52 +76,30 @@ const Login = () => {
           Inicio de Sesión
         </h1>
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
-          <div className="form-group">
-            <label
-              htmlFor="email"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Correo electrónico:
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
-              placeholder="Escribe aquí tu correo electrónico"
-            />
-            {touched.email && errors.email ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.email}
-              </div>
-            ) : null}
-          </div>
-          <div className="form-group">
-            <label
-              htmlFor="password"
-              className={`form-label fw-semibold ${styles['label']}`}
-            >
-              Contraseña:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`form-control py-3 ${touched.password && errors.password ? 'is-invalid' : ''} ${styles['password-input']}`}
-              placeholder="Escribe aquí tu contraseña"
-            />
-            {touched.password && errors.password ? (
-              <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                {errors.password}
-              </div>
-            ) : null}
-          </div>
+          <EmailField
+            id="email"
+            name="email"
+            label="Correo Electrónico:"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.email}
+            error={errors.email}
+            placeholder="Escribe aquí tu correo electrónico"
+            className={styles['email-input']}
+          />
+          <PasswordField
+            id="password"
+            name="password"
+            label="Contraseña:"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            touched={touched.password}
+            error={errors.password}
+            placeholder="Escribe aquí tu contraseña"
+            className={styles['password-input']}
+          />
           <div className="mt-3">
             {isSubmitting ? (
               <button

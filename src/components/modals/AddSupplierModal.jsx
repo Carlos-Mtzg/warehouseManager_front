@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import Swal from "sweetalert2";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addSupplierSchema } from "../validations/entriesValidation";
+import { addSupplierSchema } from "../../validations/entriesValidation.js";
 import { useFormik } from "formik";
-import { createSupplier } from "../services/ApiEntries";
-import styles from '../assets/css/entries.module.css';
+import { createSupplier } from "../../services/ApiEntries.jsx";
+import styles from '../../assets/css/entries.module.css';
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 
 const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,41 +30,26 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
             try {
                 setIsSubmitting(true);
                 const response = await createSupplier(values.name, values.email);
+
                 if (response.status === 409) {
-                    handleClose();
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Este proveedor ya ha sido registrado anteriormente',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        resetForm();
-                    })
-                }
-                if (response.state === 'success') {
+                    handleCancel()
+                    handleError('Error', `Este proveedor ya esta registrado en el sistema`);
                     resetForm();
-                    handleClose();
-                    Swal.fire({
-                        title: 'Registro correcto',
-                        text: 'Proveedor registrado correctamente',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        resetForm();
-                        handleClose();
-                        if (onSupplierAdded) onSupplierAdded();
-                    });
+                } else if (response.state === 'success') {
+                    handleCancel()
+                    handleSuccess(
+                        'Registro correcto',
+                        'Proveedor registrado correctamente',
+                        resetForm,
+                        onSupplierAdded
+                    );
+                } else {
+                    handleCancel()
+                    handleError('Error', 'Error desconocido');
                 }
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
+                handleCancel()
+                handleError('Error', 'Ocurrió un error inesperado');
             } finally {
                 setIsSubmitting(false);
             }

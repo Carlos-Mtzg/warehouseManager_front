@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
-import styles from '../assets/css/users.module.css'
-import { getAllSuppliers, deleteSupplier } from '../services/ApiSupplier'
+import styles from '../../assets/css/users.module.css'
+import { getAllSuppliers, deleteSupplier } from '../../services/ApiSupplier.jsx'
 
 const SupplierList = ({ refresh }) => {
   const [suppliers, setSuppliers] = useState([])

@@ -1,13 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../../utils/authAlerts';
 
 import { resetPasswordEmail } from '../../services/ApiAuth';
 
 import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
+import EmailField from '../../components/inputs/EmailField.jsx';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,35 +32,20 @@ const ForgotPassword = () => {
             try {
                 setIsSubmitting(true);
                 const response = await resetPasswordEmail(values.email);
+
                 if (response.state === "error") {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Ocurrió un error inesperado',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+                    handleError('Error', 'Ocurrió un error inesperado');
                 } else {
-                    Swal.fire({
-                        title: 'Correo de recuperación enviado con éxito',
-                        text: 'Revisa tu bandeja de entrada para continuar con el proceso',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        navigate('/');
-                    });
+                    handleSuccess(
+                        'Correo de recuperación enviado con éxito',
+                        'Revisa tu bandeja de entrada para continuar con el proceso',
+                        () => navigate('/')
+                    );
                 }
-                setIsSubmitting(false);
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                handleError('Error', 'Ocurrió un error inesperado');
             } finally {
+                setIsSubmitting(false);
                 await new Promise((resolve) => setTimeout(resolve, 2000));
             }
         }
@@ -78,23 +64,18 @@ const ForgotPassword = () => {
                 </p>
                 <p className={`${styles['text']}`}>Se te hará llegar un mensaje a tu correo electrónico con un enlace para que puedas restablecer tu contraseña</p>
                 <form onSubmit={handleSubmit} className='d-flex flex-column gap-5'>
-                    <div className="form-group">
-                        <input
-                            type='email'
-                            id='email'
-                            name='email'
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            className={`form-control py-3 ${touched.email && errors.email ? 'is-invalid' : ''} ${styles['email-input']}`}
-                            placeholder='Escribe aquí tu correo electrónico'
-                        />
-                        {touched.email && errors.email ? (
-                            <div className="text-danger mt-1" style={{ fontSize: '15px' }}>
-                                {errors.email}
-                            </div>
-                        ) : null}
-                    </div>
+                    <EmailField
+                        id="email"
+                        name="email"
+                        label=""
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        touched={touched.email}
+                        error={errors.email}
+                        placeholder="Escribe aquí tu correo electrónico"
+                        className={styles['email-input']}
+                    />
                     <div className="d-flex flex-column gap-3">
                         {isSubmitting ? (
                             <button

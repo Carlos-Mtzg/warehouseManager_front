@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import CategoryList from '../../components/CategoryList.jsx'
+import CategoryList from '../../components/lists/CategoryList.jsx'
 import styles from '../../assets/css/users.module.css'
-import AddCategoryModal from '../../components/AddCategoryModal.jsx'
+import AddCategoryModal from '../../components/modals/AddCategoryModal.jsx'
 const Categories = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)

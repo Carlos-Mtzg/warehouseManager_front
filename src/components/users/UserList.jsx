@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../services/ApiUser';
-import styles from '../assets/css/users.module.css'
-import UserStatus from './UserStatus';
+import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../../services/ApiUser.jsx';
+import styles from '../../assets/css/users.module.css'
+import UserStatus from './UserStatus.jsx';
 
 
 const UserList = ({ refresh, onEditUser }) => {

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
-import Swal from 'sweetalert2'
 import { useState } from 'react'
 import { Modal } from 'react-bootstrap'
-import { addCategorySchema } from '../validations/entriesValidation'
+import { addCategorySchema } from '../../validations/entriesValidation.js'
 import { useFormik } from 'formik'
-import { createCategory } from '../services/ApiEntries'
-import styles from '../assets/css/entries.module.css'
+import { createCategory } from '../../services/ApiEntries.jsx'
+import styles from '../../assets/css/entries.module.css'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 
 const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -26,54 +26,32 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        setIsSubmitting(true)
-        const response = await createCategory(values.categoryName)
+        setIsSubmitting(true);
+        const response = await createCategory(values.categoryName);
 
         if (response.status === 409) {
           handleClose()
-          Swal.fire({
-            title: 'Error',
-            text: 'Parece que ya hay una categoría registrada con ese nombre',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            resetForm()
-          })
+          handleError(
+            'Error',
+            'Parece que ya hay una categoría registrada con ese nombre',
+          );
+          resetForm();
         } else if (response.status === 'OK' || response.state === 'success') {
           handleClose()
-          Swal.fire({
-            title: 'Registro correcto',
-            text: 'Categoría creada correctamente',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            resetForm()
-            if (onCategoryAdded) onCategoryAdded()
-          })
+          handleSuccess(
+            'Registro correcto',
+            'Categoría creada correctamente',
+            resetForm,
+            onCategoryAdded
+          );
         } else {
-          handleClose()
-          Swal.fire({
-            title: 'Error',
-            text: response.message || 'Ocurrió un error',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            resetForm()
-          })
+          handleError('Error', response.message || 'Error desconocido');
         }
       } catch (error) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error inesperado',
-          icon: 'error',
-          showConfirmButton: false,
-          timer: 2000,
-        })
+        handleClose()
+        handleError('Error', 'Ocurrió un error inesperado');
       } finally {
-        setIsSubmitting(false)
+        setIsSubmitting(false);
       }
     },
   })
