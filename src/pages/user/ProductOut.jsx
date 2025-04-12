@@ -202,14 +202,17 @@ const ProductOutForm = () => {
                                                 </label>
                                                 <input
                                                     type="number"
-                                                    id='quantity'
-                                                    name='quantity'
+                                                    id="quantity"
+                                                    name="quantity"
                                                     className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity ? 'is-invalid' : ''}`}
-                                                    value={product.quantity || 1}
+                                                    value={product.quantity || ''}
                                                     onChange={(e) => {
-                                                        const inputValue = parseInt(e.target.value, 10);
-                                                        const value = isNaN(inputValue) ? 0 : Math.min(product.currentStock, Math.max(0, inputValue));
-                                                        setFieldValue(`products[${index}].quantity`, value);
+                                                        const inputValue = e.target.value; // Captura el valor ingresado como cadena
+                                                        if (/^\d*$/.test(inputValue)) { // Permite solo números
+                                                            const numericValue = parseInt(inputValue, 10);
+                                                            const value = isNaN(numericValue) ? '' : Math.min(product.currentStock, Math.max(0, numericValue));
+                                                            setFieldValue(`products[${index}].quantity`, value);
+                                                        }
                                                     }}
                                                     min="1"
                                                     max={product.currentStock}
