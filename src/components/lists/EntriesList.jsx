@@ -26,7 +26,6 @@ const EntriesList = () => {
             },
         });
 
-        console.log("Datos devueltos por la API:", response.data); 
         setEntries(response.data); 
     } catch (error) {
         Swal.fire('Error', 'Error al obtener las entradas.', 'error');
