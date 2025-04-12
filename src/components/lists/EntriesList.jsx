@@ -28,7 +28,12 @@ const EntriesList = () => {
 
         setEntries(response.data); 
     } catch (error) {
-        Swal.fire('Error', 'Error al obtener las entradas.', 'error');
+        Swal.fire({
+            icon: 'info',
+            title: 'No hay entradas',
+            text: 'No has registrado ninguna entrada para mostrar',
+            confirmButtonColor: '#16423C',
+        });
     }
   };
 
