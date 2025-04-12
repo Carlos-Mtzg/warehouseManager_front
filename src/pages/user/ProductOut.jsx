@@ -93,7 +93,7 @@ const ProductOutForm = () => {
 
                 const response = await registerProductOut(productOutData);
 
-                if (response.state === 'success') { 
+                if (response.state === 'success') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Salida registrada',
@@ -134,11 +134,15 @@ const ProductOutForm = () => {
                     </h1>
                     <form onSubmit={handleSubmit} className='d-flex flex-column gap-3'>
                         <div className='form-group'>
-                            <label className={`form-label fw-semibold ${styles['label']}`}>
+                            <label
+                                className={`form-label fw-semibold ${styles['label']}`}
+                                htmlFor="receiverName"
+                            >
                                 Nombre del receptor:
                             </label>
                             <input
                                 type="text"
+                                id='receiverName'
                                 name="receiverName"
                                 className={`form-control ${touched.receiverName && errors.receiverName ? 'is-invalid' : ''}`}
                                 value={values.receiverName}
@@ -154,10 +158,15 @@ const ProductOutForm = () => {
                         {values.products.map((product, index) => (
                             <div key={index} className="d-flex flex-column gap-3 border p-3 rounded mb-3">
                                 <div className="form-group">
-                                    <label className={`form-label fw-semibold ${styles['label']}`}>
+                                    <label
+                                        className={`form-label fw-semibold ${styles['label']}`}
+                                        htmlFor="products"
+                                    >
                                         Seleccionar producto:
                                     </label>
                                     <Select
+                                        id='products'
+                                        name='products'
                                         options={products}
                                         isLoading={loadingProducts}
                                         onChange={(selected) => handleProductSelect(selected, index)}
@@ -177,7 +186,10 @@ const ProductOutForm = () => {
                                     <Row>
                                         <Col md={6}>
                                             <div className='form-group'>
-                                                <label className={`form-label fw-semibold ${styles['label']}`}>
+                                                <label
+                                                    className={`form-label fw-semibold ${styles['label']}`}
+                                                    htmlFor='quantity'
+                                                >
                                                     Stock disponible:
                                                 </label>
                                                 <p className="form-control-plaintext">{product.currentStock}</p>
@@ -185,11 +197,13 @@ const ProductOutForm = () => {
                                         </Col>
                                         <Col md={6}>
                                             <div className='form-group'>
-                                                <label className={`form-label fw-semibold ${styles['label']}`}>
+                                                <label htmlFor='quantity' className={`form-label fw-semibold ${styles['label']}`}>
                                                     Cantidad a retirar:
                                                 </label>
                                                 <input
                                                     type="number"
+                                                    id='quantity'
+                                                    name='quantity'
                                                     className={`form-control ${touched.products?.[index]?.quantity && errors.products?.[index]?.quantity ? 'is-invalid' : ''}`}
                                                     value={product.quantity || 0}
                                                     onChange={(e) => {
