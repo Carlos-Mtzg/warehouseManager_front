@@ -90,7 +90,7 @@ const Layout = () => {
             </li>
             <li className={`${styles['sidebar-item']}`}>
               <Link to="/outs" className={`${styles['sidebar-link']}`}>
-                <i className="bi bi-building-add me-3"></i>
+                <i className="bi bi-building-dash me-3"></i>
                 <span>Salidas registradas</span>
               </Link>
             </li>
