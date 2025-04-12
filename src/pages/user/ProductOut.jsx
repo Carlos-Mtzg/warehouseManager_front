@@ -23,7 +23,6 @@ const ProductOutForm = () => {
             }));
             setProducts(options);
         } else {
-            console.error("Error al cargar productos o datos inválidos:", response);
             setProducts([]);
         }
         setLoadingProducts(false);
@@ -46,7 +45,11 @@ const ProductOutForm = () => {
                 setFieldValue('products', updatedProducts);
             }
         } catch (error) {
-            console.error('Error al seleccionar el producto:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cargar el producto seleccionado.',
+            });
         }
     };
 
@@ -77,7 +80,6 @@ const ProductOutForm = () => {
             try {
                 setIsSubmitting(true);
 
-                
                 const productOutData = {
                     receiverName: values.receiverName,
                     productOutList: values.products.map(product => ({
@@ -85,23 +87,24 @@ const ProductOutForm = () => {
                         measurementUnit: product.measurementUnit,
                         quantity: parseInt(product.quantity, 10),
                         unitPrice: parseFloat(product.unitPrice),
-                        receiverName: values.receiverName,
+                        relatedUserUUID: localStorage.getItem('uuid'),
                     }))
                 };
-                
+
                 const response = await registerProductOut(productOutData);
-                if (response.status === 200) {
+
+                if (response.state === 'success') { 
                     Swal.fire({
                         icon: 'success',
                         title: 'Salida registrada',
-                        text: 'La salida de productos se ha registrado correctamente.',
+                        text: 'La salida de productos se registró correctamente.',
                     });
                     resetForm();
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo registrar la salida de productos.',
+                        text: response.message || 'No se pudo registrar la salida de productos.',
                     });
                 }
             } catch (error) {
