@@ -30,7 +30,7 @@ const EntriesList = () => {
       });
 
       setEntries(response.data);
-      if (entries.length <= 0) {
+      if (response.data.length <= 0) {
         Swal.fire({
           icon: 'info',
           title: 'No hay entradas',
