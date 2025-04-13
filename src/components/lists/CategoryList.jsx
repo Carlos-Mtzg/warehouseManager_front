@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 import styles from '../../assets/css/users.module.css'
 import { deleteCategory, getAllCategories } from '../../services/ApiCategories.jsx'
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
+import { handleConfirm, handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
 const CategoryList = ({ refresh }) => {
   const [categories, setCategories] = useState([])
@@ -24,19 +23,12 @@ const CategoryList = ({ refresh }) => {
   }
 
   const handleDeleteCategory = async (uuid) => {
-    const result = await Swal.fire({
-      title: '¿Eliminar categoría?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true,
-      allowOutsideClick: false,
-    })
+    const confirmed = await handleConfirm(
+      '¿Eliminar categoría?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       const response = await deleteCategory(uuid);
       if (response.status === 409) {
         handleError('Operación no permitida', `Esta categoría no puede eliminarse porque está asociada a una o más entradas.`);
