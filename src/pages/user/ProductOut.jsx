@@ -6,7 +6,7 @@ import styles from '../../assets/css/entries.module.css'
 import { fetchProductByUUID, fetchProductsInStock, registerProductOut } from '../../services/ApiOut';
 import { productOutSchema } from '../../validations/outsValidation';
 import { useFormik } from 'formik';
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from '../../utils/simpleAlerts';
 
 const ProductOutForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,11 +45,10 @@ const ProductOutForm = () => {
                 setFieldValue('products', updatedProducts);
             }
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo cargar el producto seleccionado.',
-            });
+            handleError(
+                'Error',
+                'No se pudo cargar el producto seleccionado.'
+            );
         }
     };
 
@@ -94,26 +93,19 @@ const ProductOutForm = () => {
                 const response = await registerProductOut(productOutData);
 
                 if (response.state === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Salida registrada',
-                        text: 'La salida de productos se registró correctamente.',
-                    });
-                    resetForm();
+                    handleSuccess(
+                        'Salida registrada',
+                        'La salida de productos se registró correctamente.',
+                        resetForm
+                    )
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.message || 'No se pudo registrar la salida de productos.',
-                    });
+                    handleError(
+                        'Error',
+                        response.message || 'No se pudo registrar la salida de productos.'
+                    );
                 }
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al procesar la solicitud',
-                    icon: 'error',
-                    timer: 2000
-                });
+                handleError('Error', 'Error al procesar la solicitud');
             } finally {
                 setIsSubmitting(false);
             }
