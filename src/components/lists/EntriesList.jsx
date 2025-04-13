@@ -2,45 +2,65 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../assets/css/users.module.css';
 import AxiosClient from '../../config/axios-client.js';
 import Swal from 'sweetalert2';
+
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const EntriesList = () => {
-  const [entries, setEntries] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage] = useState(5);
+  const [groupedEntries, setGroupedEntries] = useState([]);
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [expandedGroups, setExpandedGroups] = useState([]);
+  const [currentGroupPage, setCurrentGroupPage] = useState(1);
+  const groupsPerPage = 15;
+
+  // Control de páginas internas por grupo
+  const [entryPages, setEntryPages] = useState({}); // {0: 1, 1: 2, ...}
 
   const fetchEntries = async () => {
     try {
-        const token = localStorage.getItem('accessToken');
-        const role = localStorage.getItem('role');
-        const uuid = localStorage.getItem('uuid');
+      const token = localStorage.getItem('accessToken');
+      const role = localStorage.getItem('role');
+      const uuid = localStorage.getItem('uuid');
 
-        let endpoint = 'productEntry/';
-        if (role !== 'ROLE_ADMIN') {
-            endpoint = `productEntry/user/${uuid}`;
-        }
+      let endpoint = 'productEntry/grouped';
+      if (role !== 'ROLE_ADMIN') {
+        endpoint = `productEntry/grouped/user/${uuid}`;
+      }
 
-        const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+      const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        setEntries(response.data); 
+      const data = response.data;
+
+      const sorted = [...data].sort((a, b) =>
+        sortOrder === 'desc'
+          ? new Date(b.entryDate) - new Date(a.entryDate)
+          : new Date(a.entryDate) - new Date(b.entryDate)
+      );
+
+      setGroupedEntries(sorted);
     } catch (error) {
-        Swal.fire('Error', 'Error al obtener las entradas.', 'error');
+      console.error('Error fetching entries:', error);
+      Swal.fire('Error', 'Error al obtener las entradas.', 'error');
     }
   };
 
   useEffect(() => {
     fetchEntries();
-  }, []);
+  }, [sortOrder]);
 
-  const indexOfLastEntry = currentPage * entriesPerPage;
-  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return new Date(dateString).toLocaleString('es-MX', options);
+  };
 
   const handleCancelEntry = async (entryId) => {
     const result = await Swal.fire({
@@ -62,63 +82,135 @@ const EntriesList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire(
-          'Cancelado',
-          'La entrada ha sido cancelada exitosamente.',
-          'success'
-        ).then(() => fetchEntries());
+        Swal.fire('Cancelado', 'La entrada ha sido cancelada exitosamente.', 'success').then(() =>
+          fetchEntries()
+        );
       } catch (error) {
         Swal.fire('Error', 'No se pudo cancelar la entrada.', 'error');
       }
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleString('es-MX', options);
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'));
   };
 
+  const toggleGroup = (index) => {
+    setExpandedGroups((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+    setEntryPages((prev) => ({ ...prev, [index]: 1 }));
+  };
+
+  const entryPerPage = 5;
+  const indexOfLastGroup = currentGroupPage * groupsPerPage;
+  const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
+  const currentGroups = groupedEntries.slice(indexOfFirstGroup, indexOfLastGroup);
+
   return (
-    <div className="table-responsive slide-in-right">
-      <table className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}>
-        <thead className='text-center'>
-          <tr>
-            <th>Cantidad</th>
-            <th>Unidad de Medida</th>
-            <th>Producto</th>
-            <th>Monto Total</th>
-            <th>Fecha</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody className='text-center'>
-          {currentEntries.map((entry) => (
-            <tr key={entry.uuid}>
-              <td>{entry.quantity}</td>
-              <td>{entry.measurementUnit}</td>
-              <td>{entry.productName}</td>
-              <td>${entry.totalAmount}</td>
-              <td>{formatDate(entry.entryDate)}</td>
-              <td>
-                <button
-                  className={`text-danger ${styles['btn-custom']}`}
-                  onClick={() => handleCancelEntry(entry.uuid)}
+    <div className="slide-in-right">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button className={`${styles['btn-custom']} btn btn-sm`} onClick={toggleSortOrder}>
+          Ver {sortOrder === 'desc' ? 'más antiguos primero' : 'más recientes primero'}
+        </button>
+      </div>
+
+      {currentGroups.map((group, indexInPage) => {
+        const actualIndex = indexOfFirstGroup + indexInPage;
+        const isExpanded = expandedGroups.includes(actualIndex);
+        const currentPage = entryPages[actualIndex] || 1;
+        const entries = group.entries || [];
+        const totalPages = Math.ceil(entries.length / entryPerPage);
+        const paginatedEntries = entries.slice(
+          (currentPage - 1) * entryPerPage,
+          currentPage * entryPerPage
+        );
+
+        return (
+          <div key={actualIndex} className="mb-3 p-3 border rounded shadow-sm">
+            <div
+              className="d-flex justify-content-between align-items-center cursor-pointer"
+              onClick={() => toggleGroup(actualIndex)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div>
+                <strong>Productos registrados el:</strong> {formatDate(group.entryDate)} <br />
+                <strong>Proveedor:</strong> {group.supplier}
+              </div>
+              <div>
+                <i className={`bi ${isExpanded ? 'bi-chevron-up' : 'bi-chevron-down'}`} />
+              </div>
+            </div>
+
+            {isExpanded && (
+              <div className="table-responsive mt-3">
+                <table
+                  className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}
                 >
-                  <i className="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <thead className="text-center">
+                    <tr>
+                      <th>Cantidad</th>
+                      <th>Unidad de Medida</th>
+                      <th>Producto</th>
+                      <th>Monto Total</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-center">
+                    {paginatedEntries.map((entry) => (
+                      <tr key={entry.uuid}>
+                        <td>{entry.quantity}</td>
+                        <td>{entry.measurementUnit}</td>
+                        <td>{entry.productName}</td>
+                        <td>${entry.totalAmount}</td>
+                        <td>
+                          <button
+                            className={`text-danger ${styles['btn-custom']}`}
+                            onClick={() => handleCancelEntry(entry.uuid)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Paginación interna */}
+                {totalPages > 1 && (
+                  <div className="d-flex justify-content-center mt-2">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        className={`${styles['btn-custom']} btn btn-sm mx-1 ${
+                          currentPage === i + 1 ? styles['active-page'] : ''
+                        }`}
+                        onClick={() =>
+                          setEntryPages((prev) => ({ ...prev, [actualIndex]: i + 1 }))
+                        }
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Paginación externa */}
       <div className="d-flex justify-content-center mt-4">
         {Array.from(
-          { length: Math.ceil(entries.length / entriesPerPage) },
+          { length: Math.ceil(groupedEntries.length / groupsPerPage) },
           (_, index) => (
             <button
               key={index + 1}
-              className={`${styles['btn-custom']} ${currentPage === index + 1 ? styles['active-page'] : ''}`}
-              onClick={() => paginate(index + 1)}
+              className={`${styles['btn-custom']} mx-1 ${
+                currentGroupPage === index + 1 ? styles['active-page'] : ''
+              }`}
+              onClick={() => setCurrentGroupPage(index + 1)}
             >
               {index + 1}
             </button>
