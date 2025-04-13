@@ -3,7 +3,7 @@ import styles from '../../assets/css/users.module.css';
 import AxiosClient from '../../config/axios-client.js';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
+import { handleConfirm, handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const EntriesList = () => {
@@ -30,16 +30,19 @@ const EntriesList = () => {
       });
 
       setEntries(response.data);
+      if (entries.length <= 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay entradas',
+          text: 'No has registrado ninguna entrada para mostrar',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          navigate('/product-entries')
+        })
+      }
     } catch (error) {
-      Swal.fire({
-        icon: 'info',
-        title: 'No hay entradas',
-        text: 'No has registrado ninguna entrada para mostrar',
-        showConfirmButton: false,
-        timer: 2000
-      }).then(() => {
-        navigate('/product-entries')
-      })
+      handleError('Error', 'Ocurrió un error inesperado');
     }
   };
 
@@ -54,18 +57,12 @@ const EntriesList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleCancelEntry = async (entryId) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro de cancelar esta entrada?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true,
-    });
+    const confirmed = await handleConfirm(
+      '¿Estás seguro de cancelar esta entrada?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       try {
         const token = localStorage.getItem('accessToken');
         await AxiosClient.delete(`productEntry/${entryId}`, {
