@@ -48,7 +48,7 @@ const Home = () => {
           <button
             className={`rounded ${styles['primary-outline-btn']}`}
             type='button'
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/product-out')}
           >
             <div className={`btn d-flex text-center ${styles['primary-outline-content']}`}>
               Registrar Salida<i className="bi bi-building-dash ms-2"></i>
