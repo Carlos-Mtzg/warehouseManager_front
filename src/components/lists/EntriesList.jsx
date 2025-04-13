@@ -12,8 +12,7 @@ const EntriesList = () => {
   const [currentGroupPage, setCurrentGroupPage] = useState(1);
   const groupsPerPage = 15;
 
-  // Control de páginas internas por grupo
-  const [entryPages, setEntryPages] = useState({}); // {0: 1, 1: 2, ...}
+  const [entryPages, setEntryPages] = useState({}); 
 
   const fetchEntries = async () => {
     try {
