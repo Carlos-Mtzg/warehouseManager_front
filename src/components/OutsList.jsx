@@ -2,37 +2,43 @@ import React, { useState, useEffect } from 'react';
 import styles from './../assets/css/users.module.css';
 import AxiosClient from './../config/axios-client';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { handleError, handleSuccess } from '../utils/simpleAlerts';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const OutsList = () => {
   const [outs, setOuts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [outsPerPage] = useState(5);
+  const navigate = useNavigate();
 
   const fetchOuts = async () => {
     try {
-        const token = localStorage.getItem('accessToken');
-        const role = localStorage.getItem('role');
-        const uuid = localStorage.getItem('uuid');
-        let endpoint = 'productOut/';
-        if (role !== 'ROLE_ADMIN') {
-            endpoint = `productOut/user/${uuid}`;
-        }
+      const token = localStorage.getItem('accessToken');
+      const role = localStorage.getItem('role');
+      const uuid = localStorage.getItem('uuid');
+      let endpoint = 'productOut/';
+      if (role !== 'ROLE_ADMIN') {
+        endpoint = `productOut/user/${uuid}`;
+      }
 
-        const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        setOuts(response.data);
-    } catch (error) {
-        Swal.fire({
-          icon: 'info',
-          title: 'No hay salidas',
-          text: 'No has registrado ninguna salida para mostrar',
-          confirmButtonColor: '#16423C',
+      const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      setOuts(response.data);
+    } catch (error) {
+      Swal.fire({
+        icon: 'info',
+        title: 'No hay salidas',
+        text: 'No hay registro de ninguna salida para mostrar',
+        showConfirmButton: false,
+        timer: 2000
+      }).then(() => {
+        navigate('/product-out')
+      })
     }
   };
 
@@ -66,13 +72,14 @@ const OutsList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire(
+        handleSuccess(
           'Cancelado',
           'La salida ha sido cancelada exitosamente.',
-          'success'
-        ).then(() => fetchOuts());
+          null,
+          fetchOuts
+        )
       } catch (error) {
-        Swal.fire('Error', 'No se pudo cancelar la salida.', 'error');
+        handleError('Error', 'No se pudo cancelar la salida.');
       }
     }
   };
