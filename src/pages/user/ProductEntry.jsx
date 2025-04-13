@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import AddSupplierModal from "../../components/modals/AddSupplierModal.jsx";
 import AddCategoryModal from "../../components/modals/AddCategoryModal.jsx";
 import styles from '../../assets/css/entries.module.css'
 import { fetchCategories, fetchSuppliers, registerProductEntry } from "../../services/ApiEntries";
 import { productEntriesSchema } from "../../validations/entriesValidation";
 import { useFormik } from "formik";
-import Swal from 'sweetalert2';
+import { handleError, handleSuccess } from "../../utils/simpleAlerts.js";
 
 const ProductEntryForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,32 +80,28 @@ const ProductEntryForm = () => {
 
                 const response = await registerProductEntry(productEntryList);
                 if (response.state === "success") {
-                    Swal.fire({
-                        title: "Registro exitoso",
-                        text: "Se registró la entrada correctamente",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 2000,
-                    });
-                    resetForm();
+                    handleSuccess(
+                        "Registro exitoso",
+                        "Se registró la entrada correctamente",
+                        resetForm,
+                        null
+                    );
                 } else {
-                    Swal.fire({
-                        title: "Error",
-                        text: response.message,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 2000,
-                    });
+                    handleError(
+                        'Error',
+                        'Ocurrió un error al registrar la entrada',
+                        null,
+                        null
+                    );
                 }
                 setIsSubmitting(false);
             } catch (error) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error inesperado',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                handleError(
+                    'Error',
+                    'Ocurrió un error inesperado',
+                    null,
+                    null
+                );
                 setIsSubmitting(false);
             } finally {
                 await new Promise((resolve) => setTimeout(resolve, 2000));
