@@ -2,38 +2,44 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../assets/css/users.module.css';
 import AxiosClient from '../../config/axios-client.js';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const EntriesList = () => {
   const [entries, setEntries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage] = useState(5);
+  const navigate = useNavigate();
 
   const fetchEntries = async () => {
     try {
-        const token = localStorage.getItem('accessToken');
-        const role = localStorage.getItem('role');
-        const uuid = localStorage.getItem('uuid');
+      const token = localStorage.getItem('accessToken');
+      const role = localStorage.getItem('role');
+      const uuid = localStorage.getItem('uuid');
 
-        let endpoint = 'productEntry/';
-        if (role !== 'ROLE_ADMIN') {
-            endpoint = `productEntry/user/${uuid}`;
-        }
+      let endpoint = 'productEntry/';
+      if (role !== 'ROLE_ADMIN') {
+        endpoint = `productEntry/user/${uuid}`;
+      }
 
-        const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+      const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        setEntries(response.data); 
+      setEntries(response.data);
     } catch (error) {
-        Swal.fire({
-            icon: 'info',
-            title: 'No hay entradas',
-            text: 'No has registrado ninguna entrada para mostrar',
-            confirmButtonColor: '#16423C',
-        });
+      Swal.fire({
+        icon: 'info',
+        title: 'No hay entradas',
+        text: 'No has registrado ninguna entrada para mostrar',
+        showConfirmButton: false,
+        timer: 2000
+      }).then(() => {
+        navigate('/product-entries')
+      })
     }
   };
 
@@ -67,13 +73,14 @@ const EntriesList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire(
+        handleSuccess(
           'Cancelado',
           'La entrada ha sido cancelada exitosamente.',
-          'success'
-        ).then(() => fetchEntries());
+          null,
+          fetchEntries
+        );
       } catch (error) {
-        Swal.fire('Error', 'No se pudo cancelar la entrada.', 'error');
+        handleError('Error', 'No se pudo cancelar la entrada.');
       }
     }
   };
