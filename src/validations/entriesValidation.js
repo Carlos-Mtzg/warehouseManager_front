@@ -82,6 +82,7 @@ export const productEntriesSchema = Yup.object().shape({
             measurementUnit: Yup.string()
                 .trim()
                 .required(REQUIRED_FIELDS)
+                .matches(/^\D*$/, 'Este campo no puede contener números')
                 .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
             quantity: Yup.number()
                 .min(1, 'La cantidad debe ser superior a 0')
