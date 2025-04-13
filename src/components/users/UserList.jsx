@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../../services/ApiUser.jsx';
 import styles from '../../assets/css/users.module.css'
 import UserStatus from './UserStatus.jsx';
+import { handleError, handleSucces } from '../../utils/simpleAlerts.js'
 
 
 const UserList = ({ refresh, onEditUser }) => {
@@ -26,14 +27,10 @@ const UserList = ({ refresh, onEditUser }) => {
 
     const handleDeleteUser = async (uuid) => {
         if (uuid === loggedInUserUUID) {
-            Swal.fire({
-                title: 'Error',
-                text: 'No puedes eliminar tu propio usuario',
-                icon: 'error',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                timer: 2000,
-            });
+            handleError(
+                'Acción no permitida',
+                'No puedes eliminar tu propio usuario'
+            );
         } else {
             const result = await Swal.fire({
                 title: '¿Estás seguro de eliminar el usuario?',
@@ -50,49 +47,56 @@ const UserList = ({ refresh, onEditUser }) => {
             if (result.isConfirmed) {
                 const response = await deleteUser(uuid);
                 if (response.state === 'success') {
-                    Swal.fire({
-                        title: 'Usuario eliminado',
-                        text: 'El usuario ya no tiene acceso al sistema',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(() => {
-                        fetchUsers();
-                    });
+                    handleSucces(
+                        'Usuario eliminado',
+                        'El usuario ya no tiene acceso al sistema',
+                        null,
+                        fetchUsers
+                    );
                 } else {
-                    Swal.fire('Error', response.message, 'error');
+                    handleError(
+                        'Error',
+                        'Ocurrió un error inesperado'
+                    );
                 }
             }
         }
     };
 
     const handleDeactivateUser = async (uuid) => {
-        const result = await Swal.fire({
-            title: '¿Estás seguro de desactivar el usuario?',
-            text: 'El usuario no podrá acceder al sistema.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#16423C',
-            reverseButtons: true,
-            allowOutsideClick: false,
-        });
+        if (uuid === loggedInUserUUID) {
+            handleError(
+                'Acción no permitida',
+                'No puedes desactivar tu propio usuario'
+            );
+        } else {
+            const result = await Swal.fire({
+                title: '¿Estás seguro de desactivar el usuario?',
+                text: 'El usuario no podrá acceder al sistema.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#16423C',
+                reverseButtons: true,
+                allowOutsideClick: false,
+            });
 
-        if (result.isConfirmed) {
-            const response = await deactivateUser(uuid);
-            if (response.state === 'success') {
-                Swal.fire({
-                    title: 'Usuario desactivado',
-                    text: 'El usuario ya no podra acceder al sistema',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    fetchUsers();
-                });
-            } else {
-                Swal.fire('Error', response.message, 'error');
+            if (result.isConfirmed) {
+                const response = await deactivateUser(uuid);
+                if (response.state === 'success') {
+                    handleSucces(
+                        'Usuario desactivado',
+                        'El usuario ya no podrá acceder al sistema',
+                        null,
+                        fetchUsers
+                    );
+                } else {
+                    handleError(
+                        'Error',
+                        'Ocurrió un error inesperado'
+                    );
+                }
             }
         }
     };
@@ -113,17 +117,17 @@ const UserList = ({ refresh, onEditUser }) => {
         if (result.isConfirmed) {
             const response = await activateUser(uuid);
             if (response.state === 'success') {
-                Swal.fire({
-                    title: 'Usuario activado',
-                    text: 'El usuario puede acceder al sistema de nuevo',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    fetchUsers();
-                });
+                handleSucces(
+                    'Usuario activado',
+                    'El usuario puede acceder al sistema de nuevo',
+                    null,
+                    fetchUsers
+                );
             } else {
-                Swal.fire('Error', response.message, 'error');
+                handleError(
+                    'Error',
+                    'Ocurrió un error inesperado'
+                );
             }
         }
     };
@@ -136,7 +140,8 @@ const UserList = ({ refresh, onEditUser }) => {
                     <thead>
                         <tr>
                             <th scope='col' className='text-center' style={{ width: "15px" }}>#</th>
-                            <th scope='col' className='text-center'>Nombre</th>
+                            <th scope='col' className='text-center'>Nombre(s)</th>
+                            <th scope='col' className='text-center'>Apellidos(s)</th>
                             <th scope='col' className='text-center'>Correo Electrónico</th>
                             <th scope='col' className='text-center'>Rol</th>
                             <th scope='col' className='text-center'>Acciones</th>
@@ -150,6 +155,7 @@ const UserList = ({ refresh, onEditUser }) => {
                                     <td className='text-center'>
                                         <UserStatus status={user.status} name={user.name} />
                                     </td>
+                                    <td className='text-center'>{user.lastname}</td>
                                     <td className='text-center'>{user.email}</td>
                                     <td className='text-center'>
                                         {user.role.name === "ROLE_ADMIN" && (
