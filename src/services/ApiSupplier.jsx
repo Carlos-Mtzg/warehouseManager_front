@@ -12,8 +12,16 @@ export async function getAllSuppliers() {
 export async function deleteSupplier(uuid) {
   try {
     const response = await AxiosClient.delete(`/supplier/${uuid}`)
-    return { state: 'success', data: response }
+    return {
+      state: 'success',
+      status: response.status,
+      data: response
+    }
   } catch (error) {
-    return { state: 'error', message: error.message }
+    return {
+      state: 'error',
+      status: error.response?.status || 500,
+      message: error.message
+    }
   }
 }
