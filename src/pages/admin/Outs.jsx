@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../../assets/css/users.module.css';
-import OutsList from '../../components/OutsList';
+import OutsList from '../../components/lists/OutsList.jsx';
 
 const Entries = () => {
   return (

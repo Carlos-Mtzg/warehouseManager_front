@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styles from './../assets/css/users.module.css';
-import AxiosClient from './../config/axios-client';
+import styles from '../../assets/css/users.module.css';
+import AxiosClient from '../../config/axios-client.js';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { handleConfirm, handleError, handleSuccess } from '../utils/simpleAlerts';
+import { handleConfirm, handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const OutsList = () => {
