@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import styles from '../../assets/css/users.module.css'
 import { deleteCategory, getAllCategories } from '../../services/ApiCategories.jsx'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
 const CategoryList = ({ refresh }) => {
   const [categories, setCategories] = useState([])
@@ -36,21 +37,20 @@ const CategoryList = ({ refresh }) => {
     })
 
     if (result.isConfirmed) {
-      const response = await deleteCategory(uuid)
-      if (response.state === 'success') {
-        await Swal.fire({
-          title: 'Categoría eliminada',
-          text: 'La categoría ha sido eliminada correctamente',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 2000,
-        })
-        fetchCategories()
+      const response = await deleteCategory(uuid);
+      if (response.status === 409) {
+        handleError('Operación no permitida', `Esta categoría no puede eliminarse porque está asociada a una o más entradas.`);
+      } else if (response.state === 'success') {
+        handleSuccess(
+          'Categoria eliminada',
+          'La categoría ha sido eliminada correctamente',
+          null,
+          fetchCategories
+        )
       } else {
-        await Swal.fire(
+        handleError(
           'Error',
-          response.message || 'No se pudo eliminar la categoría',
-          'error'
+          'No se pudo eliminar la categoría'
         )
       }
     }

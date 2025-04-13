@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import styles from '../../assets/css/users.module.css'
 import { getAllSuppliers, deleteSupplier } from '../../services/ApiSupplier.jsx'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
 const SupplierList = ({ refresh }) => {
   const [suppliers, setSuppliers] = useState([])
@@ -33,21 +34,22 @@ const SupplierList = ({ refresh }) => {
 
     if (result.isConfirmed) {
       const response = await deleteSupplier(uuid)
-      if (response.state === 'success') {
-        await Swal.fire({
-          title: 'Proveedor eliminado',
-          text: 'El proveedor ha sido eliminado correctamente',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 2000,
-        })
-        fetchSuppliers()
+      if (response.status === 409) {
+        handleError(
+          'Operación no permitida',
+          `Este proveedor no puede eliminarse porque está asociada a una o más entradas.`);
+      } else if (response.state === 'success') {
+        handleSuccess(
+          'Proveedor eliminado',
+          'El proveedor ha sido eliminado correctamente',
+          null,
+          fetchSuppliers
+        );
       } else {
-        Swal.fire(
+        handleError(
           'Error',
-          response.message || 'No se pudo eliminar el proveedor',
-          'error'
-        )
+          'No se pudo eliminar el proveedor'
+        );
       }
     }
   }
