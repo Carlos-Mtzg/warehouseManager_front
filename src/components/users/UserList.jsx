@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../../services/ApiUser.jsx';
 import styles from '../../assets/css/users.module.css'
 import UserStatus from './UserStatus.jsx';
-import { handleError, handleSucces } from '../../utils/simpleAlerts.js'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
 
 const UserList = ({ refresh, onEditUser }) => {
@@ -47,7 +47,7 @@ const UserList = ({ refresh, onEditUser }) => {
             if (result.isConfirmed) {
                 const response = await deleteUser(uuid);
                 if (response.state === 'success') {
-                    handleSucces(
+                    handleSuccess(
                         'Usuario eliminado',
                         'El usuario ya no tiene acceso al sistema',
                         null,
@@ -85,7 +85,7 @@ const UserList = ({ refresh, onEditUser }) => {
             if (result.isConfirmed) {
                 const response = await deactivateUser(uuid);
                 if (response.state === 'success') {
-                    handleSucces(
+                    handleSuccess(
                         'Usuario desactivado',
                         'El usuario ya no podrá acceder al sistema',
                         null,
@@ -117,7 +117,7 @@ const UserList = ({ refresh, onEditUser }) => {
         if (result.isConfirmed) {
             const response = await activateUser(uuid);
             if (response.state === 'success') {
-                handleSucces(
+                handleSuccess(
                     'Usuario activado',
                     'El usuario puede acceder al sistema de nuevo',
                     null,
