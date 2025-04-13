@@ -2,33 +2,10 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import Swal from 'sweetalert2';
 import styles from '../../assets/css/users.module.css';
 import { editUserInfoSchema } from '../../validations/userValidations.js';
 import { updateInfoUser } from '../../services/ApiUser.jsx';
-
-const handleSuccess = (title, text, resetForm, callback) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 2000,
-    }).then(() => {
-        if (resetForm) resetForm();
-        if (callback) callback();
-    });
-};
-
-const handleError = (title, text) => {
-    Swal.fire({
-        title,
-        text,
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 2000,
-    });
-};
+import { handleSuccess, handleError } from '../../utils/simpleAlerts.js'
 
 const EditUserInfoModal = ({ user, handleClose, onUserUpdated }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);

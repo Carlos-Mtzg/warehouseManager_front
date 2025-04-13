@@ -22,3 +22,20 @@ export const handleError = (title, text) => {
         timer: 2000,
     });
 };
+
+
+export const handleConfirm = async (title, text) => {
+    const result = await Swal.fire({
+        title,
+        text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#16423C',
+        reverseButtons: true,
+        allowOutsideClick: false,
+    });
+
+    return result.isConfirmed;
+}

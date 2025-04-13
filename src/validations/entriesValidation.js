@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const REQUIRED_FIELDS = 'Este campo es obligatorio';
-const LETTERS_SPACES = 'Este campo solo puede contener letras y espacios';
+const LETTERS_SPACES = 'Solo se permiten letras, números, espacios y un solo "-"';
 const NO_SPACES = 'Este campo no puede contener solo espacios';
 const INVALID_EMAIL = 'El correo electrónico no es válido';
 const WORLDS_NOT_ALLOWED = 'El campo contiene palabras no permitidas';
@@ -42,7 +42,7 @@ export const addSupplierSchema = Yup.object({
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
         .min(3, 'El nombre debe tener al menos 3 caracteres')
@@ -82,6 +82,7 @@ export const productEntriesSchema = Yup.object().shape({
             measurementUnit: Yup.string()
                 .trim()
                 .required(REQUIRED_FIELDS)
+                .matches(/^\D*$/, 'Este campo no puede contener números')
                 .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
             quantity: Yup.number()
                 .min(1, 'La cantidad debe ser superior a 0')
