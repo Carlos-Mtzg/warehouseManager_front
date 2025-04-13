@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 import styles from '../../assets/css/users.module.css'
 import { getAllSuppliers, deleteSupplier } from '../../services/ApiSupplier.jsx'
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
+import { handleError, handleSuccess, handleConfirm } from '../../utils/simpleAlerts.js'
 
 const SupplierList = ({ refresh }) => {
   const [suppliers, setSuppliers] = useState([])
@@ -20,19 +19,12 @@ const SupplierList = ({ refresh }) => {
   }
 
   const handleDeleteSupplier = async (uuid) => {
-    const result = await Swal.fire({
-      title: '¿Eliminar proveedor?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true,
-      allowOutsideClick: false,
-    })
+    const confirmed = await handleConfirm(
+      '¿Eliminar proveedor?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       const response = await deleteSupplier(uuid)
       if (response.status === 409) {
         handleError(
