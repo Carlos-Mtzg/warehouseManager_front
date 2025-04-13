@@ -3,7 +3,7 @@ import styles from './../assets/css/users.module.css';
 import AxiosClient from './../config/axios-client';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { handleError, handleSuccess } from '../utils/simpleAlerts';
+import { handleConfirm, handleError, handleSuccess } from '../utils/simpleAlerts';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
 const OutsList = () => {
@@ -29,16 +29,20 @@ const OutsList = () => {
       });
 
       setOuts(response.data);
+
+      if (response.data.length <= 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay salidas',
+          text: 'No hay registro de ninguna salida para mostrar',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          navigate('/product-out')
+        })
+      }
     } catch (error) {
-      Swal.fire({
-        icon: 'info',
-        title: 'No hay salidas',
-        text: 'No hay registro de ninguna salida para mostrar',
-        showConfirmButton: false,
-        timer: 2000
-      }).then(() => {
-        navigate('/product-out')
-      })
+      handleError('Error', 'Ocurrió un error inesperado.');
     }
   };
 
@@ -53,18 +57,12 @@ const OutsList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleCancelOut = async (outId) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro de cancelar esta salida?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true,
-    });
+    const confirmed = await handleConfirm(
+      '¿Estás seguro de cancelar esta salida?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       try {
         const token = localStorage.getItem('accessToken');
         await AxiosClient.delete(`productOut/${outId}`, {
