@@ -1,10 +1,9 @@
-import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { getAllUsers, deleteUser, deactivateUser, activateUser } from '../../services/ApiUser.jsx';
 import styles from '../../assets/css/users.module.css'
 import UserStatus from './UserStatus.jsx';
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
+import { handleConfirm, handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
 
 const UserList = ({ refresh, onEditUser }) => {
@@ -32,19 +31,12 @@ const UserList = ({ refresh, onEditUser }) => {
                 'No puedes eliminar tu propio usuario'
             );
         } else {
-            const result = await Swal.fire({
-                title: '¿Estás seguro de eliminar el usuario?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonColor: '#16423C',
-                reverseButtons: true,
-                allowOutsideClick: false,
-            });
+            const confirmed = await handleConfirm(
+                '¿Estás seguro de eliminar el usuario?',
+                'Esta acción no se puede deshacer.'
+            );
 
-            if (result.isConfirmed) {
+            if (confirmed) {
                 const response = await deleteUser(uuid);
                 if (response.state === 'success') {
                     handleSuccess(
@@ -70,19 +62,12 @@ const UserList = ({ refresh, onEditUser }) => {
                 'No puedes desactivar tu propio usuario'
             );
         } else {
-            const result = await Swal.fire({
-                title: '¿Estás seguro de desactivar el usuario?',
-                text: 'El usuario no podrá acceder al sistema.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonColor: '#16423C',
-                reverseButtons: true,
-                allowOutsideClick: false,
-            });
+            const confirmed = await handleConfirm(
+                '¿Estás seguro de desactivar el usuario?',
+                'El usuario no podrá acceder al sistema.'
+            );
 
-            if (result.isConfirmed) {
+            if (confirmed) {
                 const response = await deactivateUser(uuid);
                 if (response.state === 'success') {
                     handleSuccess(
@@ -102,19 +87,12 @@ const UserList = ({ refresh, onEditUser }) => {
     };
 
     const handleActivateUser = async (uuid) => {
-        const result = await Swal.fire({
-            title: '¿Estás seguro de activar el usuario?',
-            text: 'El usuario podrá acceder al sistema de nuevo.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#16423C',
-            reverseButtons: true,
-            allowOutsideClick: false,
-        });
+        const confirmed = await handleConfirm(
+            '¿Estás seguro de activar el usuario?',
+            'El usuario podrá acceder al sistema de nuevo.'
+        );
 
-        if (result.isConfirmed) {
+        if (confirmed) {
             const response = await activateUser(uuid);
             if (response.state === 'success') {
                 handleSuccess(
