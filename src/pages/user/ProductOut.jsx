@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
-import "bootstrap/dist/css/bootstrap.min.css";
 import styles from '../../assets/css/entries.module.css'
 import { fetchProductByUUID, fetchProductsInStock, registerProductOut } from '../../services/ApiOut';
 import { productOutSchema } from '../../validations/outsValidation';
 import { useFormik } from 'formik';
 import { handleError, handleSuccess } from '../../utils/simpleAlerts';
+
 
 const ProductOutForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -237,7 +237,7 @@ const ProductOutForm = () => {
                         <div className="mt-3">
                             <button
                                 type="button"
-                                className={`btn ${styles['secondary-btn']}`}
+                                className={`rounded ${styles['secondary-btn']}`}
                                 onClick={() => {
                                     setFieldValue('products', [...values.products, {
                                         product: null,
@@ -245,26 +245,43 @@ const ProductOutForm = () => {
                                         currentStock: 0,
                                         quantity: '',
                                     }]);
-                                }}
-                            >
-                                Agregar Producto <i className="bi bi-plus-lg"></i>
+                                }}>
+                                <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
+                                    Agregar Producto <i className="bi bi-plus-lg"></i>
+                                </div>
+                                <span></span>
                             </button>
                         </div>
 
                         <div className="mt-4">
-                            <button
-                                type="submit"
-                                className={`btn ${styles['primary-btn']} w-100`}
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? (
-                                    <span>
-                                        Procesando... <div className="spinner-border spinner-border-sm"></div>
-                                    </span>
-                                ) : (
-                                    "Registrar Salida"
-                                )}
-                            </button>
+                            {isSubmitting ? (
+                                <button
+                                    className={`rounded w-100 ${styles['primary-btn']}`}
+                                    type="submit"
+                                    disabled
+                                >
+                                    <div className={`d-flex align-items-center justify-content-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
+                                        Procesando
+                                        <output
+                                            className="spinner-border"
+                                            style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
+                                        >
+                                            <span className="visually-hidden"></span>
+                                        </output>
+                                    </div>
+                                    <span></span>
+                                </button>
+                            ) : (
+                                <button
+                                    className={`rounded w-100 ${styles['primary-btn']}`}
+                                    type='submit'
+                                >
+                                    <div className={`btn d-flex justify-content-center ${styles['primary-content']}`}>
+                                        Registrar Salida<i className="bi bi-check ms-2"></i>
+                                    </div>
+                                    <span></span>
+                                </button>
+                            )}
                         </div>
                     </form>
                 </div>
