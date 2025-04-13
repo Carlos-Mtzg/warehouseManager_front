@@ -6,7 +6,6 @@ import { getAllSuppliers, deleteSupplier } from '../../services/ApiSupplier.jsx'
 
 const SupplierList = ({ refresh }) => {
   const [suppliers, setSuppliers] = useState([])
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchSuppliers()
@@ -16,9 +15,6 @@ const SupplierList = ({ refresh }) => {
     const result = await getAllSuppliers()
     if (result.state === 'success') {
       setSuppliers(result.data)
-      setError(null)
-    } else {
-      setError(result.message)
     }
   }
 
@@ -58,12 +54,6 @@ const SupplierList = ({ refresh }) => {
 
   return (
     <div className='slide-in-right'>
-      {error && (
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-circle me-2"></i>
-          {error}
-        </div>
-      )}
       <div className="table-responsive">
         <table
           className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}

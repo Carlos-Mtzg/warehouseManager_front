@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../../assets/css/users.module.css';
-import AxiosClient from '../../config/axios-client.js';
+import styles from './../assets/css/users.module.css';
+import AxiosClient from './../config/axios-client';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
+import { handleError, handleSuccess } from '../utils/simpleAlerts';
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
-const EntriesList = () => {
-  const [entries, setEntries] = useState([]);
+const OutsList = () => {
+  const [outs, setOuts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage] = useState(5);
+  const [outsPerPage] = useState(5);
   const navigate = useNavigate();
 
-  const fetchEntries = async () => {
+  const fetchOuts = async () => {
     try {
       const token = localStorage.getItem('accessToken');
       const role = localStorage.getItem('role');
       const uuid = localStorage.getItem('uuid');
-
-      let endpoint = 'productEntry/';
+      let endpoint = 'productOut/';
       if (role !== 'ROLE_ADMIN') {
-        endpoint = `productEntry/user/${uuid}`;
+        endpoint = `productOut/user/${uuid}`;
       }
 
       const response = await AxiosClient.get(`${API_URL}${endpoint}`, {
@@ -29,33 +28,33 @@ const EntriesList = () => {
         },
       });
 
-      setEntries(response.data);
+      setOuts(response.data);
     } catch (error) {
       Swal.fire({
         icon: 'info',
-        title: 'No hay entradas',
-        text: 'No has registrado ninguna entrada para mostrar',
+        title: 'No hay salidas',
+        text: 'No hay registro de ninguna salida para mostrar',
         showConfirmButton: false,
         timer: 2000
       }).then(() => {
-        navigate('/product-entries')
+        navigate('/product-out')
       })
     }
   };
 
   useEffect(() => {
-    fetchEntries();
+    fetchOuts();
   }, []);
 
-  const indexOfLastEntry = currentPage * entriesPerPage;
-  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
+  const indexOfLastOut = currentPage * outsPerPage;
+  const indexOfFirstOut = indexOfLastOut - outsPerPage;
+  const currentOuts = outs.slice(indexOfFirstOut, indexOfLastOut);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleCancelEntry = async (entryId) => {
+  const handleCancelOut = async (outId) => {
     const result = await Swal.fire({
-      title: '¿Estás seguro de cancelar esta entrada?',
+      title: '¿Estás seguro de cancelar esta salida?',
       text: 'Esta acción no se puede deshacer.',
       icon: 'warning',
       showCancelButton: true,
@@ -68,19 +67,19 @@ const EntriesList = () => {
     if (result.isConfirmed) {
       try {
         const token = localStorage.getItem('accessToken');
-        await AxiosClient.delete(`productEntry/${entryId}`, {
+        await AxiosClient.delete(`productOut/${outId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         handleSuccess(
           'Cancelado',
-          'La entrada ha sido cancelada exitosamente.',
+          'La salida ha sido cancelada exitosamente.',
           null,
-          fetchEntries
-        );
+          fetchOuts
+        )
       } catch (error) {
-        handleError('Error', 'No se pudo cancelar la entrada.');
+        handleError('Error', 'No se pudo cancelar la salida.');
       }
     }
   };
@@ -104,17 +103,17 @@ const EntriesList = () => {
           </tr>
         </thead>
         <tbody className='text-center'>
-          {currentEntries.map((entry) => (
-            <tr key={entry.uuid}>
-              <td>{entry.quantity}</td>
-              <td>{entry.measurementUnit}</td>
-              <td>{entry.productName}</td>
-              <td>${entry.totalAmount}</td>
-              <td>{formatDate(entry.entryDate)}</td>
+          {currentOuts.map((out) => (
+            <tr key={out.uuid}>
+              <td>{out.quantity}</td>
+              <td>{out.measurementUnit}</td>
+              <td>{out.productName}</td>
+              <td>${out.totalAmount}</td>
+              <td>{formatDate(out.outDate)}</td>
               <td>
                 <button
                   className={`text-danger ${styles['btn-custom']}`}
-                  onClick={() => handleCancelEntry(entry.uuid)}
+                  onClick={() => handleCancelOut(out.uuid)}
                 >
                   <i className="bi bi-trash"></i>
                 </button>
@@ -125,7 +124,7 @@ const EntriesList = () => {
       </table>
       <div className="d-flex justify-content-center mt-4">
         {Array.from(
-          { length: Math.ceil(entries.length / entriesPerPage) },
+          { length: Math.ceil(outs.length / outsPerPage) },
           (_, index) => (
             <button
               key={index + 1}
@@ -141,4 +140,4 @@ const EntriesList = () => {
   );
 };
 
-export default EntriesList;
+export default OutsList;

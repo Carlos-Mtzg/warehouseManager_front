@@ -58,10 +58,6 @@ const UserHome = () => {
                 alt="Registrar entrada"
                 className={localStyles.image}
               />
-              <p className="text-muted mt-3">
-                Registra todas las entradas de los productos que lleguen
-                al almacén.
-              </p>
             </div>
           </div>
 
@@ -71,7 +67,7 @@ const UserHome = () => {
             >
               <button
                 className={`rounded mb-3 w-100 ${styles['submit-btn']}`}
-                onClick={() => navigate('/product-outs')}
+                onClick={() => navigate('/product-out')}
               >
                 <div
                   className={`btn d-flex justify-content-center ${styles['submit-content']}`}
@@ -85,10 +81,6 @@ const UserHome = () => {
                 alt="Registrar salida"
                 className={localStyles.image}
               />
-              <p className="text-muted mt-3">
-                Registra todas las salidas de los productos que salgan del
-                almacén.
-              </p>
             </div>
           </div>
         </div>

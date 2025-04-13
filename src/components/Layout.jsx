@@ -66,7 +66,7 @@ const Layout = () => {
               </ul>
             </li>
             <li className={`${styles['sidebar-item']}`}>
-              <Link to="#" className={`${styles['sidebar-link']}`}>
+              <Link to="/product-out" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-dash me-3"></i>
                 <span>Salidas</span>
               </Link>
@@ -86,6 +86,12 @@ const Layout = () => {
               <Link to="/entries" className={`${styles['sidebar-link']}`}>
                 <i className="bi bi-building-add me-3"></i>
                 <span>Entradas registradas</span>
+              </Link>
+            </li>
+            <li className={`${styles['sidebar-item']}`}>
+              <Link to="/outs" className={`${styles['sidebar-link']}`}>
+                <i className="bi bi-building-dash me-3"></i>
+                <span>Salidas registradas</span>
               </Link>
             </li>
             {role === "ROLE_USER" && (
