@@ -69,7 +69,6 @@ div {
 
 .primary-outline-btn {
   border: 1px solid var(--color-primary);
-  text-transform: uppercase;
   position: relative;
   background-color: transparent;
   color: var(--color-primary);
