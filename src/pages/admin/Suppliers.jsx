@@ -2,6 +2,7 @@ import { useState } from 'react'
 import SupplierList from '../../components/lists/SupplierList.jsx'
 import styles from '../../assets/css/users.module.css'
 import AddSupplierModal from '../../components/modals/AddSupplierModal.jsx'
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx'
 
 const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)
@@ -42,17 +43,13 @@ const Suppliers = () => {
                 <i className="bi bi-search px-3"></i>
               </button>
             </div>
-            <button
-              className={`rounded px-3 ${styles['primary-btn']}`}
+            <PrimaryButton
+              text="Agregar"
+              type="button"
+              icon="bi bi-plus-lg"
               onClick={() => setShowAddModal(true)}
-            >
-              <div
-                className={`btn d-flex text-center ${styles['primary-content']}`}
-              >
-                Agregar<i className="bi bi-plus-lg ms-2"></i>
-              </div>
-              <span></span>
-            </button>
+              className="px-4"
+            />
           </div>
         </div>
         <SupplierList refresh={refreshTable} searchTerm={searchTerm} />{' '}

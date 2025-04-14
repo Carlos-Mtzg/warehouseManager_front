@@ -7,6 +7,8 @@ import ProductEntriesGauge from '../../components/charts/ProductEntriesGauge';
 import ProductOutGauge from '../../components/charts/ProductOutGauge';
 import AxiosClient from '../../config/axios-client';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../components/buttons/PrimaryButton';
+import PrimaryOutlineButton from '../../components/buttons/PrimaryOutlineButton';
 
 const Home = () => {
   const [userName, setUserName] = useState('');
@@ -35,26 +37,19 @@ const Home = () => {
       <div className="slide-in-right">
         <div className="mb-4 d-flex align-items-center gap-3">
           <h1 className={`font-bold text-2xl me-auto ${styles['title']}`}>Bienvenido(a), {userName} {lastname}</h1>
-          <button
-            className={`rounded ${styles['submit-btn']}`}
-            type='button'
+          <PrimaryButton
+            text="Registrar Entrada"
+            icon="bi bi-building-add"
             onClick={() => navigate('/product-entries')}
-          >
-            <div className={`btn d-flex text-center ${styles['submit-content']}`}>
-              Registrar Entrada<i className="bi bi-building-add ms-2"></i>
-            </div>
-            <span></span>
-          </button>
-          <button
-            className={`rounded ${styles['primary-outline-btn']}`}
-            type='button'
+            type="button"
+            className="px-4"
+          />
+          <PrimaryOutlineButton
+            text="Registrar Salida"
+            icon="bi bi-building-dash"
             onClick={() => navigate('/product-out')}
-          >
-            <div className={`btn d-flex text-center ${styles['primary-outline-content']}`}>
-              Registrar Salida<i className="bi bi-building-dash ms-2"></i>
-            </div>
-            <span></span>
-          </button>
+            className="px-4"
+          />
         </div>
       </div>
 

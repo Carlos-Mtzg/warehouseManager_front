@@ -4,10 +4,17 @@ import { Modal } from 'react-bootstrap'
 import { addCategorySchema } from '../../validations/entriesValidation.js'
 import { useFormik } from 'formik'
 import { createCategory } from '../../services/ApiEntries.jsx'
-import styles from '../../assets/css/entries.module.css'
 import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
+import styles from '../../assets/css/entries.module.css'
+import PrimaryButton from '../buttons/PrimaryButton.jsx'
+import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx'
 
-const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
+const AddCategoryModal = ({
+  show,
+  handleClose,
+  onCategoryAdded,
+  clearSearch,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const validationSchema = addCategorySchema
 
@@ -26,16 +33,17 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        setIsSubmitting(true);
-        const response = await createCategory(values.categoryName);
+        setIsSubmitting(true)
+        const response = await createCategory(values.categoryName)
 
         if (response.status === 409) {
           handleClose()
           handleError(
             'Error',
-            'Parece que ya hay una categoría registrada con ese nombre',
-          );
-          resetForm();
+            'Parece que ya hay una categoría registrada con ese nombre'
+          )
+          resetForm()
+          if (clearSearch) clearSearch()
         } else if (response.status === 'OK' || response.state === 'success') {
           handleClose()
           handleSuccess(
@@ -43,15 +51,16 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
             'Categoría creada correctamente',
             resetForm,
             onCategoryAdded
-          );
+          )
+          if (clearSearch) clearSearch()
         } else {
-          handleError('Error', response.message || 'Error desconocido');
+          handleError('Error', response.message || 'Error desconocido')
         }
       } catch (error) {
         handleClose()
-        handleError('Error', 'Ocurrió un error inesperado');
+        handleError('Error', 'Ocurrió un error inesperado')
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
       }
     },
   })
@@ -88,8 +97,9 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
               value={values.categoryName}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control py-3 ${touched.categoryName && errors.categoryName ? 'is-invalid' : ''
-                }`}
+              className={`form-control py-3 ${
+                touched.categoryName && errors.categoryName ? 'is-invalid' : ''
+              }`}
               placeholder="Escribe aquí el nombre de la categoría"
             />
             {touched.categoryName && errors.categoryName && (
@@ -100,30 +110,19 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button
-            className={`rounded ${styles['secondary-btn']}`}
-            onClick={handleCancel}
+          <PrimaryOutlineButton
+            text="Cancelar"
             type="button"
-          >
-            <div
-              className={`btn d-flex text-center ${styles['secondary-content']}`}
-            >
-              Cancelar
-            </div>
-            <span></span>
-          </button>
-          <button
-            className={`rounded ${styles['primary-btn']}`}
+            onClick={handleCancel}
+            className="px-3"
+          />
+          <PrimaryButton
+            text="Confirmar"
             type="submit"
             disabled={isSubmitting}
-          >
-            <div
-              className={`btn d-flex text-center ${styles['primary-content']}`}
-            >
-              {isSubmitting ? 'Cargando...' : 'Confirmar'}
-            </div>
-            <span></span>
-          </button>
+            loading={isSubmitting}
+            className="px-3"
+          />
         </Modal.Footer>
       </form>
     </Modal>
@@ -134,6 +133,7 @@ AddCategoryModal.propTypes = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   onCategoryAdded: PropTypes.func,
+  clearSearch: PropTypes.func,
 }
 
 export default AddCategoryModal
