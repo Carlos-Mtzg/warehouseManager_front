@@ -6,6 +6,7 @@ import { fetchProductByUUID, fetchProductsInStock, registerProductOut } from '..
 import { productOutSchema } from '../../validations/outsValidation';
 import { useFormik } from 'formik';
 import { handleError, handleSuccess } from '../../utils/simpleAlerts';
+import PrimaryButton from '../../components/buttons/PrimaryButton';
 
 
 const ProductOutForm = () => {
@@ -254,34 +255,14 @@ const ProductOutForm = () => {
                         </div>
 
                         <div className="mt-4">
-                            {isSubmitting ? (
-                                <button
-                                    className={`rounded w-100 ${styles['primary-btn']}`}
-                                    type="submit"
-                                    disabled
-                                >
-                                    <div className={`d-flex align-items-center justify-content-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
-                                        Procesando
-                                        <output
-                                            className="spinner-border"
-                                            style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
-                                        >
-                                            <span className="visually-hidden"></span>
-                                        </output>
-                                    </div>
-                                    <span></span>
-                                </button>
-                            ) : (
-                                <button
-                                    className={`rounded w-100 ${styles['primary-btn']}`}
-                                    type='submit'
-                                >
-                                    <div className={`btn d-flex justify-content-center ${styles['primary-content']}`}>
-                                        Registrar Salida<i className="bi bi-check ms-2"></i>
-                                    </div>
-                                    <span></span>
-                                </button>
-                            )}
+                            <PrimaryButton
+                                text="Registrar Salida"
+                                type="submit"
+                                icon="bi bi-check"
+                                disabled={isSubmitting}
+                                loading={isSubmitting}
+                                className="w-100"
+                            />
                         </div>
                     </form>
                 </div>

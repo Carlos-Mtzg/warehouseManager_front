@@ -10,6 +10,7 @@ import logo from '../../assets/images/logo-color.png';
 import { loginValidationSchema } from '../../validations/authValidation';
 import PasswordField from '../../components/inputs/PasswordField.jsx';
 import EmailField from '../../components/inputs/EmailField.jsx';
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx';
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -101,35 +102,14 @@ const Login = () => {
             className={styles['password-input']}
           />
           <div className="mt-3">
-            {isSubmitting ? (
-              <button
-                className={`rounded w-100 ${styles['submit-btn']}`}
-                type="submit"
-                disabled
-              >
-                <div className={`${styles['submit-content']}`}>
-                  Cargando
-                  <output
-                    className="spinner-border ms-1"
-                    style={{ width: '1.25rem', height: '1.25rem' }}
-                  >
-                    <span className="visually-hidden"></span>
-                  </output>
-                </div>
-                <span></span>
-              </button>
-            ) : (
-              <button
-                className={`rounded w-100 ${styles['submit-btn']}`}
-                type="submit"
-                disabled={isSubmitting}
-              >
-                <div className={`${styles['submit-content']}`}>
-                  Iniciar Sesión<i className="bi bi-box-arrow-in-right ms-2"></i>
-                </div>
-                <span></span>
-              </button>
-            )}
+            <PrimaryButton
+              text="Iniciar Sesión"
+              type="submit"
+              icon="bi bi-box-arrow-in-right"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              className="w-100"
+            />
           </div>
           <Link className={`text-center ${styles['forget-password']}`} to="/forgot-password">
             He olvidado mi contraseña

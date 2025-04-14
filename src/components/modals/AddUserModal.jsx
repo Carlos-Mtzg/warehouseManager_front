@@ -7,6 +7,7 @@ import { registerUser } from '../../services/ApiUser.jsx';
 import { handleError, handleSuccess } from '../../utils/userAlerts.js';
 import { addUserSchema } from '../../validations/userValidations.js';
 import InputField from '../inputs/InputField.jsx';
+import PrimaryButton from '../buttons/PrimaryButton.jsx';
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -182,44 +183,22 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {isSubmitting ? (
+                    {!isSubmitting && (
                         <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type="submit"
-                            disabled
-                        >
-                            <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
-                                Cargando
-                                <output
-                                    className="spinner-border"
-                                    style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
-                                >
-                                    <span className="visually-hidden"></span>
-                                </output>
+                            className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
+                            <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
+                                Cancelar
                             </div>
                             <span></span>
                         </button>
-                    ) : (
-                        <>
-                            <button
-                                className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
-                                <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                                    Cancelar
-                                </div>
-                                <span></span>
-                            </button>
-                            <button
-                                className={`rounded ${styles['primary-btn']}`}
-                                type='submit'
-                                disabled={isSubmitting}
-                            >
-                                <div className={`btn d-flex text-center ${styles['primary-content']}`}>
-                                    Confirmar
-                                </div>
-                                <span></span>
-                            </button>
-                        </>
                     )}
+                    <PrimaryButton
+                        text="Confirmar"
+                        type="submit"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        className="px-3"
+                    />
                 </Modal.Footer>
             </form>
         </Modal>

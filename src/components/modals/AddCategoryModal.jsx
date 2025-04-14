@@ -6,6 +6,7 @@ import { useFormik } from 'formik'
 import { createCategory } from '../../services/ApiEntries.jsx'
 import styles from '../../assets/css/entries.module.css'
 import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
+import PrimaryButton from '../buttons/PrimaryButton.jsx'
 
 const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -112,18 +113,13 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
             </div>
             <span></span>
           </button>
-          <button
-            className={`rounded ${styles['primary-btn']}`}
+          <PrimaryButton
+            text="Confirmar"
             type="submit"
             disabled={isSubmitting}
-          >
-            <div
-              className={`btn d-flex text-center ${styles['primary-content']}`}
-            >
-              {isSubmitting ? 'Cargando...' : 'Confirmar'}
-            </div>
-            <span></span>
-          </button>
+            loading={isSubmitting}
+            className="px-3"
+          />
         </Modal.Footer>
       </form>
     </Modal>

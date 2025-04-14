@@ -2,6 +2,7 @@ import { useState } from 'react'
 import CategoryList from '../../components/lists/CategoryList.jsx'
 import styles from '../../assets/css/users.module.css'
 import AddCategoryModal from '../../components/modals/AddCategoryModal.jsx'
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx'
 const Categories = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
@@ -37,17 +38,13 @@ const Categories = () => {
                 <i className="bi bi-search px-3"></i>
               </button>
             </div>
-            <button
-              className={`rounded px-3 ${styles['primary-btn']}`}
+            <PrimaryButton
+              text="Agregar"
+              type="button"
+              icon="bi bi-plus-lg"
               onClick={() => setShowAddModal(true)}
-            >
-              <div
-                className={`btn d-flex text-center ${styles['primary-content']}`}
-              >
-                Agregar<i className="bi bi-plus-lg ms-2"></i>
-              </div>
-              <span></span>
-            </button>
+              className="px-4"
+            />
           </div>
         </div>
         <CategoryList refresh={refreshTable} />
