@@ -6,10 +6,12 @@ import PrimaryButton from '../../components/buttons/PrimaryButton.jsx'
 const Categories = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleClearSearch = () => setSearchTerm('')
 
   const handleAddClose = () => setShowAddModal(false)
   const handleResetForm = (resetForm) => resetForm()
-
   const handleCategoryAdded = () => setRefreshTable((prev) => !prev)
 
   return (
@@ -19,6 +21,7 @@ const Categories = () => {
         handleClose={handleAddClose}
         onResetForm={handleResetForm}
         onCategoryAdded={handleCategoryAdded}
+        clearSearch={handleClearSearch}
       />
 
       <div className="content d-flex flex-column gap-3">
@@ -30,6 +33,8 @@ const Categories = () => {
                 type="text"
                 className="form-control py-2"
                 placeholder="Buscar categoría por nombre"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button
                 type="submit"
@@ -47,7 +52,8 @@ const Categories = () => {
             />
           </div>
         </div>
-        <CategoryList refresh={refreshTable} />
+
+        <CategoryList refresh={refreshTable} searchTerm={searchTerm} />
       </div>
     </>
   )
