@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './../../assets/css/users.module.css';
 import AxiosClient from './../../config/axios-client.js';
 import Swal from 'sweetalert2';
+import { handleSuccess, handleError, handleConfirm } from '../../utils/simpleAlerts.js'
 
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
@@ -54,7 +55,10 @@ const OutsList = () => {
 
       setGroupedOuts(sorted);
     } catch (error) {
-      Swal.fire('Error', 'Error al obtener las salidas.', 'error');
+      handleError(
+        'Error',
+        'Error al obtener las salidas.'
+      );
     }
   };
 
@@ -79,18 +83,12 @@ const OutsList = () => {
   };
 
   const handleCancelOut = async (outId) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro de cancelar esta salida?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true,
-    });
+    const confirmed = await handleConfirm(
+      '¿Estás seguro de cancelar esta salida?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       try {
         const token = localStorage.getItem('accessToken');
         await AxiosClient.delete(`productOut/${outId}`, {
@@ -98,11 +96,17 @@ const OutsList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire('Cancelado', 'La salida ha sido cancelada exitosamente.', 'success').then(() =>
-          fetchOuts()
+        handleSuccess(
+          'Cancelado',
+          'La salida ha sido cancelada exitosamente.',
+          null,
+          fetchOuts
         );
       } catch (error) {
-        Swal.fire('Error', 'No se pudo cancelar la salida.', 'error');
+        handleError(
+          'Error',
+          'No se pudo cancelar la salida.'
+        );
       }
     }
   };
