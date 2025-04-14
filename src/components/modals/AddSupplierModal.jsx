@@ -9,58 +9,68 @@ import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx';
 
-const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const validationSchema = addSupplierSchema;
+const AddSupplierModal = ({
+  show,
+  handleClose,
+  onSupplierAdded,
+  clearSearch,
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const validationSchema = addSupplierSchema
 
-    const {
-        handleSubmit,
-        handleChange,
-        handleBlur,
-        values,
-        errors,
-        touched,
-        resetForm
-    } = useFormik({
-        initialValues: {
-            name: "",
-            email: ""
-        },
-        validationSchema,
-        onSubmit: async (values) => {
-            try {
-                setIsSubmitting(true);
-                const response = await createSupplier(values.name, values.email);
+  const {
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    values,
+    errors,
+    touched,
+    resetForm,
+  } = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        setIsSubmitting(true)
+        const response = await createSupplier(values.name, values.email)
 
-                if (response.status === 409) {
-                    handleCancel()
-                    handleError('Error', `Este proveedor ya esta registrado en el sistema`);
-                    resetForm();
-                } else if (response.state === 'success') {
-                    handleCancel()
-                    handleSuccess(
-                        'Registro correcto',
-                        'Proveedor registrado correctamente',
-                        resetForm,
-                        onSupplierAdded
-                    );
-                } else {
-                    handleCancel()
-                    handleError('Error', 'Error desconocido');
-                }
-            } catch (error) {
-                handleCancel()
-                handleError('Error', 'Ocurrió un error inesperado');
-            } finally {
-                setIsSubmitting(false);
-            }
+        if (response.status === 409) {
+          handleCancel()
+          handleError(
+            'Error',
+            `Este proveedor ya está registrado en el sistema`
+          )
+          resetForm()
+          if (clearSearch) clearSearch()
+        } else if (response.state === 'success') {
+          handleCancel()
+          handleSuccess(
+            'Registro correcto',
+            'Proveedor registrado correctamente',
+            resetForm,
+            onSupplierAdded
+          )
+          if (clearSearch) clearSearch()
+        } else {
+          handleCancel()
+          handleError('Error', 'Error desconocido')
         }
-    });
+      } catch (error) {
+        handleCancel()
+        handleError('Error', 'Ocurrió un error inesperado')
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+  })
 
-    const handleCancel = () => {
-        resetForm();
-        handleClose();
-    };
+  const handleCancel = () => {
+    resetForm()
+    handleClose()
+  }
 
     return (
         <Modal show={show} onHide={handleCancel} centered backdrop="static" keyboard={false}>
@@ -133,9 +143,10 @@ const AddSupplierModal = ({ show, handleClose, onSupplierAdded }) => {
 };
 
 AddSupplierModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
-    onSupplierAdded: PropTypes.func, // ✅ OPCIONAL
-};
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  onSupplierAdded: PropTypes.func,
+  clearSearch: PropTypes.func,
+}
 
-export default AddSupplierModal;
+export default AddSupplierModal
