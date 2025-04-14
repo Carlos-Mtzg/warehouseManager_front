@@ -1,10 +1,17 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import styles from '../../assets/css/users.module.css'
-import { deleteCategory, getAllCategories } from '../../services/ApiCategories.jsx'
-import { handleConfirm, handleError, handleSuccess } from '../../utils/simpleAlerts.js'
+import {
+  deleteCategory,
+  getAllCategories,
+} from '../../services/ApiCategories.jsx'
+import {
+  handleConfirm,
+  handleError,
+  handleSuccess,
+} from '../../utils/simpleAlerts.js'
 
-const CategoryList = ({ refresh }) => {
+const CategoryList = ({ refresh, searchTerm }) => {
   const [categories, setCategories] = useState([])
   const [error, setError] = useState(null)
 
@@ -26,12 +33,15 @@ const CategoryList = ({ refresh }) => {
     const confirmed = await handleConfirm(
       '¿Eliminar categoría?',
       'Esta acción no se puede deshacer.'
-    );
+    )
 
     if (confirmed) {
-      const response = await deleteCategory(uuid);
+      const response = await deleteCategory(uuid)
       if (response.status === 409) {
-        handleError('Operación no permitida', `Esta categoría no puede eliminarse porque está asociada a una o más entradas.`);
+        handleError(
+          'Operación no permitida',
+          `Esta categoría no puede eliminarse porque está asociada a una o más entradas.`
+        )
       } else if (response.state === 'success') {
         handleSuccess(
           'Categoria eliminada',
@@ -40,16 +50,17 @@ const CategoryList = ({ refresh }) => {
           fetchCategories
         )
       } else {
-        handleError(
-          'Error',
-          'No se pudo eliminar la categoría'
-        )
+        handleError('Error', 'No se pudo eliminar la categoría')
       }
     }
   }
 
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
-    <div className='slide-in-right'>
+    <div className="slide-in-right">
       {error && (
         <div className="alert alert-danger">
           <i className="bi bi-exclamation-circle me-2"></i>
@@ -68,8 +79,9 @@ const CategoryList = ({ refresh }) => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(categories) && categories.length > 0 ? (
-              categories.map((category, index) => (
+            {Array.isArray(filteredCategories) &&
+            filteredCategories.length > 0 ? (
+              filteredCategories.map((category, index) => (
                 <tr key={category.id}>
                   <td className="text-center">{index + 1}</td>
                   <td className="text-center">{category.name}</td>
@@ -99,6 +111,7 @@ const CategoryList = ({ refresh }) => {
 
 CategoryList.propTypes = {
   refresh: PropTypes.bool.isRequired,
+  searchTerm: PropTypes.string.isRequired, 
 }
 
 export default CategoryList

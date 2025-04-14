@@ -5,9 +5,14 @@ import { addCategorySchema } from '../../validations/entriesValidation.js'
 import { useFormik } from 'formik'
 import { createCategory } from '../../services/ApiEntries.jsx'
 import styles from '../../assets/css/entries.module.css'
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
 
-const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
+const AddCategoryModal = ({
+  show,
+  handleClose,
+  onCategoryAdded,
+  clearSearch,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const validationSchema = addCategorySchema
 
@@ -26,16 +31,17 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        setIsSubmitting(true);
-        const response = await createCategory(values.categoryName);
+        setIsSubmitting(true)
+        const response = await createCategory(values.categoryName)
 
         if (response.status === 409) {
           handleClose()
           handleError(
             'Error',
-            'Parece que ya hay una categoría registrada con ese nombre',
-          );
-          resetForm();
+            'Parece que ya hay una categoría registrada con ese nombre'
+          )
+          resetForm()
+          if (clearSearch) clearSearch()
         } else if (response.status === 'OK' || response.state === 'success') {
           handleClose()
           handleSuccess(
@@ -43,15 +49,16 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
             'Categoría creada correctamente',
             resetForm,
             onCategoryAdded
-          );
+          )
+          if (clearSearch) clearSearch()
         } else {
-          handleError('Error', response.message || 'Error desconocido');
+          handleError('Error', response.message || 'Error desconocido')
         }
       } catch (error) {
         handleClose()
-        handleError('Error', 'Ocurrió un error inesperado');
+        handleError('Error', 'Ocurrió un error inesperado')
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
       }
     },
   })
@@ -88,8 +95,9 @@ const AddCategoryModal = ({ show, handleClose, onCategoryAdded }) => {
               value={values.categoryName}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`form-control py-3 ${touched.categoryName && errors.categoryName ? 'is-invalid' : ''
-                }`}
+              className={`form-control py-3 ${
+                touched.categoryName && errors.categoryName ? 'is-invalid' : ''
+              }`}
               placeholder="Escribe aquí el nombre de la categoría"
             />
             {touched.categoryName && errors.categoryName && (
@@ -134,6 +142,7 @@ AddCategoryModal.propTypes = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   onCategoryAdded: PropTypes.func,
+  clearSearch: PropTypes.func,
 }
 
 export default AddCategoryModal
