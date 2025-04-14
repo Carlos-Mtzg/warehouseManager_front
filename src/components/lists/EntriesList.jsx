@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/users.module.css';
 import AxiosClient from '../../config/axios-client.js';
 import Swal from 'sweetalert2';
+import { handleSuccess, handleError, handleConfirm } from '../../utils/simpleAlerts.js'
+
 
 const API_URL = import.meta.env.VITE_API_URL_LOCAL;
 
@@ -57,9 +59,10 @@ const EntriesList = () => {
 
       setGroupedEntries(sorted);
     } catch (error) {
-      console.error('Error fetching entries:', error);
-      Swal.fire('Error', 'Error al obtener las entradas.', 'error');
-
+      handleError(
+        'Error',
+        'Error al obtener las entradas.'
+      );
     }
   };
 
@@ -79,18 +82,12 @@ const EntriesList = () => {
   };
 
   const handleCancelEntry = async (entryId) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro de cancelar esta entrada?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#16423C',
-      reverseButtons: true
-    });
+    const confirmed = await handleConfirm(
+      '¿Estás seguro de cancelar esta entrada?',
+      'Esta acción no se puede deshacer.'
+    );
 
-    if (result.isConfirmed) {
+    if (confirmed) {
       try {
         const token = localStorage.getItem('accessToken');
         await AxiosClient.delete(`productEntry/${entryId}`, {
@@ -98,9 +95,11 @@ const EntriesList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire('Cancelado', 'La entrada ha sido cancelada exitosamente.', 'success').then(() =>
-          fetchEntries()
-
+        handleSuccess(
+          'Cancelado',
+          'La entrada ha sido cancelada exitosamente.',
+          null,
+          fetchEntries
         );
       } catch (error) {
         handleError('Error', 'No se pudo cancelar la entrada.');
