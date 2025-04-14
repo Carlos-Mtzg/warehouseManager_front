@@ -6,11 +6,13 @@ import AddSupplierModal from '../../components/modals/AddSupplierModal.jsx'
 const Suppliers = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleAddClose = () => setShowAddModal(false)
   const handleResetForm = (resetForm) => resetForm()
   const handleSupplierAdded = () => setRefreshTable((prev) => !prev)
 
+  const clearSearch = () => setSearchTerm('')
   return (
     <>
       <AddSupplierModal
@@ -18,6 +20,7 @@ const Suppliers = () => {
         handleClose={handleAddClose}
         onResetForm={handleResetForm}
         onSupplierAdded={handleSupplierAdded}
+        clearSearch={clearSearch} // ✅ NUEVA PROP
       />
 
       <div className="content d-flex flex-column gap-3">
@@ -29,6 +32,8 @@ const Suppliers = () => {
                 type="text"
                 className="form-control py-2"
                 placeholder="Buscar proveedor por nombre"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button
                 type="submit"
@@ -50,7 +55,7 @@ const Suppliers = () => {
             </button>
           </div>
         </div>
-        <SupplierList refresh={refreshTable} />
+        <SupplierList refresh={refreshTable} searchTerm={searchTerm} />{' '}
       </div>
     </>
   )

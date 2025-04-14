@@ -2,9 +2,13 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import styles from '../../assets/css/users.module.css'
 import { getAllSuppliers, deleteSupplier } from '../../services/ApiSupplier.jsx'
-import { handleError, handleSuccess, handleConfirm } from '../../utils/simpleAlerts.js'
+import {
+  handleError,
+  handleSuccess,
+  handleConfirm,
+} from '../../utils/simpleAlerts.js'
 
-const SupplierList = ({ refresh }) => {
+const SupplierList = ({ refresh, searchTerm }) => {
   const [suppliers, setSuppliers] = useState([])
 
   useEffect(() => {
@@ -22,32 +26,34 @@ const SupplierList = ({ refresh }) => {
     const confirmed = await handleConfirm(
       '¿Eliminar proveedor?',
       'Esta acción no se puede deshacer.'
-    );
+    )
 
     if (confirmed) {
       const response = await deleteSupplier(uuid)
       if (response.status === 409) {
         handleError(
           'Operación no permitida',
-          `Este proveedor no puede eliminarse porque está asociada a una o más entradas.`);
+          `Este proveedor no puede eliminarse porque está asociado a una o más entradas.`
+        )
       } else if (response.state === 'success') {
         handleSuccess(
           'Proveedor eliminado',
           'El proveedor ha sido eliminado correctamente',
           null,
           fetchSuppliers
-        );
+        )
       } else {
-        handleError(
-          'Error',
-          'No se pudo eliminar el proveedor'
-        );
+        handleError('Error', 'No se pudo eliminar el proveedor')
       }
     }
   }
 
+  const filteredSuppliers = suppliers.filter((supplier) =>
+    supplier.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
-    <div className='slide-in-right'>
+    <div className="slide-in-right">
       <div className="table-responsive">
         <table
           className={`table table-bordered table-hover table-striped ${styles['table-custom']}`}
@@ -61,8 +67,9 @@ const SupplierList = ({ refresh }) => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(suppliers) && suppliers.length > 0 ? (
-              suppliers.map((supplier, index) => (
+            {Array.isArray(filteredSuppliers) &&
+            filteredSuppliers.length > 0 ? (
+              filteredSuppliers.map((supplier, index) => (
                 <tr key={supplier.id}>
                   <td className="text-center">{index + 1}</td>
                   <td className="text-center">{supplier.name}</td>
@@ -93,6 +100,7 @@ const SupplierList = ({ refresh }) => {
 
 SupplierList.propTypes = {
   refresh: PropTypes.bool.isRequired,
+  searchTerm: PropTypes.string.isRequired,
 }
 
 export default SupplierList
