@@ -7,6 +7,8 @@ import { fetchCategories, fetchSuppliers, registerProductEntry } from "../../ser
 import { productEntriesSchema } from "../../validations/entriesValidation";
 import { useFormik } from "formik";
 import { handleError, handleSuccess } from "../../utils/simpleAlerts.js";
+import PrimaryButton from "../../components/buttons/PrimaryButton.jsx";
+import PrimaryOutlineButton from "../../components/buttons/PrimaryOutlineButton.jsx";
 
 const ProductEntryForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -344,8 +346,8 @@ const ProductEntryForm = () => {
                                     </div>
                                 ))}
                                 <div className="mt-2">
-                                    <button
-                                        className={`rounded w-100 ${styles['secondary-btn']}`}
+                                    <PrimaryOutlineButton
+                                        text="Agregar Producto"
                                         type="button"
                                         onClick={() => {
                                             const newProduct = {
@@ -356,44 +358,20 @@ const ProductEntryForm = () => {
                                             };
                                             setFieldValue('products', [...values.products, newProduct]);
                                         }}
-                                    >
-                                        <div className={`btn d-flex justify-content-center ${styles['secondary-content']}`}>
-                                            Agregar Producto<i className="bi bi-plus-lg ms-2"></i>
-                                        </div>
-                                        <span></span>
-                                    </button>
+                                        icon="bi bi-plus-lg"
+                                        className="w-100"
+                                    />
                                 </div>
                             </div>
-
                             <div className="mt-4 w-100">
-                                {isSubmitting ? (
-                                    <button
-                                        className={`rounded w-100 ${styles['primary-btn']}`}
-                                        type="submit"
-                                        disabled
-                                    >
-                                        <div className={`d-flex align-items-center justify-content-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
-                                            Cargando
-                                            <output
-                                                className="spinner-border"
-                                                style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
-                                            >
-                                                <span className="visually-hidden"></span>
-                                            </output>
-                                        </div>
-                                        <span></span>
-                                    </button>
-                                ) : (
-                                    <button
-                                        className={`rounded w-100 ${styles['primary-btn']}`}
-                                        type='submit'
-                                    >
-                                        <div className={`btn d-flex justify-content-center ${styles['primary-content']}`}>
-                                            Confirmar Entrada<i className="bi bi-check ms-2"></i>
-                                        </div>
-                                        <span></span>
-                                    </button>
-                                )}
+                                <PrimaryButton
+                                    text="Confirmar Entrada"
+                                    type="submit"
+                                    icon="bi bi-check"
+                                    disabled={isSubmitting}
+                                    loading={isSubmitting}
+                                    className="w-100"
+                                />
                             </div>
                         </form>
                     </div>

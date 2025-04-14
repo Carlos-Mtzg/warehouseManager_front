@@ -3,6 +3,7 @@ import styles from '../../assets/css/users.module.css'
 import AddUserModal from '../../components/modals/AddUserModal.jsx'
 import EditUserModal from '../../components/modals/EditUserModal.jsx';
 import UserList from '../../components/users/UserList.jsx';
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx';
 
 const Users = () => {
     const [showAddUserModel, setShowAddUserModel] = useState(false);
@@ -75,13 +76,13 @@ const Users = () => {
                                 <i className="bi bi-search px-3"></i>
                             </button>
                         </div>
-                        <button
-                            className={`rounded px-3 ${styles['primary-btn']}`} onClick={() => setShowAddUserModel(true)}>
-                            <div className={`btn d-flex text-center ${styles['primary-content']}`}>
-                                Agregar<i className="bi bi-person-plus ms-2"></i>
-                            </div>
-                            <span></span>
-                        </button>
+                        <PrimaryButton
+                            text="Agregar"
+                            type="button"
+                            icon="bi bi-person-plus"
+                            onClick={() => setShowAddUserModel(true)}
+                            className="px-4"
+                        />
                     </div>
                 </div>
                 <UserList refresh={refreshTable} onEditUser={handleEditUser} />
