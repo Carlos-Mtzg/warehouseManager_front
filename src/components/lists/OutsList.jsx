@@ -132,19 +132,19 @@ const OutsList = () => {
 
         return (
           <div key={actualIndex} className="mb-3 p-3 border rounded shadow-sm">
-            <div
-              className="d-flex justify-content-between align-items-center cursor-pointer"
+            <button
+              className="w-100 border-0 bg-transparent d-flex justify-content-between align-items-center"
               onClick={() => toggleGroup(actualIndex)}
-              style={{ cursor: 'pointer' }}
+              aria-expanded={isExpanded}
+              aria-controls={`group-content-${actualIndex}`}
             >
               <div>
-                <strong>Productos retirados el:</strong> {formatDate(group.outDate)} <br />
-                <strong>Entregado a:</strong> {group.receiverName}
+                <strong>Productos registrados el:</strong> {formatDate(group.outDate)} <br />
               </div>
               <div>
                 <i className={`bi ${isExpanded ? 'bi-chevron-up' : 'bi-chevron-down'}`} />
               </div>
-            </div>
+            </button>
 
             {isExpanded && (
               <div className="table-responsive mt-3">
