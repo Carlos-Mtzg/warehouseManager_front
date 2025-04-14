@@ -7,6 +7,7 @@ import { productOutSchema } from '../../validations/outsValidation';
 import { useFormik } from 'formik';
 import { handleError, handleSuccess } from '../../utils/simpleAlerts';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
+import PrimaryOutlineButton from '../../components/buttons/PrimaryOutlineButton';
 
 
 const ProductOutForm = () => {
@@ -222,23 +223,29 @@ const ProductOutForm = () => {
                                 )}
 
                                 {values.products.length > 1 && (
-                                    <button
-                                        type="button"
-                                        className={`btn ${styles['danger-btn']} align-self-end`}
-                                        onClick={() => {
-                                            const updatedProducts = values.products.filter((_, i) => i !== index);
-                                            setFieldValue('products', updatedProducts);
-                                        }}
-                                    >
-                                        Eliminar <i className="bi bi-trash"></i>
-                                    </button>
+                                    <div className="d-flex">
+                                        <button
+                                            className={`ms-auto rounded ${styles['danger-btn']}`}
+                                            type="button"
+                                            onClick={() => {
+                                                const updatedProducts = values.products.filter((_, i) => i !== index);
+                                                setFieldValue('products', updatedProducts);
+                                            }}
+                                        >
+                                            <div className={`py-1 px-3 ${styles['danger-content']}`}>
+                                                Eliminar <i className="bi bi-trash ms-2"></i>
+                                            </div>
+                                            <span></span>
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         ))}
                         <div className="mt-3">
-                            <button
+                            <PrimaryOutlineButton
+                                text="Agregar Producto"
                                 type="button"
-                                className={`rounded ${styles['secondary-btn']}`}
+                                icon="bi bi-plus-lg"
                                 onClick={() => {
                                     setFieldValue('products', [...values.products, {
                                         product: null,
@@ -246,12 +253,9 @@ const ProductOutForm = () => {
                                         currentStock: 0,
                                         quantity: '',
                                     }]);
-                                }}>
-                                <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                                    Agregar Producto <i className="bi bi-plus-lg"></i>
-                                </div>
-                                <span></span>
-                            </button>
+                                }}
+                                className="w-100"
+                            />
                         </div>
 
                         <div className="mt-4">

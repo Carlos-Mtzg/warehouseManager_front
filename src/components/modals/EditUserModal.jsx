@@ -9,6 +9,7 @@ import { editUserSchema } from '../../validations/userValidations.js';
 import AuthContext from '../../context/AuthProvider.jsx';
 import InputField from '../inputs/InputField.jsx';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx';
 
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
@@ -167,13 +168,12 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     {!isSubmitting && (
-                        <button
-                            className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
-                            <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                                Cancelar
-                            </div>
-                            <span></span>
-                        </button>
+                        <PrimaryOutlineButton
+                            text="Cancelar"
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-3"
+                        />
                     )}
                     <PrimaryButton
                         text="Confirmar"

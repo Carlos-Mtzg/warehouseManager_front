@@ -8,6 +8,7 @@ import { handleError, handleSuccess } from '../../utils/userAlerts.js';
 import { addUserSchema } from '../../validations/userValidations.js';
 import InputField from '../inputs/InputField.jsx';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx';
 
 const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -184,13 +185,12 @@ const AddUserModal = ({ show, handleClose, onResetForm, onUserAdded }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     {!isSubmitting && (
-                        <button
-                            className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type='button'>
-                            <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                                Cancelar
-                            </div>
-                            <span></span>
-                        </button>
+                        <PrimaryOutlineButton
+                            text="Cancelar"
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-3"
+                        />
                     )}
                     <PrimaryButton
                         text="Confirmar"

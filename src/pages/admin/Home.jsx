@@ -8,6 +8,7 @@ import ProductOutGauge from '../../components/charts/ProductOutGauge';
 import AxiosClient from '../../config/axios-client';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
+import PrimaryOutlineButton from '../../components/buttons/PrimaryOutlineButton';
 
 const Home = () => {
   const [userName, setUserName] = useState('');
@@ -43,16 +44,12 @@ const Home = () => {
             type="button"
             className="px-4"
           />
-          <button
-            className={`rounded ${styles['primary-outline-btn']}`}
-            type='button'
+          <PrimaryOutlineButton
+            text="Registrar Salida"
+            icon="bi bi-building-dash"
             onClick={() => navigate('/product-out')}
-          >
-            <div className={`btn d-flex text-center ${styles['primary-outline-content']}`}>
-              Registrar Salida<i className="bi bi-building-dash ms-2"></i>
-            </div>
-            <span></span>
-          </button>
+            className="px-4"
+          />
         </div>
       </div>
 
