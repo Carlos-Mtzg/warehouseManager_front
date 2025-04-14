@@ -8,6 +8,7 @@ import logo from '../../assets/images/logo-color.png';
 import { activateAccount, resetPassword } from '../../services/ApiAuth';
 import { passwordSchema } from '../../validations/authValidation';
 import PasswordField from '../../components/inputs/PasswordField.jsx';
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx';
 
 const PasswordForm = () => {
     const { token } = useParams();
@@ -106,33 +107,13 @@ const PasswordForm = () => {
                         className={styles['email-input']}
                     />
                     <div className="d-flex flex-column mt-3">
-                        {isSubmitting ? (
-                            <button
-                                className={`rounded ${styles['submit-btn']}`}
-                                type="submit"
-                                disabled
-                            >
-                                <div className={`${styles['submit-content']}`}>
-                                    Cargando
-                                    <output
-                                        className="spinner-border ms-1"
-                                        style={{ width: '1.25rem', height: '1.25rem' }}
-                                    >
-                                        <span className="visually-hidden"></span>
-                                    </output>
-                                </div>
-                                <span></span>
-                            </button>
-                        ) : (
-                            <button
-                                className={`rounded ${styles['submit-btn']}`}
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                <div className={`${styles['submit-content']}`}>Confirmar</div>
-                                <span></span>
-                            </button>
-                        )}
+                        <PrimaryButton
+                            text="CONFIRMAR"
+                            type="submit"
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                            className="w-100"
+                        />
                     </div>
                 </form>
             </div>

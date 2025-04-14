@@ -5,6 +5,7 @@ import styles from '../../assets/css/admin/admin.module.css'
 import localStyles from '../../assets/css/users.module.css'
 import { useNavigate } from 'react-router-dom'
 import AxiosClient from '../../config/axios-client'
+import PrimaryButton from '../../components/buttons/PrimaryButton'
 
 const UserHome = () => {
   const [userName, setUserName] = useState('')
@@ -32,7 +33,7 @@ const UserHome = () => {
     >
       <div>
         <div className="mb-4 d-flex align-items-center gap-3 flex-wrap">
-          <h1 className={`font-bold text-2xl me-auto ${styles.title} slide-in-right` }>
+          <h1 className={`font-bold text-2xl me-auto ${styles.title} slide-in-right`}>
             Bienvenido(a), {userName} {lastname}
           </h1>
         </div>
@@ -42,17 +43,13 @@ const UserHome = () => {
             <div
               className={`bg-card p-4 rounded shadow text-center ${localStyles['card-hover']}`}
             >
-              <button
-                className={`rounded mb-3 w-100 ${styles['submit-btn']}`}
+              <PrimaryButton
+                text="Registrar entrada"
+                type="button"
                 onClick={() => navigate('/product-entries')}
-              >
-                <div
-                  className={`btn d-flex justify-content-center ${styles['submit-content']}`}
-                >
-                  Registrar entrada<i className="bi bi-box-arrow-in-down ms-2"></i>
-                </div>
-                <span></span>
-              </button>
+                icon="bi bi-box-arrow-in-down"
+                className="w-100"
+              />
               <img
                 src={entradaImg}
                 alt="Registrar entrada"
@@ -65,17 +62,13 @@ const UserHome = () => {
             <div
               className={`bg-card p-4 rounded shadow text-center ${localStyles['card-hover']}`}
             >
-              <button
-                className={`rounded mb-3 w-100 ${styles['submit-btn']}`}
+              <PrimaryButton
+                text="Registrar salida"
+                type="button"
                 onClick={() => navigate('/product-out')}
-              >
-                <div
-                  className={`btn d-flex justify-content-center ${styles['submit-content']}`}
-                >
-                  Registrar salida<i className="bi bi-box-arrow-up ms-2"></i>
-                </div>
-                <span></span>
-              </button>
+                icon="bi bi-box-arrow-in-up"
+                className="w-100"
+              />
               <img
                 src={salidaImg}
                 alt="Registrar salida"

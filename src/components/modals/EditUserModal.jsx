@@ -8,6 +8,8 @@ import styles from '../../assets/css/users.module.css';
 import { editUserSchema } from '../../validations/userValidations.js';
 import AuthContext from '../../context/AuthProvider.jsx';
 import InputField from '../inputs/InputField.jsx';
+import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx';
 
 
 const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
@@ -165,42 +167,21 @@ const EditUserModal = ({ show, handleClose, user, onUserUpdated }) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button
-                        className={`rounded ${styles['secondary-btn']}`} onClick={handleCancel} type="button">
-                        <div className={`btn d-flex text-center ${styles['secondary-content']}`}>
-                            Cancelar
-                        </div>
-                        <span></span>
-                    </button>
-                    {isSubmitting ? (
-                        <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type="submit"
-                            disabled
-                        >
-                            <div className={`d-flex align-items-center px-2 gap-2 ${styles['primary-content']}`} style={{ height: '37.6px' }}>
-                                Cargando
-                                <output
-                                    className="spinner-border"
-                                    style={{ height: "1.2rem", width: "1.2rem", fontSize: "10px" }}
-                                >
-                                    <span className="visually-hidden"></span>
-                                </output>
-                            </div>
-                            <span></span>
-                        </button>
-                    ) : (
-                        <button
-                            className={`rounded ${styles['primary-btn']}`}
-                            type="submit"
-                            disabled={isSubmitting}
-                        >
-                            <div className={`btn d-flex text-center ${styles['primary-content']}`}>
-                                Confirmar
-                            </div>
-                            <span></span>
-                        </button>
+                    {!isSubmitting && (
+                        <PrimaryOutlineButton
+                            text="Cancelar"
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-3"
+                        />
                     )}
+                    <PrimaryButton
+                        text="Confirmar"
+                        type="submit"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        className="px-3"
+                    />
                 </Modal.Footer>
             </form>
         </Modal>

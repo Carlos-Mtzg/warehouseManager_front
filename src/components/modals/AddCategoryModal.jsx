@@ -4,8 +4,10 @@ import { Modal } from 'react-bootstrap'
 import { addCategorySchema } from '../../validations/entriesValidation.js'
 import { useFormik } from 'formik'
 import { createCategory } from '../../services/ApiEntries.jsx'
+import { handleError, handleSuccess } from '../../utils/simpleAlerts.js';
 import styles from '../../assets/css/entries.module.css'
-import { handleError, handleSuccess } from '../../utils/simpleAlerts.js'
+import PrimaryButton from '../buttons/PrimaryButton.jsx'
+import PrimaryOutlineButton from '../buttons/PrimaryOutlineButton.jsx'
 
 const AddCategoryModal = ({
   show,
@@ -108,30 +110,19 @@ const AddCategoryModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button
-            className={`rounded ${styles['secondary-btn']}`}
-            onClick={handleCancel}
+          <PrimaryOutlineButton
+            text="Cancelar"
             type="button"
-          >
-            <div
-              className={`btn d-flex text-center ${styles['secondary-content']}`}
-            >
-              Cancelar
-            </div>
-            <span></span>
-          </button>
-          <button
-            className={`rounded ${styles['primary-btn']}`}
+            onClick={handleCancel}
+            className="px-3"
+          />
+          <PrimaryButton
+            text="Confirmar"
             type="submit"
             disabled={isSubmitting}
-          >
-            <div
-              className={`btn d-flex text-center ${styles['primary-content']}`}
-            >
-              {isSubmitting ? 'Cargando...' : 'Confirmar'}
-            </div>
-            <span></span>
-          </button>
+            loading={isSubmitting}
+            className="px-3"
+          />
         </Modal.Footer>
       </form>
     </Modal>
