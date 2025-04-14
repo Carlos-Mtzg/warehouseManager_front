@@ -37,6 +37,11 @@ export const addCategorySchema = Yup.object({
 export const addSupplierSchema = Yup.object({
     name: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        ) 
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
@@ -55,8 +60,7 @@ export const addSupplierSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
     email: Yup.string()
         .email(INVALID_EMAIL)
         .required(REQUIRED_FIELDS)
@@ -66,7 +70,7 @@ export const addSupplierSchema = Yup.object({
         )
         .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
         .trim(NO_SPACES),
-})
+});
 
 export const productEntriesSchema = Yup.object().shape({
     selectedSupplier: Yup.string().required(REQUIRED_FIELDS),
@@ -74,16 +78,57 @@ export const productEntriesSchema = Yup.object().shape({
     products: Yup.array().of(
         Yup.object().shape({
             productName: Yup.string()
-                .trim()
-                .required(REQUIRED_FIELDS)
-                .test('no-whitespace', 'El nombre no puede ser solo espacios', (value) => value.trim().length > 0)
-                .min(3, 'Debe tener al menos 3 caracteres')
-                .max(30, 'No puede exceder los 30 caracteres'),
+            .required(REQUIRED_FIELDS)
+            .test(
+                'no-leading-trailing-spaces',
+                'No se permiten espacios al inicio o al final',
+                (value) => value && value === value.trim()
+            ) 
+            .matches(
+                /^[^\u3164\u200B\uFEFF]*$/,
+                INVISIBLE_CHARACTERS
+            )
+            .matches(
+                /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
+                LETTERS_SPACES
+            )
+            .min(3, 'El nombre debe tener al menos 3 caracteres')
+            .max(30, 'El nombre no puede exceder los 30 caracteres')
+            .matches(
+                /^[^<>]*$/,
+                CHARACTERS_NOT_ALLOWED
+            )
+            .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
+            .matches(
+                /^\S+(?: \S+)*$/,
+                CONSECUTIVE_SPACES
+            ),
             measurementUnit: Yup.string()
-                .trim()
-                .required(REQUIRED_FIELDS)
-                .matches(/^\D*$/, 'Este campo no puede contener números')
-                .test('no-whitespace', 'La unidad no puede ser solo espacios', (value) => value.trim().length > 0),
+            .required(REQUIRED_FIELDS)
+            .test(
+                'no-leading-trailing-spaces',
+                'No se permiten espacios al inicio o al final',
+                (value) => value && value === value.trim()
+            ) 
+            .matches(
+                /^[^\u3164\u200B\uFEFF]*$/,
+                INVISIBLE_CHARACTERS
+            )
+            .matches(
+                /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
+                LETTERS_SPACES
+            )
+            .min(3, 'El nombre debe tener al menos 3 caracteres')
+            .max(30, 'El nombre no puede exceder los 30 caracteres')
+            .matches(
+                /^[^<>]*$/,
+                CHARACTERS_NOT_ALLOWED
+            )
+            .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
+            .matches(
+                /^\S+(?: \S+)*$/,
+                CONSECUTIVE_SPACES
+            ),
             quantity: Yup.number()
                 .min(1, 'La cantidad debe ser superior a 0')
                 .required('La cantidad es obligatoria'),
