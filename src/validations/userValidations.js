@@ -13,12 +13,17 @@ const CONSECUTIVE_SPACES = "Este campo no puede contener espacios consecutivos";
 export const addUserSchema = Yup.object({
     name: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        )
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
         .min(3, 'El nombre debe tener al menos 3 caracteres')
@@ -31,20 +36,24 @@ export const addUserSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
     lastname: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        )
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
-        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
-        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
+        .min(3, 'El apellido debe tener al menos 3 caracteres')
+        .max(30, 'El apellido no puede exceder los 30 caracteres')
         .matches(
             /^[^<>]*$/,
             CHARACTERS_NOT_ALLOWED
@@ -53,11 +62,15 @@ export const addUserSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
     email: Yup.string()
         .email(INVALID_EMAIL)
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        )
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
@@ -67,7 +80,10 @@ export const addUserSchema = Yup.object({
             CHARACTERS_NOT_ALLOWED
         )
         .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .trim(NO_SPACES),
+        .matches(
+            /^\S+(?: \S+)*$/,
+            CONSECUTIVE_SPACES
+        ),
     role: Yup.string()
         .required(REQUIRED_FIELDS),
 });
@@ -75,12 +91,17 @@ export const addUserSchema = Yup.object({
 export const editUserSchema = Yup.object({
     name: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        )
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
         .min(3, 'El nombre debe tener al menos 3 caracteres')
@@ -93,20 +114,24 @@ export const editUserSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
     lastname: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        )
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
-        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
-        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
+        .min(3, 'El apellido debe tener al menos 3 caracteres')
+        .max(30, 'El apellido no puede exceder los 30 caracteres')
         .matches(
             /^[^<>]*$/,
             CHARACTERS_NOT_ALLOWED
@@ -115,47 +140,55 @@ export const editUserSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
     role: Yup.string()
         .required(REQUIRED_FIELDS),
 });
 
 export const editUserInfoSchema = Yup.object({
     name: Yup.string()
-        .required(REQUIRED_FIELDS)
-        .matches(
-            /^[^\u3164\u200B\uFEFF]*$/,
-            INVISIBLE_CHARACTERS
-        )
-        .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-            LETTERS_SPACES
-        )
-        .min(3, 'El nombre debe tener al menos 3 caracteres')
-        .max(30, 'El nombre no puede exceder los 30 caracteres')
-        .matches(
-            /^[^<>]*$/,
-            CHARACTERS_NOT_ALLOWED
-        )
-        .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
-        .matches(
-            /^\S+(?: \S+)*$/,
-            CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+    .required(REQUIRED_FIELDS)
+    .test(
+        'no-leading-trailing-spaces',
+        'No se permiten espacios al inicio o al final',
+        (value) => value && value === value.trim()
+    ) 
+    .matches(
+        /^[^\u3164\u200B\uFEFF]*$/,
+        INVISIBLE_CHARACTERS
+    )
+    .matches(
+        /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
+        LETTERS_SPACES
+    )
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .max(30, 'El nombre no puede exceder los 30 caracteres')
+    .matches(
+        /^[^<>]*$/,
+        CHARACTERS_NOT_ALLOWED
+    )
+    .notOneOf(['Script', 'script'], WORLDS_NOT_ALLOWED)
+    .matches(
+        /^\S+(?: \S+)*$/,
+        CONSECUTIVE_SPACES
+    ),
     lastname: Yup.string()
         .required(REQUIRED_FIELDS)
+        .test(
+            'no-leading-trailing-spaces',
+            'No se permiten espacios al inicio o al final',
+            (value) => value && value === value.trim()
+        ) 
         .matches(
             /^[^\u3164\u200B\uFEFF]*$/,
             INVISIBLE_CHARACTERS
         )
         .matches(
-            /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            /^(?!.*-.*-)[A-Za-z0-9 -]*$/,
             LETTERS_SPACES
         )
-        .min(3, 'El campo apellido(s) debe tener al menos 3 caracteres')
-        .max(30, 'El campo apellido(s) no puede exceder los 30 caracteres')
+        .min(3, 'El apellido debe tener al menos 3 caracteres')
+        .max(30, 'El apellido no puede exceder los 30 caracteres')
         .matches(
             /^[^<>]*$/,
             CHARACTERS_NOT_ALLOWED
@@ -164,6 +197,5 @@ export const editUserInfoSchema = Yup.object({
         .matches(
             /^\S+(?: \S+)*$/,
             CONSECUTIVE_SPACES
-        )
-        .trim(NO_SPACES),
+        ),
 });
