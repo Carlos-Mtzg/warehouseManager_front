@@ -86,12 +86,14 @@ const ForgotPassword = () => {
                             loading={isSubmitting}
                             className="w-100"
                         />
-                        <PrimaryOutlineButton
-                            text="CANCELAR"
-                            type="button"
-                            onClick={() => { navigate('/') }}
-                            className="w-100"
-                        />
+                        {!isSubmitting && (
+                            <PrimaryOutlineButton
+                                text="CANCELAR"
+                                type="button"
+                                onClick={() => { navigate('/') }}
+                                className="w-100"
+                            />
+                        )}
                     </div>
                 </form>
             </div>
