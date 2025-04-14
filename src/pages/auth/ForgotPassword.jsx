@@ -9,6 +9,7 @@ import styles from '../../assets/css/auth/authentication.module.css';
 import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
 import EmailField from '../../components/inputs/EmailField.jsx';
+import PrimaryButton from '../../components/buttons/PrimaryButton.jsx';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,35 +78,13 @@ const ForgotPassword = () => {
                         className={styles['email-input']}
                     />
                     <div className="d-flex flex-column gap-3">
-                        {isSubmitting ? (
-                            <button
-                                className={`rounded ${styles['submit-btn']}`}
-                                type="submit"
-                                disabled
-                            >
-                                <div className={`${styles['submit-content']}`}>
-                                    Cargando
-                                    <output
-                                        className="spinner-border ms-2"
-                                        style={{ width: '1.25rem', height: '1.25rem' }}
-                                    >
-                                        <span className="visually-hidden"></span>
-                                    </output>
-                                </div>
-                                <span></span>
-                            </button>
-                        ) : (
-                            <button
-                                className={`rounded ${styles['submit-btn']}`}
-                                type="submit"
-                                disabled={isSubmitting}
-                            >
-                                <div className={`${styles['submit-content']}`}>
-                                    Enviar
-                                </div>
-                                <span></span>
-                            </button>
-                        )}
+                        <PrimaryButton
+                            text="ENVIAR"
+                            type="submit"
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                            className="w-100"
+                        />
                         <Link className={`rounded ${styles['cancel-btn']}`} to='/'>Cancelar</Link>
                     </div>
                 </form>
