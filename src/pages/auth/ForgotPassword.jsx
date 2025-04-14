@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useFormik } from 'formik';
 import { handleError, handleSuccess } from '../../utils/authAlerts';
@@ -10,6 +10,7 @@ import logo from '../../assets/images/logo-color.png';
 import { forgotPasswordSchema } from '../../validations/authValidation';
 import EmailField from '../../components/inputs/EmailField.jsx';
 import PrimaryButton from '../../components/buttons/PrimaryButton.jsx';
+import PrimaryOutlineButton from '../../components/buttons/PrimaryOutlineButton.jsx';
 
 const ForgotPassword = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,7 +86,12 @@ const ForgotPassword = () => {
                             loading={isSubmitting}
                             className="w-100"
                         />
-                        <Link className={`rounded ${styles['cancel-btn']}`} to='/'>Cancelar</Link>
+                        <PrimaryOutlineButton
+                            text="CANCELAR"
+                            type="button"
+                            onClick={() => { navigate('/') }}
+                            className="w-100"
+                        />
                     </div>
                 </form>
             </div>
