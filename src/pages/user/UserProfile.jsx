@@ -3,6 +3,7 @@ import styles from '../../assets/css/users.module.css'
 import profile from '../../assets/images/profile.png'
 import EditUserInfoModal from '../../components/modals/EditUserInfoModal.jsx';
 import AuthContext from '../../context/AuthProvider';
+import PrimaryOutlineButton from '../../components/buttons/PrimaryOutlineButton.jsx';
 
 const UserProfile = () => {
     const { user, updateUser } = useContext(AuthContext);
@@ -41,16 +42,13 @@ const UserProfile = () => {
             <div className='d-flex flex-column bg-white rounded p-4 gap-3 slide-in-right'>
                 <div className="d-flex align-items-center">
                     <p className={`fw-bold text-uppercase fs-4 mb-0 ${styles['title']}`}>Mi información</p>
-                    <button
-                        className={`rounded ms-auto ${styles['primary-outline-btn']}`}
-                        type='button'
+                    <PrimaryOutlineButton
+                        text="Editar"
+                        type="button"
                         onClick={() => setShowEditModal(true)}
-                    >
-                        <div className={`d-flex text-center py-1 px-2 ${styles['primary-outline-content']}`}>
-                            Editar<i className="bi bi-pencil-square ms-2"></i>
-                        </div>
-                        <span></span>
-                    </button>
+                        icon="bi bi-pencil-square"
+                        className="ms-auto px-3"
+                    />
                 </div>
                 <div className='row'>
                     <div className="form-group col-12 col-md-4 mb-4">
