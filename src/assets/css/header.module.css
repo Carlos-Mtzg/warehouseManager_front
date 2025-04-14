@@ -1,0 +1,13 @@
+.header {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.logo {
+    width: 70px;
+}
+
+.title {
+    border-left: 3px solid var(--color-white);
+    margin-bottom: 0;
+}

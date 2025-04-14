@@ -1,3 +1,6 @@
+# Sonnarqube
+.scannerwork/
+
 # Logs
 logs
 *.log
@@ -12,6 +15,11 @@ dist
 dist-ssr
 *.local
 
+# Yarn lock files
+yarn-error.log
+yarn-debug.log
+yarn.lock
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,5 +30,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
+.env
 package-lock.json
+
+# Pnpm lock files
+pnpm-lock.yaml
+

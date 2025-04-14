@@ -1,0 +1,11 @@
+.title {
+    color: var(--color-primary);
+}
+
+.gauge-card {
+    transition: all 0.2s ease-in-out !important;
+}
+
+.gauge-card:hover {
+    transform: scale(1.05);
+}

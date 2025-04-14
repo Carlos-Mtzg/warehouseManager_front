@@ -1,0 +1,88 @@
+.title {
+  color: var(--color-primary);
+}
+
+.modal-header {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.label {
+  color: var(--color-primary);
+}
+
+.table-custom {
+  border: transparent;
+}
+
+.table-custom th {
+  color: var(--color-primary);
+  background-color: transparent;
+}
+
+.table-custom td {
+  background-color: transparent;
+  border: transparent;
+}
+
+.btn-custom {
+  background-color: transparent;
+  border: none;
+  transition: all 0.3s ease-in-out !important;
+}
+
+.btn-custom:hover {
+  transform: scale(1.1);
+}
+
+.profile {
+  width: 120px;
+}
+
+.primary-text {
+  color: var(--color-text-primary);
+}
+
+.secondary-text {
+  color: var(--color-text);
+}
+
+.inner-shadow {
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.04),
+    inset 0px -4px 6px rgba(0, 0, 0, 0.04),
+    inset 4px 0px 6px rgba(0, 0, 0, 0.04),
+    inset -4px 0px 6px rgba(0, 0, 0, 0.04);
+}
+
+.user-card {
+  background-color: var(--color-background);
+}
+
+.user-card .name {
+  font-size: 14px;
+  color: var(--color-primary);
+}
+
+.user-card .email {
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.profile-card {
+  width: 52px;
+  height: 52px;
+}
+
+.image {
+  max-height: 150px;
+  width: auto;
+  object-fit: contain;
+}
+
+.card-hover {
+  transition: transform 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: scale(1.03);
+}
