@@ -103,7 +103,7 @@ const Login = () => {
           />
           <div className="mt-3">
             <PrimaryButton
-              text="Iniciar Sesión"
+              text="INICIAR SESIÓN"
               type="submit"
               icon="bi bi-box-arrow-in-right"
               disabled={isSubmitting}
